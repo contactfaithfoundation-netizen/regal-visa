@@ -1,0 +1,6 @@
+{
+  "name": "Globe Express - Travel Explorer",
+  "description": "An interactive, pixel-perfect 100vh travel slider featuring dynamic card-to-fullscreen background expansion, auto-play progress, and smooth destination showcases.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
