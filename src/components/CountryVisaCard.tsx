@@ -42,25 +42,29 @@ export const CountryVisaCard: React.FC<CountryVisaCardProps> = ({
     e.stopPropagation();
     if (onOpenVisaPage) {
       onOpenVisaPage(country);
+    } else {
+      setVisaModalOpen(true);
     }
-    setVisaModalOpen(true);
   };
+
+  // Distance from bottom of viewport so the card sits comfortably above the small carousel cards
+  const bottomOffset = Math.max(16, (viewportHeight - baseTop) + (isDesktop ? 30 : 24));
 
   return (
     <>
-      {/* Expandable Visa Card Widget - Anchored by top position so header stays stable and expansion is silky smooth and calm */}
+      {/* Expandable Visa Card Widget - Anchored by bottom position so it expands in the UP direction and never clips carousel cards */}
       <div
         style={{
           position: 'absolute',
-          top: baseTop - (isDesktop ? 64 : 56),
+          bottom: bottomOffset,
           left: '50%',
           transform: 'translateX(-50%)',
           zIndex: 40,
         }}
-        className="w-[275px] sm:w-[300px] max-w-[calc(100vw-32px)] select-none pointer-events-auto"
+        className="w-[280px] sm:w-[310px] max-w-[calc(100vw-32px)] select-none pointer-events-auto"
       >
-        {/* Unified Card Container with stable geometry */}
-        <div className="bg-white/98 backdrop-blur-md border border-white/85 rounded-[22px] shadow-[0_12px_36px_rgba(0,0,0,0.20)] overflow-hidden transition-shadow duration-200">
+        {/* Unified Card Container with stable upward expansion geometry */}
+        <div className="bg-white/98 backdrop-blur-md border border-white/90 rounded-[22px] shadow-[0_12px_36px_rgba(0,0,0,0.22)] overflow-hidden transition-shadow duration-200">
           {/* Header Row: Always visible and anchored without shifting up/down */}
           <div
             onClick={() => onToggleVisa(!isVisaOpen)}
@@ -182,7 +186,7 @@ export const CountryVisaCard: React.FC<CountryVisaCardProps> = ({
               {/* Header */}
               <div className="flex items-start justify-between pb-4 border-b border-white/10">
                 <div>
-                  <div className="text-[11px] font-semibold tracking-wider text-[#3B82F6] uppercase mb-1">
+                  <div className="text-[11px] font-semibold tracking-wider text-[#A0AEC0] uppercase mb-1">
                     Visa Concierge Protocol
                   </div>
                   <div className="flex items-center gap-2.5">
@@ -266,7 +270,7 @@ export const CountryVisaCard: React.FC<CountryVisaCardProps> = ({
                       setVisaModalOpen(false);
                     }, 1800);
                   }}
-                  className="px-5 py-2.5 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-bold tracking-wide uppercase transition shadow-lg cursor-pointer"
+                  className="px-5 py-2.5 rounded-xl bg-white text-[#1C232D] hover:bg-neutral-100 text-xs font-bold tracking-wide uppercase transition shadow-lg cursor-pointer"
                 >
                   {visaSubmitted ? 'Application Initiated ✓' : `Apply for ${country} Visa`}
                 </button>

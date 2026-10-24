@@ -46,7 +46,7 @@ export const SLIDES: Slide[] = [
     country: 'Morocco',
     flagCode: 'ma',
     title: 'SAHARA\nMERZOUGA',
-    image: 'https://images.unsplash.com/photo-1489493585363-d69421e0edd3?q=85&w=2560&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?q=85&w=2560&auto=format&fit=crop',
     description: 'Colossal wind-rippled golden terracotta dunes stretching across Erg Chebbi into the horizon, where traditional Berber nomad caravans welcome twilight under starry skies.',
     coordinates: "31°06'00\" N 4°01'00\" W",
     altitude: '700 m',
@@ -59,7 +59,7 @@ export const SLIDES: Slide[] = [
     country: 'United States',
     flagCode: 'us',
     title: 'YOSEMITE\nVALLEY',
-    image: 'https://images.unsplash.com/photo-1472396961693-142e6e269027?q=85&w=2560&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1426604966848-d7adac402bff?q=85&w=2560&auto=format&fit=crop',
     description: 'A cathedral of sheer wilderness carved by ancient glaciers — standing before El Capitan’s 3,000-foot granite precipice, emerald pine groves, and tumbling alpine falls.',
     coordinates: "37°44'56\" N 119°35'48\" W",
     altitude: '2,199 m',
@@ -67,16 +67,16 @@ export const SLIDES: Slide[] = [
     highlight: 'Iconic granite monoliths of El Capitan and Half Dome vistas.'
   },
   {
-    id: 'sagrada-familia-barcelona',
-    region: 'Barcelona • Spain',
+    id: 'el-tajo-ronda',
+    region: 'Andalusia • Spain',
     country: 'Spain',
     flagCode: 'es',
-    title: 'SAGRADA\nFAMÍLIA',
-    image: 'https://images.unsplash.com/photo-1583422409516-2895a77efded?q=85&w=2560&auto=format&fit=crop',
-    description: 'Antoni Gaudí’s legendary basilica crowning the Catalan skyline with stone-sculpted organic spires and kaleidoscopic stained glass brilliance.',
-    coordinates: "41°24'13\" N 2°10'28\" E",
-    altitude: '45 m',
-    bestSeason: 'April – October',
-    highlight: 'Gaudí’s visionary stone forest spires bathed in golden light.'
+    title: 'EL TAJO\nRONDA',
+    image: 'https://images.unsplash.com/photo-1547039508-fa7d4620d7ca?q=85&w=2560&auto=format&fit=crop',
+    description: 'Spain’s breathtaking cliffside wonderland perched 120 meters above the sheer limestone chasms of El Tajo gorge, overlooking sweeping Andalusian mountain valleys.',
+    coordinates: "36°44'28\" N 5°09'57\" W",
+    altitude: '739 m',
+    bestSeason: 'April – June & Sept – Nov',
+    highlight: 'Monumental 18th-century stone arch bridge spanning a 120-meter sheer cliff canyon.'
   }
 ];
