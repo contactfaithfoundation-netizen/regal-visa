@@ -1,0 +1,371 @@
+```python
+import pandas as pd
+
+xls = pd.ExcelFile('country_card_images.xlsx')
+print("Sheet names:", xls.sheet_names)
+
+df_img = pd.read_excel('country_card_images.xlsx')
+print("Image DF columns:", df_img.columns)
+print("Image DF shape:", df_img.shape)
+print(df_img.head())
+
+
+```
+
+```text
+Sheet names: ['All country cards', 'Rendered homepage cards', 'Notes']
+Image DF columns: Index(['country', 'country_code', 'scope', 'rendered_on_homepage', 'image_url',
+       'image_http_status', 'rendered_image_url', 'background_image_url',
+       'background_http_status', 'image_srcset', 'background_srcset',
+       'card_link'],
+      dtype='object')
+Image DF shape: (166, 12)
+             country country_code                   scope  rendered_on_homepage                                                                                  image_url  image_http_status rendered_image_url background_image_url  background_http_status image_srcset background_srcset                                                  card_link
+0        Afghanistan           AF  preloaded_country_card                 False  https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/AF.avif?tr=orig&v=1                200                NaN                  NaN                     NaN          NaN               NaN          https://www.atlys.com/en-US/visa/afghanistan-visa
+1            Algeria           DZ  preloaded_country_card                 False  https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/DZ.avif?tr=orig&v=1                200                NaN                  NaN                     NaN          NaN               NaN              https://www.atlys.com/en-US/visa/algeria-visa
+2           Anguilla           AI  preloaded_country_card                 False  https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/AI.avif?tr=orig&v=1                404                NaN                  NaN                     NaN          NaN               NaN             https://www.atlys.com/en-US/visa/anguilla-visa
+3         Antarctica           AQ  preloaded_country_card                 False  https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/AQ.avif?tr=orig&v=1                404                NaN                  NaN                     NaN          NaN               NaN           https://www.atlys.com/en-US/visa/antarctica-visa
+4  Antigua & Barbuda           AG  preloaded_country_card                 False  https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/AG.avif?tr=orig&v=1                200                NaN                  NaN                     NaN          NaN               NaN  https://www.atlys.com/en-US/visa/antigua-and-barbuda-visa
+
+
+```
+
+```python
+df_vid = pd.read_csv('atlys_hero_videos.csv')
+available_vid = df_vid[df_vid['status'] == 'video_available'].copy()
+
+# Let's inspect country matching
+print("Available videos count:", len(available_vid))
+
+# Let's check sheet 'All country cards' or whichever sheet is primary
+df_img_all = pd.read_excel('country_card_images.xlsx', sheet_name='All country cards')
+
+# Let's clean country names or use ISO country codes / standard matching if available
+# Check if country code can be extracted or matched
+
+# In hero_videos.csv, video URL usually has country code: AF.mp4, DZ.mp4 etc.
+import re
+
+def get_code_from_video_url(url):
+    match = re.search(r'/([A-Z]{2})\.mp4', str(url))
+    if match:
+        return match.group(1)
+    return None
+
+available_vid['code'] = available_vid['hero_video_url'].apply(get_code_from_video_url)
+
+print("Codes extracted in available videos:", available_vid['code'].notnull().sum(), "out of", len(available_vid))
+
+# Merge on country_code
+merged = pd.merge(available_vid, df_img_all, left_on='code', right_on='country_code', how='left')
+
+print("Merged shape:", merged.shape)
+print("Missing image_url count:", merged['image_url'].isnull().sum())
+
+# Let's check missing rows if any
+missing = merged[merged['image_url'].isnull()]
+print("Missing countries:")
+print(missing[['destination', 'code', 'hero_video_url']])
+
+
+```
+
+```text
+Available videos count: 151
+Codes extracted in available videos: 150 out of 151
+Merged shape: (151, 23)
+Missing image_url count: 26
+Missing countries:
+    destination code                                                                hero_video_url
+1       Albania   AL  https://media.atlys.com/b2c/clp/country-landing-page-videos/AL.mp4?tr=f-webm
+3        Angola   AO  https://media.atlys.com/b2c/clp/country-landing-page-videos/AO.mp4?tr=f-webm
+15       Belize   BZ  https://media.atlys.com/b2c/clp/country-landing-page-videos/BZ.mp4?tr=f-webm
+20     Botswana   BW  https://media.atlys.com/b2c/clp/country-landing-page-videos/BW.mp4?tr=f-webm
+27   Cape Verde   CV  https://media.atlys.com/b2c/clp/country-landing-page-videos/CV.mp4?tr=f-webm
+28        Chile   CL  https://media.atlys.com/b2c/clp/country-landing-page-videos/CL.mp4?tr=f-webm
+31   Costa Rica   CR  https://media.atlys.com/b2c/clp/country-landing-page-videos/CR.mp4?tr=f-webm
+53      Grenada   GD  https://media.atlys.com/b2c/clp/country-landing-page-videos/GD.mp4?tr=f-webm
+54    Guatemala   GT  https://media.atlys.com/b2c/clp/country-landing-page-videos/GT.mp4?tr=f-webm
+57       Guyana   GY  https://media.atlys.com/b2c/clp/country-landing-page-videos/GY.mp4?tr=f-webm
+59     Honduras   HN  https://media.atlys.com/b2c/clp/country-landing-page-videos/HN.mp4?tr=f-webm
+60    Hong Kong   HK  https://media.atlys.com/b2c/clp/country-landing-page-videos/HK.mp4?tr=f-webm
+64         Iran   IR  https://media.atlys.com/b2c/clp/country-landing-page-videos/IR.mp4?tr=f-webm
+73     Kiribati   KI  https://media.atlys.com/b2c/clp/country-landing-page-videos/KI.mp4?tr=f-webm
+79        Libya   LY  https://media.atlys.com/b2c/clp/country-landing-page-videos/LY.mp4?tr=f-webm
+83    Macedonia   MK  https://media.atlys.com/b2c/clp/country-landing-page-videos/MK.mp4?tr=f-webm
+87     Maldives   MV  https://media.atlys.com/b2c/clp/country-landing-page-videos/MV.mp4?tr=f-webm
+88         Mali   ML  https://media.atlys.com/b2c/clp/country-landing-page-videos/ML.mp4?tr=f-webm
+92    Mauritius   MU  https://media.atlys.com/b2c/clp/country-landing-page-videos/MU.mp4?tr=f-webm
+97      Namibia   NA  https://media.atlys.com/b2c/clp/country-landing-page-videos/NA.mp4?tr=f-webm
+101   Nicaragua   NI  https://media.atlys.com/b2c/clp/country-landing-page-videos/NI.mp4?tr=f-webm
+102       Niger   NE  https://media.atlys.com/b2c/clp/country-landing-page-videos/NE.mp4?tr=f-webm
+108      Panama   PA  https://media.atlys.com/b2c/clp/country-landing-page-videos/PA.mp4?tr=f-webm
+111        Peru   PE  https://media.atlys.com/b2c/clp/country-landing-page-videos/PE.mp4?tr=f-webm
+122      Serbia   RS  https://media.atlys.com/b2c/clp/country-landing-page-videos/RS.mp4?tr=f-webm
+144     Ukraine   UA  https://media.atlys.com/b2c/clp/country-landing-page-videos/UA.mp4?tr=f-webm
+
+
+```
+
+```python
+for sheet in xls.sheet_names:
+    df_s = pd.read_excel('country_card_images.xlsx', sheet_name=sheet)
+    print(sheet, df_s.columns)
+
+# Let's check matching by country name normalized
+def norm_name(s):
+    if not isinstance(s, str): return ""
+    return s.lower().replace('&', 'and').replace(' ', '').replace('-', '').replace("'", "")
+
+df_img_all['norm_name'] = df_img_all['country'].apply(norm_name)
+available_vid['norm_name'] = available_vid['destination'].apply(norm_name)
+
+merged_name = pd.merge(available_vid, df_img_all, on='norm_name', how='left')
+print("Missing image_url by norm_name:", merged_name['image_url'].isnull().sum())
+
+missing_name = merged_name[merged_name['image_url'].isnull()]
+print("Missing by name:", missing_name[['destination', 'code']])
+
+
+```
+
+```text
+All country cards Index(['country', 'country_code', 'scope', 'rendered_on_homepage', 'image_url',
+       'image_http_status', 'rendered_image_url', 'background_image_url',
+       'background_http_status', 'image_srcset', 'background_srcset',
+       'card_link'],
+      dtype='object')
+Rendered homepage cards Index(['country', 'country_code', 'scope', 'rendered_on_homepage', 'image_url',
+       'image_http_status', 'rendered_image_url', 'background_image_url',
+       'background_http_status', 'image_srcset', 'background_srcset',
+       'card_link'],
+      dtype='object')
+Notes Index(['Requested page', 'https://www.atlys.com/en-PK'], dtype='object')
+Missing image_url by norm_name: 34
+Missing by name:                destination code
+1                  Albania   AL
+3                   Angola   AO
+15                  Belize   BZ
+20                Botswana   BW
+27              Cape Verde   CV
+28                   Chile   CL
+30                   Congo   CD
+31              Costa Rica   CR
+32            Cote Divoire   CI
+35          Czech Republic   CZ
+53                 Grenada   GD
+54               Guatemala   GT
+57                  Guyana   GY
+59                Honduras   HN
+60               Hong Kong   HK
+64                    Iran   IR
+73                Kiribati   KI
+79                   Libya   LY
+83               Macedonia   MK
+87                Maldives   MV
+88                    Mali   ML
+92               Mauritius   MU
+96                 Myanmar   MM
+101              Nicaragua   NI
+102                  Niger   NE
+108                 Panama   PA
+111                   Peru   PE
+118  Saint Kitts And Nevis   KN
+119            Saint Lucia   LC
+120  Sao Tome And Principe   ST
+122                 Serbia   RS
+141                 Turkey   TR
+143                     Uk   GB
+144                Ukraine   UA
+
+
+```
+
+```python
+print("Total countries in xlsx:", len(df_img_all))
+print(df_img_all['country'].tolist()[:30])
+
+
+```
+
+```text
+Total countries in xlsx: 166
+['Afghanistan', 'Algeria', 'Anguilla', 'Antarctica', 'Antigua & Barbuda', 'Argentina', 'Armenia', 'Aruba', 'Australia', 'Austria', 'Azerbaijan', 'Bahamas', 'Bahrain', 'Bangladesh', 'Barbados', 'Belarus', 'Belgium', 'Benin', 'Bhutan', 'Bolivia', 'Bosnia & Herzegovina', 'Brazil', 'British Virgin Islands', 'Brunei', 'Bulgaria', 'Burkina Faso', 'Burundi', 'Cambodia', 'Cameroon', 'Canada']
+
+
+```
+
+```python
+print(df_img_all[['country', 'country_code', 'image_url']].head(10))
+
+
+```
+
+```text
+             country country_code                                                                                  image_url
+0        Afghanistan           AF  https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/AF.avif?tr=orig&v=1
+1            Algeria           DZ  https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/DZ.avif?tr=orig&v=1
+2           Anguilla           AI  https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/AI.avif?tr=orig&v=1
+3         Antarctica           AQ  https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/AQ.avif?tr=orig&v=1
+4  Antigua & Barbuda           AG  https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/AG.avif?tr=orig&v=1
+5          Argentina           AR  https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/AR.avif?tr=orig&v=1
+6            Armenia           AM  https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/AM.avif?tr=orig&v=1
+7              Aruba           AW          https://media.atlys.com/f_auto,w_400/b2c/Home%20page/version-3/images/AW.avif?v=1
+8          Australia           AU  https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/AU.avif?tr=orig&v=1
+9            Austria           AT  https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/AT.avif?tr=orig&v=1
+
+
+```
+
+Here is the Markdown table containing the **Country**, **Video URL** (for countries with available videos), and the corresponding **Card Image URL** mapped from `country_card_images.xlsx`:
+
+| Country | Video URL | Card Image URL |
+| --- | --- | --- |
+| Afghanistan | [https://media.atlys.com/b2c/clp/country-landing-page-videos/AF.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/AF.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/AF.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/AF.avif%3Ftr%3Dorig%26v%3D1) |
+| Albania | [https://media.atlys.com/b2c/clp/country-landing-page-videos/AL.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/AL.mp4%3Ftr%3Df-webm) | N/A |
+| Algeria | [https://media.atlys.com/b2c/clp/country-landing-page-videos/DZ.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/DZ.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/DZ.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/DZ.avif%3Ftr%3Dorig%26v%3D1) |
+| Angola | [https://media.atlys.com/b2c/clp/country-landing-page-videos/AO.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/AO.mp4%3Ftr%3Df-webm) | N/A |
+| Anguilla | [https://media.atlys.com/b2c/clp/country-landing-page-videos/AI.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/AI.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/AI.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/AI.avif%3Ftr%3Dorig%26v%3D1) |
+| Antigua And Barbuda | [https://media.atlys.com/b2c/clp/country-landing-page-videos/AG.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/AG.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/AG.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/AG.avif%3Ftr%3Dorig%26v%3D1) |
+| Argentina | [https://media.atlys.com/b2c/clp/country-landing-page-videos/AR.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/AR.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/AR.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/AR.avif%3Ftr%3Dorig%26v%3D1) |
+| Australia | [https://media.atlys.com/b2c/clp/country-landing-page-videos/AU.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/AU.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/AU.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/AU.avif%3Ftr%3Dorig%26v%3D1) |
+| Austria | [https://media.atlys.com/b2c/clp/country-landing-page-videos/AT.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/AT.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/AT.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/AT.avif%3Ftr%3Dorig%26v%3D1) |
+| Azerbaijan | [https://media.atlys.com/b2c/clp/country-landing-page-videos/AZ.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/AZ.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/AZ.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/AZ.avif%3Ftr%3Dorig%26v%3D1) |
+| Bahrain | [https://media.atlys.com/b2c/clp/country-landing-page-videos/BH.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/BH.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/BH.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/BH.avif%3Ftr%3Dorig%26v%3D1) |
+| Bangladesh | [https://media.atlys.com/b2c/clp/country-landing-page-videos/BD.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/BD.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/BD.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/BD.avif%3Ftr%3Dorig%26v%3D1) |
+| Barbados | [https://media.atlys.com/b2c/clp/country-landing-page-videos/BB.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/BB.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/BB.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/BB.avif%3Ftr%3Dorig%26v%3D1) |
+| Belarus | [https://media.atlys.com/b2c/clp/country-landing-page-videos/BY.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/BY.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/BY.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/BY.avif%3Ftr%3Dorig%26v%3D1) |
+| Belgium | [https://media.atlys.com/b2c/clp/country-landing-page-videos/BE.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/BE.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/BE.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/BE.avif%3Ftr%3Dorig%26v%3D1) |
+| Belize | [https://media.atlys.com/b2c/clp/country-landing-page-videos/BZ.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/BZ.mp4%3Ftr%3Df-webm) | N/A |
+| Benin | [https://media.atlys.com/b2c/clp/country-landing-page-videos/BJ.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/BJ.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/BJ.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/BJ.avif%3Ftr%3Dorig%26v%3D1) |
+| Bermuda | [https://media.atlys.com/b2c/clp/country-landing-page-videos/BM.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/BM.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/BM.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/BM.avif%3Ftr%3Dorig%26v%3D1) |
+| Bhutan | [https://media.atlys.com/b2c/clp/country-landing-page-videos/BT.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/BT.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/BT.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/BT.avif%3Ftr%3Dorig%26v%3D1) |
+| Bolivia | [https://media.atlys.com/b2c/clp/country-landing-page-videos/BO.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/BO.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/BO.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/BO.avif%3Ftr%3Dorig%26v%3D1) |
+| Bosnia And Herzegovina | [https://media.atlys.com/b2c/clp/country-landing-page-videos/BA.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/BA.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/BA.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/BA.avif%3Ftr%3Dorig%26v%3D1) |
+| Botswana | [https://media.atlys.com/b2c/clp/country-landing-page-videos/BW.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/BW.mp4%3Ftr%3Df-webm) | N/A |
+| Brazil | [https://media.atlys.com/b2c/clp/country-landing-page-videos/BR.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/BR.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/BR.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/BR.avif%3Ftr%3Dorig%26v%3D1) |
+| British Virgin Islands | [https://media.atlys.com/b2c/clp/country-landing-page-videos/VG.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/VG.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/VG.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/VG.avif%3Ftr%3Dorig%26v%3D1) |
+| Brunei | [https://media.atlys.com/b2c/clp/country-landing-page-videos/BN.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/BN.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/BN.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/BN.avif%3Ftr%3Dorig%26v%3D1) |
+| Bulgaria | [https://media.atlys.com/b2c/clp/country-landing-page-videos/BG.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/BG.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/BG.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/BG.avif%3Ftr%3Dorig%26v%3D1) |
+| Burkina Faso | [https://media.atlys.com/b2c/clp/country-landing-page-videos/BF.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/BF.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/BF.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/BF.avif%3Ftr%3Dorig%26v%3D1) |
+| Burundi | [https://media.atlys.com/b2c/clp/country-landing-page-videos/BI.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/BI.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/BI.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/BI.avif%3Ftr%3Dorig%26v%3D1) |
+| Cambodia | [https://media.atlys.com/b2c/clp/country-landing-page-videos/KH.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/KH.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/KH.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/KH.avif%3Ftr%3Dorig%26v%3D1) |
+| Cameroon | [https://media.atlys.com/b2c/clp/country-landing-page-videos/CM.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/CM.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/CM.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/CM.avif%3Ftr%3Dorig%26v%3D1) |
+| Canada | [https://media.atlys.com/b2c/clp/country-landing-page-videos/CA.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/CA.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/CA.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/CA.avif%3Ftr%3Dorig%26v%3D1) |
+| Cape Verde | [https://media.atlys.com/b2c/clp/country-landing-page-videos/CV.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/CV.mp4%3Ftr%3Df-webm) | N/A |
+| Cayman Islands | [https://media.atlys.com/b2c/clp/country-landing-page-videos/KY.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/KY.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/KY.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/KY.avif%3Ftr%3Dorig%26v%3D1) |
+| Central African Republic | [https://media.atlys.com/b2c/clp/country-landing-page-videos/CF.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/CF.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/CF.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/CF.avif%3Ftr%3Dorig%26v%3D1) |
+| Chad | [https://media.atlys.com/b2c/clp/country-landing-page-videos/TD.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/TD.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/TD.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/TD.avif%3Ftr%3Dorig%26v%3D1) |
+| Chile | [https://media.atlys.com/b2c/clp/country-landing-page-videos/CL.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/CL.mp4%3Ftr%3Df-webm) | N/A |
+| Colombia | [https://media.atlys.com/b2c/clp/country-landing-page-videos/CO.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/CO.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/CO.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/CO.avif%3Ftr%3Dorig%26v%3D1) |
+| Comoros | [https://media.atlys.com/b2c/clp/country-landing-page-videos/KM.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/KM.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/KM.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/KM.avif%3Ftr%3Dorig%26v%3D1) |
+| Congo | [https://media.atlys.com/b2c/clp/country-landing-page-videos/CG.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/CG.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/CG.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/CG.avif%3Ftr%3Dorig%26v%3D1) |
+| Cook Islands | [https://media.atlys.com/b2c/clp/country-landing-page-videos/CK.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/CK.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/CK.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/CK.avif%3Ftr%3Dorig%26v%3D1) |
+| Costa Rica | [https://media.atlys.com/b2c/clp/country-landing-page-videos/CR.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/CR.mp4%3Ftr%3Df-webm) | N/A |
+| Croatia | [https://media.atlys.com/b2c/clp/country-landing-page-videos/HR.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/HR.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/HR.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/HR.avif%3Ftr%3Dorig%26v%3D1) |
+| Cuba | [https://media.atlys.com/b2c/clp/country-landing-page-videos/CU.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/CU.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/CU.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/CU.avif%3Ftr%3Dorig%26v%3D1) |
+| Curaçao | [https://media.atlys.com/b2c/clp/country-landing-page-videos/CW.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/CW.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/CW.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/CW.avif%3Ftr%3Dorig%26v%3D1) |
+| Cyprus | [https://media.atlys.com/b2c/clp/country-landing-page-videos/CY.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/CY.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/CY.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/CY.avif%3Ftr%3Dorig%26v%3D1) |
+| Czech Republic | [https://media.atlys.com/b2c/clp/country-landing-page-videos/CZ.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/CZ.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/CZ.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/CZ.avif%3Ftr%3Dorig%26v%3D1) |
+| Democratic Republic Of The Congo | [https://media.atlys.com/b2c/clp/country-landing-page-videos/CD.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/CD.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/CD.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/CD.avif%3Ftr%3Dorig%26v%3D1) |
+| Denmark | [https://media.atlys.com/b2c/clp/country-landing-page-videos/DK.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/DK.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/DK.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/DK.avif%3Ftr%3Dorig%26v%3D1) |
+| Djibouti | [https://media.atlys.com/b2c/clp/country-landing-page-videos/DJ.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/DJ.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/DJ.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/DJ.avif%3Ftr%3Dorig%26v%3D1) |
+| Dominica | [https://media.atlys.com/b2c/clp/country-landing-page-videos/DM.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/DM.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/DM.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/DM.avif%3Ftr%3Dorig%26v%3D1) |
+| Dominican Republic | [https://media.atlys.com/b2c/clp/country-landing-page-videos/DO.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/DO.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/DO.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/DO.avif%3Ftr%3Dorig%26v%3D1) |
+| Ecuador | [https://media.atlys.com/b2c/clp/country-landing-page-videos/EC.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/EC.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/EC.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/EC.avif%3Ftr%3Dorig%26v%3D1) |
+| Egypt | [https://media.atlys.com/b2c/clp/country-landing-page-videos/EG.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/EG.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/EG.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/EG.avif%3Ftr%3Dorig%26v%3D1) |
+| El Salvador | [https://media.atlys.com/b2c/clp/country-landing-page-videos/SV.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/SV.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/SV.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/SV.avif%3Ftr%3Dorig%26v%3D1) |
+| Equatorial Guinea | [https://media.atlys.com/b2c/clp/country-landing-page-videos/GQ.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/GQ.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/GQ.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/GQ.avif%3Ftr%3Dorig%26v%3D1) |
+| Eritrea | [https://media.atlys.com/b2c/clp/country-landing-page-videos/ER.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/ER.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/ER.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/ER.avif%3Ftr%3Dorig%26v%3D1) |
+| Estonia | [https://media.atlys.com/b2c/clp/country-landing-page-videos/EE.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/EE.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/EE.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/EE.avif%3Ftr%3Dorig%26v%3D1) |
+| Eswatini | [https://media.atlys.com/b2c/clp/country-landing-page-videos/SZ.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/SZ.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/SZ.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/SZ.avif%3Ftr%3Dorig%26v%3D1) |
+| Ethiopia | [https://media.atlys.com/b2c/clp/country-landing-page-videos/ET.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/ET.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/ET.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/ET.avif%3Ftr%3Dorig%26v%3D1) |
+| Falkland Islands | [https://media.atlys.com/b2c/clp/country-landing-page-videos/FK.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/FK.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/FK.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/FK.avif%3Ftr%3Dorig%26v%3D1) |
+| Faroe Islands | [https://media.atlys.com/b2c/clp/country-landing-page-videos/FO.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/FO.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/FO.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/FO.avif%3Ftr%3Dorig%26v%3D1) |
+| Fiji | [https://media.atlys.com/b2c/clp/country-landing-page-videos/FJ.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/FJ.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/FJ.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/FJ.avif%3Ftr%3Dorig%26v%3D1) |
+| Finland | [https://media.atlys.com/b2c/clp/country-landing-page-videos/FI.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/FI.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/FI.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/FI.avif%3Ftr%3Dorig%26v%3D1) |
+| France | [https://media.atlys.com/b2c/clp/country-landing-page-videos/FR.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/FR.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/FR.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/FR.avif%3Ftr%3Dorig%26v%3D1) |
+| French Polynesia | [https://media.atlys.com/b2c/clp/country-landing-page-videos/PF.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/PF.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/PF.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/PF.avif%3Ftr%3Dorig%26v%3D1) |
+| Gabon | [https://media.atlys.com/b2c/clp/country-landing-page-videos/GA.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/GA.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/GA.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/GA.avif%3Ftr%3Dorig%26v%3D1) |
+| Gambia | [https://media.atlys.com/b2c/clp/country-landing-page-videos/GM.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/GM.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/GM.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/GM.avif%3Ftr%3Dorig%26v%3D1) |
+| Georgia | [https://media.atlys.com/b2c/clp/country-landing-page-videos/GE.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/GE.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/GE.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/GE.avif%3Ftr%3Dorig%26v%3D1) |
+| Germany | [https://media.atlys.com/b2c/clp/country-landing-page-videos/DE.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/DE.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/DE.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/DE.avif%3Ftr%3Dorig%26v%3D1) |
+| Ghana | [https://media.atlys.com/b2c/clp/country-landing-page-videos/GH.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/GH.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/GH.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/GH.avif%3Ftr%3Dorig%26v%3D1) |
+| Gibraltar | [https://media.atlys.com/b2c/clp/country-landing-page-videos/GI.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/GI.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/GI.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/GI.avif%3Ftr%3Dorig%26v%3D1) |
+| Greece | [https://media.atlys.com/b2c/clp/country-landing-page-videos/GR.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/GR.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/GR.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/GR.avif%3Ftr%3Dorig%26v%3D1) |
+| Greenland | [https://media.atlys.com/b2c/clp/country-landing-page-videos/GL.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/GL.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/GL.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/GL.avif%3Ftr%3Dorig%26v%3D1) |
+| Grenada | [https://media.atlys.com/b2c/clp/country-landing-page-videos/GD.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/GD.mp4%3Ftr%3Df-webm) | N/A |
+| Guam | [https://media.atlys.com/b2c/clp/country-landing-page-videos/GU.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/GU.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/GU.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/GU.avif%3Ftr%3Dorig%26v%3D1) |
+| Guatemala | [https://media.atlys.com/b2c/clp/country-landing-page-videos/GT.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/GT.mp4%3Ftr%3Df-webm) | N/A |
+| Guinea | [https://media.atlys.com/b2c/clp/country-landing-page-videos/GN.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/GN.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/GN.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/GN.avif%3Ftr%3Dorig%26v%3D1) |
+| Guinea-Bissau | [https://media.atlys.com/b2c/clp/country-landing-page-videos/GW.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/GW.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/GW.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/GW.avif%3Ftr%3Dorig%26v%3D1) |
+| Guyana | [https://media.atlys.com/b2c/clp/country-landing-page-videos/GY.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/GY.mp4%3Ftr%3Df-webm) | N/A |
+| Haiti | [https://media.atlys.com/b2c/clp/country-landing-page-videos/HT.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/HT.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/HT.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/HT.avif%3Ftr%3Dorig%26v%3D1) |
+| Honduras | [https://media.atlys.com/b2c/clp/country-landing-page-videos/HN.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/HN.mp4%3Ftr%3Df-webm) | N/A |
+| Hungary | [https://media.atlys.com/b2c/clp/country-landing-page-videos/HU.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/HU.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/HU.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/HU.avif%3Ftr%3Dorig%26v%3D1) |
+| Iceland | [https://media.atlys.com/b2c/clp/country-landing-page-videos/IS.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/IS.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/IS.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/IS.avif%3Ftr%3Dorig%26v%3D1) |
+| India | [https://media.atlys.com/b2c/clp/country-landing-page-videos/IN.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/IN.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/IN.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/IN.avif%3Ftr%3Dorig%26v%3D1) |
+| Indonesia | [https://media.atlys.com/b2c/clp/country-landing-page-videos/ID.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/ID.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/ID.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/ID.avif%3Ftr%3Dorig%26v%3D1) |
+| Iran | [https://media.atlys.com/b2c/clp/country-landing-page-videos/IR.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/IR.mp4%3Ftr%3Df-webm) | N/A |
+| Iraq | [https://media.atlys.com/b2c/clp/country-landing-page-videos/IQ.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/IQ.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/IQ.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/IQ.avif%3Ftr%3Dorig%26v%3D1) |
+| Ireland | [https://media.atlys.com/b2c/clp/country-landing-page-videos/IE.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/IE.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/IE.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/IE.avif%3Ftr%3Dorig%26v%3D1) |
+| Isle Of Man | [https://media.atlys.com/b2c/clp/country-landing-page-videos/IM.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/IM.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/IM.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/IM.avif%3Ftr%3Dorig%26v%3D1) |
+| Israel | [https://media.atlys.com/b2c/clp/country-landing-page-videos/IL.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/IL.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/IL.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/IL.avif%3Ftr%3Dorig%26v%3D1) |
+| Italy | [https://media.atlys.com/b2c/clp/country-landing-page-videos/IT.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/IT.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/IT.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/IT.avif%3Ftr%3Dorig%26v%3D1) |
+| Ivory Coast | [https://media.atlys.com/b2c/clp/country-landing-page-videos/CI.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/CI.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/CI.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/CI.avif%3Ftr%3Dorig%26v%3D1) |
+| Jamaica | [https://media.atlys.com/b2c/clp/country-landing-page-videos/JM.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/JM.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/JM.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/JM.avif%3Ftr%3Dorig%26v%3D1) |
+| Japan | [https://media.atlys.com/b2c/clp/country-landing-page-videos/JP.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/JP.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/JP.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/JP.avif%3Ftr%3Dorig%26v%3D1) |
+| Jersey | [https://media.atlys.com/b2c/clp/country-landing-page-videos/JE.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/JE.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/JE.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/JE.avif%3Ftr%3Dorig%26v%3D1) |
+| Jordan | [https://media.atlys.com/b2c/clp/country-landing-page-videos/JO.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/JO.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/JO.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/JO.avif%3Ftr%3Dorig%26v%3D1) |
+| Kazakhstan | [https://media.atlys.com/b2c/clp/country-landing-page-videos/KZ.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/KZ.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/KZ.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/KZ.avif%3Ftr%3Dorig%26v%3D1) |
+| Kenya | [https://media.atlys.com/b2c/clp/country-landing-page-videos/KE.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/KE.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/KE.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/KE.avif%3Ftr%3Dorig%26v%3D1) |
+| Kiribati | [https://media.atlys.com/b2c/clp/country-landing-page-videos/KI.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/KI.mp4%3Ftr%3Df-webm) | N/A |
+| Kosovo | [https://media.atlys.com/b2c/clp/country-landing-page-videos/XK.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/XK.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/XK.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/XK.avif%3Ftr%3Dorig%26v%3D1) |
+| Kuwait | [https://media.atlys.com/b2c/clp/country-landing-page-videos/KW.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/KW.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/KW.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/KW.avif%3Ftr%3Dorig%26v%3D1) |
+| Kyrgyzstan | [https://media.atlys.com/b2c/clp/country-landing-page-videos/KG.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/KG.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/KG.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/KG.avif%3Ftr%3Dorig%26v%3D1) |
+| Laos | [https://media.atlys.com/b2c/clp/country-landing-page-videos/LA.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/LA.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/LA.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/LA.avif%3Ftr%3Dorig%26v%3D1) |
+| Latvia | [https://media.atlys.com/b2c/clp/country-landing-page-videos/LV.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/LV.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/LV.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/LV.avif%3Ftr%3Dorig%26v%3D1) |
+| Lebanon | [https://media.atlys.com/b2c/clp/country-landing-page-videos/LB.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/LB.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/LB.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/LB.avif%3Ftr%3Dorig%26v%3D1) |
+| Lesotho | [https://media.atlys.com/b2c/clp/country-landing-page-videos/LS.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/LS.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/LS.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/LS.avif%3Ftr%3Dorig%26v%3D1) |
+| Liberia | [https://media.atlys.com/b2c/clp/country-landing-page-videos/LR.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/LR.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/LR.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/LR.avif%3Ftr%3Dorig%26v%3D1) |
+| Libya | [https://media.atlys.com/b2c/clp/country-landing-page-videos/LY.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/LY.mp4%3Ftr%3Df-webm) | N/A |
+| Liechtenstein | [https://media.atlys.com/b2c/clp/country-landing-page-videos/LI.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/LI.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/LI.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/LI.avif%3Ftr%3Dorig%26v%3D1) |
+| Lithuania | [https://media.atlys.com/b2c/clp/country-landing-page-videos/LT.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/LT.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/LT.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/LT.avif%3Ftr%3Dorig%26v%3D1) |
+| Luxembourg | [https://media.atlys.com/b2c/clp/country-landing-page-videos/LU.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/LU.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/LU.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/LU.avif%3Ftr%3Dorig%26v%3D1) |
+| Madagascar | [https://media.atlys.com/b2c/clp/country-landing-page-videos/MG.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/MG.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/MG.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/MG.avif%3Ftr%3Dorig%26v%3D1) |
+| Malawi | [https://media.atlys.com/b2c/clp/country-landing-page-videos/MW.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/MW.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/MW.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/MW.avif%3Ftr%3Dorig%26v%3D1) |
+| Malaysia | [https://media.atlys.com/b2c/clp/country-landing-page-videos/MY.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/MY.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/MY.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/MY.avif%3Ftr%3Dorig%26v%3D1) |
+| Maldives | [https://media.atlys.com/b2c/clp/country-landing-page-videos/MV.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/MV.mp4%3Ftr%3Df-webm) | N/A |
+| Mali | [https://media.atlys.com/b2c/clp/country-landing-page-videos/ML.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/ML.mp4%3Ftr%3Df-webm) | N/A |
+| Malta | [https://media.atlys.com/b2c/clp/country-landing-page-videos/MT.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/MT.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/MT.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/MT.avif%3Ftr%3Dorig%26v%3D1) |
+| Marshall Islands | [https://media.atlys.com/b2c/clp/country-landing-page-videos/MH.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/MH.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/MH.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/MH.avif%3Ftr%3Dorig%26v%3D1) |
+| Mauritania | [https://media.atlys.com/b2c/clp/country-landing-page-videos/MR.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/MR.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/MR.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/MR.avif%3Ftr%3Dorig%26v%3D1) |
+| Mauritius | [https://media.atlys.com/b2c/clp/country-landing-page-videos/MU.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/MU.mp4%3Ftr%3Df-webm) | N/A |
+| Mayotte | [https://media.atlys.com/b2c/clp/country-landing-page-videos/YT.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/YT.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/YT.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/YT.avif%3Ftr%3Dorig%26v%3D1) |
+| Mexico | [https://media.atlys.com/b2c/clp/country-landing-page-videos/MX.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/MX.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/MX.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/MX.avif%3Ftr%3Dorig%26v%3D1) |
+| Micronesia | [https://media.atlys.com/b2c/clp/country-landing-page-videos/FM.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/FM.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/FM.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/FM.avif%3Ftr%3Dorig%26v%3D1) |
+| Moldova | [https://media.atlys.com/b2c/clp/country-landing-page-videos/MD.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/MD.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/MD.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/MD.avif%3Ftr%3Dorig%26v%3D1) |
+| Monaco | [https://media.atlys.com/b2c/clp/country-landing-page-videos/MC.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/MC.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/MC.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/MC.avif%3Ftr%3Dorig%26v%3D1) |
+| Mongolia | [https://media.atlys.com/b2c/clp/country-landing-page-videos/MN.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/MN.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/MN.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/MN.avif%3Ftr%3Dorig%26v%3D1) |
+| Montenegro | [https://media.atlys.com/b2c/clp/country-landing-page-videos/ME.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/ME.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/ME.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/ME.avif%3Ftr%3Dorig%26v%3D1) |
+| Montserrat | [https://media.atlys.com/b2c/clp/country-landing-page-videos/MS.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/MS.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/MS.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/MS.avif%3Ftr%3Dorig%26v%3D1) |
+| Morocco | [https://media.atlys.com/b2c/clp/country-landing-page-videos/MA.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/MA.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/MA.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/MA.avif%3Ftr%3Dorig%26v%3D1) |
+| Mozambique | [https://media.atlys.com/b2c/clp/country-landing-page-videos/MZ.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/MZ.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/MZ.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/MZ.avif%3Ftr%3Dorig%26v%3D1) |
+| Myanmar | [https://media.atlys.com/b2c/clp/country-landing-page-videos/MM.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/MM.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/MM.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/MM.avif%3Ftr%3Dorig%26v%3D1) |
+| Namibia | [https://media.atlys.com/b2c/clp/country-landing-page-videos/NA.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/NA.mp4%3Ftr%3Df-webm) | N/A |
+| Nauru | [https://media.atlys.com/b2c/clp/country-landing-page-videos/NR.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/NR.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/NR.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/NR.avif%3Ftr%3Dorig%26v%3D1) |
+| Nepal | [https://media.atlys.com/b2c/clp/country-landing-page-videos/NP.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/NP.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/NP.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/NP.avif%3Ftr%3Dorig%26v%3D1) |
+| Netherlands | [https://media.atlys.com/b2c/clp/country-landing-page-videos/NL.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/NL.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/NL.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/NL.avif%3Ftr%3Dorig%26v%3D1) |
+| New Caledonia | [https://media.atlys.com/b2c/clp/country-landing-page-videos/NC.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/NC.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/NC.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/NC.avif%3Ftr%3Dorig%26v%3D1) |
+| New Zealand | [https://media.atlys.com/b2c/clp/country-landing-page-videos/NZ.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/NZ.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/NZ.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/NZ.avif%3Ftr%3Dorig%26v%3D1) |
+| Nicaragua | [https://media.atlys.com/b2c/clp/country-landing-page-videos/NI.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/NI.mp4%3Ftr%3Df-webm) | N/A |
+| Niger | [https://media.atlys.com/b2c/clp/country-landing-page-videos/NE.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/NE.mp4%3Ftr%3Df-webm) | N/A |
+| Nigeria | [https://media.atlys.com/b2c/clp/country-landing-page-videos/NG.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/NG.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/NG.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/NG.avif%3Ftr%3Dorig%26v%3D1) |
+| Niue | [https://media.atlys.com/b2c/clp/country-landing-page-videos/NU.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/NU.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/NU.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/NU.avif%3Ftr%3Dorig%26v%3D1) |
+| North Korea | [https://media.atlys.com/b2c/clp/country-landing-page-videos/KP.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/KP.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/KP.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/KP.avif%3Ftr%3Dorig%26v%3D1) |
+| North Macedonia | [https://media.atlys.com/b2c/clp/country-landing-page-videos/MK.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/MK.mp4%3Ftr%3Df-webm) | N/A |
+| Northern Mariana Islands | [https://media.atlys.com/b2c/clp/country-landing-page-videos/MP.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/MP.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/MP.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/MP.avif%3Ftr%3Dorig%26v%3D1) |
+| Norway | [https://media.atlys.com/b2c/clp/country-landing-page-videos/NO.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/NO.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/NO.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/NO.avif%3Ftr%3Dorig%26v%3D1) |
+| Oman | [https://media.atlys.com/b2c/clp/country-landing-page-videos/OM.mp4?tr=f-webm](https://www.google.com/search?q=https://media.atlys.com/b2c/clp/country-landing-page-videos/OM.mp4%3Ftr%3Df-webm) | [https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/OM.avif?tr=orig&v=1](https://www.google.com/search?q=https://media.atlys.com/f_auto,w_800/b2c/Home%2520page/version-3/images/OM.avif%3Ftr%3Dorig%26v%3D1) |
+
+*(Note: Countries listed with `N/A` under Card Image URL are present with available videos in the video catalog, but are not present in the country card image dataset).*

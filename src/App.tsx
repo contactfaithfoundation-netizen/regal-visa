@@ -6,8 +6,8 @@ import { ProgressBar } from './components/ProgressBar';
 import { CountryVisaCard } from './components/CountryVisaCard';
 import { LiveCounterStripe } from './components/LiveCounterStripe';
 import { ExploreEventsSection } from './components/ExploreEventsSection';
-import { MalaysiaVisaPage } from './components/MalaysiaVisaPage';
-import { ArrowRight } from 'lucide-react';
+import { CountryVisaPage } from './components/CountryVisaPage';
+import { FaqSection } from './components/FaqSection';
 
 export default function App() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -17,7 +17,8 @@ export default function App() {
   const [isVisaOpen, setIsVisaOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCallOpen, setIsCallOpen] = useState(false);
-  const [currentView, setCurrentView] = useState<'home' | 'malaysia-visa'>('malaysia-visa');
+  const [currentView, setCurrentView] = useState<'home' | 'country-visa'>('home');
+  const [selectedCountry, setSelectedCountry] = useState<string>('Malaysia');
 
   // Viewport dimensions
   const [dimensions, setDimensions] = useState(() => ({
@@ -156,14 +157,35 @@ export default function App() {
   const baseLeft = isDesktop ? dimensions.vw * 0.48 : dimensions.vw * 0.48;
   const baseTop = isDesktop ? dimensions.vh - cardH - 56 : dimensions.vh - cardH - 24;
 
-  if (currentView === 'malaysia-visa') {
+  // Navigate to Explore & Events section smoothly from header plane button or country page
+  const handleNavigateToExplore = useCallback(() => {
+    if (currentView !== 'home') {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      setCurrentView('home');
+      setTimeout(() => {
+        const el = document.getElementById('explore-events');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 80);
+    } else {
+      const el = document.getElementById('explore-events');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [currentView]);
+
+  if (currentView === 'country-visa') {
     return (
-      <MalaysiaVisaPage
+      <CountryVisaPage
+        countryName={selectedCountry}
         onBackToHome={() => {
+          window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
           setCurrentView('home');
-          window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
         onOpenVisaModal={() => setIsVisaOpen(true)}
+        onNavigateToExplore={handleNavigateToExplore}
       />
     );
   }
@@ -185,6 +207,7 @@ export default function App() {
         onToggleCall={setIsCallOpen}
         onOpenVisaModal={() => setIsVisaOpen(true)}
         onResetToHero={handleResetToHero}
+        onNavigateToExplore={handleNavigateToExplore}
       />
 
       {/* HERO SECTION (100dvh) */}
@@ -202,8 +225,9 @@ export default function App() {
           viewportHeight={dimensions.vh}
           isVisaOpen={isVisaOpen}
           onToggleVisa={setIsVisaOpen}
-          onOpenVisaPage={() => {
-            setCurrentView('malaysia-visa');
+          onOpenVisaPage={(country) => {
+            setSelectedCountry(country || activeSlide.country);
+            setCurrentView('country-visa');
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
         />
@@ -411,34 +435,19 @@ export default function App() {
         <LiveCounterStripe />
       </section>
 
-      {/* EXPLORE & EVENTS VISA DISCOVERY SECTION */}
-      <ExploreEventsSection
-        onSelectCountry={(country) => {
-          if (country.toUpperCase().includes('MALAYSIA')) {
-            setCurrentView('malaysia-visa');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }
-        }}
-      />
-
-      {/* Floating View Switcher to quickly open the Malaysia Visa Detail Page */}
-      <div className="fixed bottom-5 right-5 z-40">
-        <button
-          onClick={() => {
-            setCurrentView('malaysia-visa');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+      {/* EXPLORE & EVENTS VISA DISCOVERY SECTION (Pure White Background) */}
+      <section className="w-full bg-white">
+        <ExploreEventsSection
+          onSelectCountry={(country) => {
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+            setSelectedCountry(country);
+            setCurrentView('country-visa');
           }}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#1D4ED8] hover:bg-[#1E40AF] text-white text-xs font-semibold shadow-[0_8px_30px_rgba(29,78,216,0.5)] border border-white/20 transition-all duration-300 hover:scale-105 cursor-pointer"
-        >
-          <img
-            src="https://flagcdn.com/w40/my.png"
-            alt="Malaysia"
-            className="w-4 h-3 rounded-[2px] object-cover"
-          />
-          <span>Malaysia Visa from Pakistan</span>
-          <ArrowRight className="w-3.5 h-3.5" />
-        </button>
-      </div>
+        />
+      </section>
+
+      {/* FREQUENTLY ASKED QUESTIONS SECTION (Pure White Background & Brand Colors) */}
+      <FaqSection className="border-t border-neutral-100" />
     </div>
   );
 }

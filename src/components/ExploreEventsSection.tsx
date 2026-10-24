@@ -11,6 +11,7 @@ interface VisaCardItem {
   fees: string | null;
   date: string;
   image: string;
+  fallbackImage?: string;
   documents: string;
   description?: string;
 }
@@ -24,7 +25,8 @@ const EXPLORE_DATA: VisaCardItem[] = [
     valid: '30 DAYS',
     fees: null,
     date: '20 Oct 2026, 8:52 PM',
-    image: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=800&q=80',
+    image: 'https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/MV.avif?tr=orig&v=1',
+    fallbackImage: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=800&q=80',
     documents: 'Passport Scan, Confirmed Hotel Booking, Return Flight Ticket, IMUGA Declaration',
     description: 'Direct tourist arrival endorsement with fast-track immigration clearance across Male Atoll.',
   },
@@ -36,7 +38,8 @@ const EXPLORE_DATA: VisaCardItem[] = [
     valid: '6 MONTHS',
     fees: 'PKR 17,119',
     date: '30 Oct 2026, 5:52 PM',
-    image: 'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?auto=format&fit=crop&w=800&q=80',
+    image: 'https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/MY.avif?tr=orig&v=1',
+    fallbackImage: 'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?auto=format&fit=crop&w=800&q=80',
     documents: 'Passport Bio Page, Digital Photo, Return Air Ticket, Proof of Accommodation',
     description: 'Official single/multiple entry tourist eVisa issued directly via the Malaysian Immigration Department.',
   },
@@ -48,7 +51,8 @@ const EXPLORE_DATA: VisaCardItem[] = [
     valid: '180 DAYS',
     fees: 'PKR 27,594',
     date: '2 Dec 2026, 5:44 PM',
-    image: 'https://images.unsplash.com/photo-1590089415225-401ed6f9db8e?auto=format&fit=crop&w=800&q=80',
+    image: 'https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/IE.avif?tr=orig&v=1',
+    fallbackImage: 'https://images.unsplash.com/photo-1590089415225-401ed6f9db8e?auto=format&fit=crop&w=800&q=80',
     documents: 'Income Tax Returns, 6 Months Bank Statement, Employment Letter, Passport',
     description: 'Standard Irish short stay "C" visitor visa processed through VFS Global and Dublin Consular.',
   },
@@ -60,7 +64,8 @@ const EXPLORE_DATA: VisaCardItem[] = [
     valid: '10 YEARS',
     fees: 'PKR 65,178',
     date: '22 Dec 2026, 5:33 PM',
-    image: 'https://images.unsplash.com/photo-1517090504586-fde19ea6066f?auto=format&fit=crop&w=800&q=80',
+    image: 'https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/CA.avif?tr=orig&v=1',
+    fallbackImage: 'https://images.unsplash.com/photo-1517090504586-fde19ea6066f?auto=format&fit=crop&w=800&q=80',
     documents: 'Bank Statement, Proof of Funds, Ties to Home Country, Passport, Biometrics',
     description: 'Multiple-entry Canadian Temporary Resident Visa (TRV) valid up to passport validity.',
   },
@@ -72,7 +77,8 @@ const EXPLORE_DATA: VisaCardItem[] = [
     valid: '180 DAYS',
     fees: 'PKR 89,497',
     date: '17 Nov 2026, 5:40 PM',
-    image: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=80',
+    image: 'https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/GB.avif?tr=orig&v=1',
+    fallbackImage: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=80',
     documents: 'Bank Statement, Employment Verification, Travel Itinerary, Valid Passport',
     description: 'UK Standard Visitor Visa with priority biometric submission and digital consular status.',
   },
@@ -84,7 +90,8 @@ const EXPLORE_DATA: VisaCardItem[] = [
     valid: '180 DAYS',
     fees: 'PKR 41,391',
     date: '25 Oct 2026, 5:51 AM',
-    image: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=800&q=80',
+    image: 'https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/MA.avif?tr=orig&v=1',
+    fallbackImage: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=800&q=80',
     documents: 'Passport Copy, Hotel Voucher, Round-trip Flight Reservation, Bank Letter',
     description: 'Kingdom of Morocco express tourist eVisa for tourism and commercial travel.',
   },
@@ -96,7 +103,8 @@ const EXPLORE_DATA: VisaCardItem[] = [
     valid: '6 MONTHS',
     fees: 'PKR 80,846',
     date: '12 Nov 2026, 5:31 PM',
-    image: 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=800&q=80',
+    image: 'https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/AU.avif?tr=orig&v=1',
+    fallbackImage: 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=800&q=80',
     documents: '6 Months Bank Statements, Tax Returns, Employment Letter, Passport Scan',
     description: 'Australian Subclass 600 Visitor visa submitted directly to the Department of Home Affairs.',
   },
@@ -108,7 +116,8 @@ const EXPLORE_DATA: VisaCardItem[] = [
     valid: '90 DAYS',
     fees: 'PKR 28,655',
     date: '2 Nov 2026, 5:44 PM',
-    image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=800&q=80',
+    image: 'https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/ID.avif?tr=orig&v=1',
+    fallbackImage: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=800&q=80',
     documents: 'Passport (min 6 mos validity), Return Flight Ticket, Digital Photo Scan',
     description: 'Official electronic visa (e-VOA / B211A) for Bali and all Indonesian provinces.',
   },
@@ -120,7 +129,8 @@ const EXPLORE_DATA: VisaCardItem[] = [
     valid: '90 DAYS',
     fees: 'PKR 84,893',
     date: '5 Nov 2026, 6:02 PM',
-    image: 'https://images.unsplash.com/photo-1565552645632-d725f8bfc19a?auto=format&fit=crop&w=800&q=80',
+    image: 'https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/SA.avif?tr=orig&v=1',
+    fallbackImage: 'https://images.unsplash.com/photo-1565552645632-d725f8bfc19a?auto=format&fit=crop&w=800&q=80',
     documents: 'Passport Copy, Passport-size Photo, Confirmed Flight, Vaccination Record',
     description: 'Official Nusuk tourist and Umrah electronic visa with included mandatory medical insurance.',
   },
@@ -132,7 +142,8 @@ const EXPLORE_DATA: VisaCardItem[] = [
     valid: '180 DAYS',
     fees: 'PKR 23,052',
     date: '21 Oct 2026, 9:05 AM',
-    image: 'https://images.unsplash.com/photo-1527838832700-5059252407fa?auto=format&fit=crop&w=800&q=80',
+    image: 'https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/TR.avif?tr=orig&v=1',
+    fallbackImage: 'https://images.unsplash.com/photo-1527838832700-5059252407fa?auto=format&fit=crop&w=800&q=80',
     documents: 'Valid Passport, Supporting Visa / Residence Permit (if applicable), Return Ticket',
     description: 'Republic of Türkiye official eVisa portal instant approval with multi-entry privileges.',
   },
@@ -147,7 +158,8 @@ const EVENTS_DATA: VisaCardItem[] = [
     valid: '30 DAYS',
     fees: 'PKR 245,000',
     date: '15 Jan 2027, 4:00 PM',
-    image: 'https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?auto=format&fit=crop&w=800&q=80',
+    image: 'https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/SA.avif?tr=orig&v=1',
+    fallbackImage: 'https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?auto=format&fit=crop&w=800&q=80',
     documents: 'Passport Bio Scan, White Background Photo, Nusuk Permit Application, Return Flight',
     description: 'Complete pilgrimage bundle with priority flights, 5-star hotel transfers and confirmed Nusuk permits.',
   },
@@ -159,7 +171,8 @@ const EVENTS_DATA: VisaCardItem[] = [
     valid: '5 YEARS',
     fees: 'PKR 52,000',
     date: '18 Dec 2026, 2:30 PM',
-    image: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=800&q=80',
+    image: 'https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/US.avif?tr=orig&v=1',
+    fallbackImage: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=800&q=80',
     documents: 'Valid Passport, DS-160 Confirmation, Match Ticket Voucher, Financial Proof',
     description: 'Consular express sports appointment with match ticket verification and multi-state travel clearance.',
   },
@@ -171,7 +184,8 @@ const EVENTS_DATA: VisaCardItem[] = [
     valid: '60 DAYS',
     fees: 'PKR 29,500',
     date: '24 Oct 2026, 11:00 AM',
-    image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80',
+    image: 'https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/AE.avif?tr=orig&v=1',
+    fallbackImage: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80',
     documents: 'Passport Copy, Delegate Pass Confirmation, Passport Photo, Hotel Booking',
     description: 'Dubai World Trade Centre official delegate visa with exhibition badges and airport VIP welcome.',
   },
@@ -183,7 +197,8 @@ const EVENTS_DATA: VisaCardItem[] = [
     valid: '90 DAYS',
     fees: 'PKR 38,000',
     date: '28 Oct 2026, 6:15 PM',
-    image: 'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=800&q=80',
+    image: 'https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/CN.avif?tr=orig&v=1',
+    fallbackImage: 'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=800&q=80',
     documents: 'Official Invitation (TE), Passport Bio Page, Business Registration, Flight Itinerary',
     description: 'Official invitation letter (TE) support with expedited consular fingerprint biometric submission.',
   },
@@ -195,7 +210,8 @@ const EVENTS_DATA: VisaCardItem[] = [
     valid: '90 DAYS',
     fees: 'PKR 44,900',
     date: '3 Nov 2026, 1:20 PM',
-    image: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80',
+    image: 'https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/PT.avif?tr=orig&v=1',
+    fallbackImage: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80',
     documents: 'Summit Attendee Ticket, 3 Months Bank Statement, Travel Insurance, Passport',
     description: 'Short stay Schengen business visa with European tech summit certification and hotel confirmations.',
   },
@@ -207,7 +223,8 @@ const EVENTS_DATA: VisaCardItem[] = [
     valid: '40 DAYS',
     fees: 'PKR 1,150,000',
     date: '10 Feb 2027, 9:00 AM',
-    image: 'https://images.unsplash.com/photo-1580418827493-f2b22c0a76cb?auto=format&fit=crop&w=800&q=80',
+    image: 'https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/SA.avif?tr=orig&v=1',
+    fallbackImage: 'https://images.unsplash.com/photo-1580418827493-f2b22c0a76cb?auto=format&fit=crop&w=800&q=80',
     documents: 'Nusuk Hajj Profile, Passport Copy, Meningitis Certificate, 4 Passport Photos',
     description: 'Turnkey authorized Hajj mission package with private air-conditioned tents in Mina and direct flights.',
   },
@@ -219,7 +236,8 @@ const EVENTS_DATA: VisaCardItem[] = [
     valid: '10 YEARS',
     fees: 'PKR 68,500',
     date: '19 Dec 2026, 3:45 PM',
-    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80',
+    image: 'https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/CA.avif?tr=orig&v=1',
+    fallbackImage: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80',
     documents: 'Conference Badge, Corporate Letter, Bank Statement, Passport Scan',
     description: 'Canadian business visitor status for tech founders, corporate delegates, and trade exhibitors.',
   },
@@ -231,7 +249,8 @@ const EVENTS_DATA: VisaCardItem[] = [
     valid: '180 DAYS',
     fees: 'PKR 92,000',
     date: '14 Nov 2026, 7:10 PM',
-    image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80',
+    image: 'https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/GB.avif?tr=orig&v=1',
+    fallbackImage: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80',
     documents: 'Accreditation Letter, Proof of Accommodation, UK Visa Form, Passport Scan',
     description: 'British fashion council guest visa arrangement with Heathrow fast-track arrival and concierge.',
   },
@@ -243,7 +262,8 @@ const EVENTS_DATA: VisaCardItem[] = [
     valid: '1 YEAR',
     fees: 'PKR 34,200',
     date: '22 Oct 2026, 10:30 AM',
-    image: 'https://images.unsplash.com/photo-1586724237569-f3d0c1dee8c6?auto=format&fit=crop&w=800&q=80',
+    image: 'https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/SA.avif?tr=orig&v=1',
+    fallbackImage: 'https://images.unsplash.com/photo-1586724237569-f3d0c1dee8c6?auto=format&fit=crop&w=800&q=80',
     documents: 'Passport Bio Page, Festival Ticket Confirmation, Digital Passport Photo',
     description: 'Multiple-entry tourism visa bundled with entertainment zone VIP access and festival bookings.',
   },
@@ -255,11 +275,35 @@ const EVENTS_DATA: VisaCardItem[] = [
     valid: '180 DAYS',
     fees: 'PKR 48,000',
     date: '8 Nov 2026, 4:15 PM',
-    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80',
+    image: 'https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/DE.avif?tr=orig&v=1',
+    fallbackImage: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80',
     documents: 'Messe Frankfurt Exhibitor Voucher, Company Chamber Registration, Passport',
     description: 'German consular business Schengen clearance with official Messe Frankfurt exhibitor registration.',
   },
 ];
+
+function getCleanCountryName(title: string): string {
+  const upper = title.toUpperCase();
+  if (upper.includes('MALAYSIA')) return 'Malaysia';
+  if (upper.includes('MALDIVES')) return 'Maldives';
+  if (upper.includes('IRELAND')) return 'Ireland';
+  if (upper.includes('CANADA') || upper.includes('TORONTO')) return 'Canada';
+  if (upper.includes('UNITED KINGDOM') || upper.includes('LONDON') || upper.includes('UK')) return 'United Kingdom';
+  if (upper.includes('MOROCCO')) return 'Morocco';
+  if (upper.includes('AUSTRALIA')) return 'Australia';
+  if (upper.includes('INDONESIA') || upper.includes('BALI')) return 'Indonesia';
+  if (upper.includes('SAUDI') || upper.includes('UMRAH') || upper.includes('HAJJ') || upper.includes('RIYADH')) return 'Saudi Arabia';
+  if (upper.includes('TÜRKIYE') || upper.includes('TURKEY') || upper.includes('ISTANBUL')) return 'Türkiye';
+  if (upper.includes('USA') || upper.includes('UNITED STATES') || upper.includes('AMERICA')) return 'United States';
+  if (upper.includes('DUBAI') || upper.includes('UAE') || upper.includes('GITEX')) return 'United Arab Emirates';
+  if (upper.includes('CHINA') || upper.includes('CANTON') || upper.includes('BEIJING')) return 'China';
+  if (upper.includes('LISBON') || upper.includes('PORTUGAL')) return 'Portugal';
+  if (upper.includes('FRANKFURT') || upper.includes('GERMANY')) return 'Germany';
+  if (upper.includes('SWITZERLAND') || upper.includes('SWISS')) return 'Switzerland';
+  if (upper.includes('JAPAN') || upper.includes('TOKYO')) return 'Japan';
+  if (upper.includes('SPAIN') || upper.includes('MADRID') || upper.includes('BARCELONA')) return 'Spain';
+  return title;
+}
 
 interface ExploreEventsSectionProps {
   onSelectCountry?: (country: string) => void;
@@ -278,9 +322,6 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
 
   // Mobile filter drawer state
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
-
-  // Selected card for quick modal inspection
-  const [selectedCard, setSelectedCard] = useState<VisaCardItem | null>(null);
 
   // Filter items
   const activeDataset = activeTab === 'explore' ? EXPLORE_DATA : EVENTS_DATA;
@@ -326,7 +367,8 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
   };
 
   return (
-    <section className="w-full bg-white py-8 sm:py-12 px-3.5 sm:px-8 xl:px-14 max-w-[1440px] mx-auto font-sans select-none">
+    <div className="w-full bg-white">
+      <section id="explore-events" className="w-full bg-white py-8 sm:py-12 px-3.5 sm:px-8 xl:px-14 max-w-[1440px] mx-auto font-sans select-none scroll-mt-20">
       {/* 
         Top Interactive Switcher (Explore vs Events) & Desktop Search Input
         Strictly omitting top-left logo and top-right flags/user profiles
@@ -644,29 +686,38 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
             filteredCards.map((card) => (
               <div
                 key={card.id}
-                onClick={() => setSelectedCard(card)}
-                className="flex flex-col group select-none"
+                onClick={() => {
+                  if (onSelectCountry) {
+                    onSelectCountry(getCleanCountryName(card.title));
+                  }
+                }}
+                className="flex flex-col group select-none cursor-pointer"
               >
                 {/* Upper Image Card with responsive mobile height */}
-                <div className="relative h-[235px] sm:h-[310px] lg:h-[350px] w-full rounded-[20px] sm:rounded-[24px] overflow-hidden shadow-sm group-hover:shadow-md transition-shadow duration-300 cursor-pointer bg-neutral-900">
+                <div className="relative h-[235px] sm:h-[310px] lg:h-[350px] w-full rounded-[20px] sm:rounded-[24px] overflow-hidden shadow-sm group-hover:shadow-md transition-shadow duration-300 cursor-pointer bg-neutral-100">
                   {/* Background Photo */}
                   <img
                     src={card.image}
                     alt={card.title}
+                    onError={(e) => {
+                      if (card.fallbackImage && e.currentTarget.src !== card.fallbackImage) {
+                        e.currentTarget.src = card.fallbackImage;
+                      }
+                    }}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                     loading="lazy"
                   />
 
                   {/* 
-                    Progressive Bottom Blur & Dark Gradient Overlay (CRITICAL)
+                    Progressive Bottom Blur with lightened translucent gradient
                     Smooth desktop upward-slide reveal:
                     - Expands height from h-[52%] to lg:group-hover:h-[82%]
-                    - Deeper dark gradient from-black/95 via-black/80 to-transparent
+                    - Lightened gradient to eliminate heavy darkness while maintaining blur aesthetic
                   */}
                   <div className="absolute inset-x-0 bottom-0 h-[52%] lg:group-hover:h-[82%] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] flex flex-col justify-end p-3 sm:p-4">
-                    {/* Layer 1: Blur Mask with Gradient to transparent */}
+                    {/* Layer 1: Frosted Blur Mask with lighter, reduced darkness gradient */}
                     <div
-                      className="absolute inset-0 backdrop-blur-md bg-gradient-to-t from-black/95 via-black/80 to-transparent pointer-events-none"
+                      className="absolute inset-0 backdrop-blur-md bg-gradient-to-t from-black/45 via-black/20 to-transparent pointer-events-none"
                       style={{
                         WebkitMaskImage: 'linear-gradient(to top, rgba(0,0,0,1) 65%, rgba(0,0,0,0) 100%)',
                         maskImage: 'linear-gradient(to top, rgba(0,0,0,1) 65%, rgba(0,0,0,0) 100%)',
@@ -686,12 +737,12 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
                       </div>
 
                       {/* Destination Name */}
-                      <h4 className="font-['Playfair_Display',serif] text-[13px] sm:text-[15px] font-semibold uppercase tracking-[0.04em] text-white text-center leading-tight drop-shadow-xs">
+                      <h4 className="font-['Playfair_Display',serif] text-[13px] sm:text-[15px] font-semibold uppercase tracking-[0.04em] text-white text-center leading-tight drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)]">
                         {card.title}
                       </h4>
 
                       {/* Horizontal Divider */}
-                      <div className="w-full h-[1px] bg-white/15 my-2 sm:my-2.5" />
+                      <div className="w-full h-[1px] bg-white/25 my-2 sm:my-2.5" />
 
                       {/* 
                         Bottom Metadata Row:
@@ -701,20 +752,20 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
                       <div className="w-full flex items-end justify-between text-white">
                         {/* TYPE */}
                         <div className="text-left flex flex-col">
-                          <span className="text-[7.5px] sm:text-[8.5px] uppercase tracking-wider text-white/55 mb-0.5 leading-none">
+                          <span className="text-[7.5px] sm:text-[8.5px] uppercase tracking-wider text-white/80 mb-0.5 leading-none drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]">
                             TYPE
                           </span>
-                          <span className="text-[9.5px] sm:text-[10.5px] font-bold tracking-tight text-white leading-tight">
+                          <span className="text-[9.5px] sm:text-[10.5px] font-bold tracking-tight text-white leading-tight drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]">
                             {card.type}
                           </span>
                         </div>
 
                         {/* VALID: text-right on mobile (<768px), text-center on md+ */}
                         <div className="text-right md:text-center flex flex-col">
-                          <span className="text-[7.5px] sm:text-[8.5px] uppercase tracking-wider text-white/55 mb-0.5 leading-none">
+                          <span className="text-[7.5px] sm:text-[8.5px] uppercase tracking-wider text-white/80 mb-0.5 leading-none drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]">
                             VALID
                           </span>
-                          <span className="text-[9.5px] sm:text-[10.5px] font-bold tracking-tight text-white leading-tight">
+                          <span className="text-[9.5px] sm:text-[10.5px] font-bold tracking-tight text-white leading-tight drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]">
                             {card.valid}
                           </span>
                         </div>
@@ -761,7 +812,9 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
                             type="button"
                             onClick={(e) => {
                               e.stopPropagation();
-                              alert(`Emergency consular assistance initiated for ${card.title}. A duty officer is being assigned.`);
+                              if (onSelectCountry) {
+                                onSelectCountry(getCleanCountryName(card.title));
+                              }
                             }}
                             className="w-full py-1.5 px-3 rounded-full bg-white/[0.08] hover:bg-white/[0.14] border border-white/10 flex items-center justify-center gap-2 transition cursor-pointer active:scale-95 shadow-xs"
                           >
@@ -944,145 +997,8 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
         )}
       </AnimatePresence>
 
-      {/* Interactive Visa / Event Inspection Modal */}
-      <AnimatePresence>
-        {selectedCard && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setSelectedCard(null)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-xs cursor-pointer"
-            />
-
-            {/* Modal Dialog */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 16 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 16 }}
-              transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-              className="relative w-full max-w-lg bg-white rounded-3xl overflow-hidden shadow-2xl z-10 text-neutral-900"
-            >
-              {/* Header Image Cover */}
-              <div className="relative h-48 w-full">
-                <img
-                  src={selectedCard.image}
-                  alt={selectedCard.title}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-                <button
-                  onClick={() => setSelectedCard(null)}
-                  className="absolute top-4 right-4 w-8 h-8 rounded-full bg-black/40 hover:bg-black/70 text-white flex items-center justify-center transition cursor-pointer"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-                <div className="absolute bottom-4 left-5 right-5 flex items-center justify-between text-white">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 rounded-full overflow-hidden border border-white/30 shadow-xs shrink-0">
-                      <img
-                        src={`https://flagcdn.com/w80/${selectedCard.flagCode.toLowerCase()}.png`}
-                        alt=""
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <h3 className="font-['Playfair_Display',serif] text-xl font-bold uppercase tracking-wide">
-                      {selectedCard.title}
-                    </h3>
-                  </div>
-                  <span className="px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-[11px] font-bold uppercase tracking-wider">
-                    {selectedCard.type}
-                  </span>
-                </div>
-              </div>
-
-              {/* Details Body */}
-              <div className="p-6 space-y-4">
-                <p className="text-xs text-neutral-600 leading-relaxed">
-                  {selectedCard.description}
-                </p>
-
-                {/* Documents Needed Card in Modal */}
-                <div className="p-3.5 rounded-2xl bg-blue-50/60 border border-blue-100/80">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#1D4ED8]">Required Documents</span>
-                  <p className="text-xs font-semibold text-neutral-800 mt-1 leading-relaxed">
-                    {selectedCard.documents}
-                  </p>
-                </div>
-
-                {/* Info Grid */}
-                <div className="grid grid-cols-3 gap-2.5 p-3 rounded-2xl bg-neutral-50 border border-neutral-100 text-center">
-                  <div>
-                    <span className="text-[10px] uppercase tracking-wider text-neutral-400">Validity</span>
-                    <p className="text-xs font-bold text-neutral-900 mt-0.5">{selectedCard.valid}</p>
-                  </div>
-                  <div>
-                    <span className="text-[10px] uppercase tracking-wider text-neutral-400">Ready By</span>
-                    <p className="text-xs font-bold text-neutral-900 mt-0.5">{selectedCard.date.split(',')[0]}</p>
-                  </div>
-                  <div>
-                    <span className="text-[10px] uppercase tracking-wider text-neutral-400">Fee</span>
-                    <p className="text-xs font-bold text-neutral-900 mt-0.5">{selectedCard.fees || 'Complimentary'}</p>
-                  </div>
-                </div>
-
-                {/* Highlights */}
-                <div className="space-y-2 text-xs">
-                  <div className="flex items-center gap-2 text-neutral-700">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                    <span>Official consular clearance with certified digital verification</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-neutral-700">
-                    <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-                    <span>100% Guaranteed document review by accredited case barristers</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-neutral-700">
-                    <Clock className="w-4 h-4 text-emerald-600 shrink-0" />
-                    <span>Priority dispatch with real-time tracking status notifications</span>
-                  </div>
-                </div>
-
-                {/* Action button */}
-                <div className="pt-2 flex flex-col gap-2">
-                  {selectedCard.title.toUpperCase().includes('MALAYSIA') && onSelectCountry && (
-                    <button
-                      onClick={() => {
-                        onSelectCountry('MALAYSIA');
-                        setSelectedCard(null);
-                      }}
-                      className="w-full py-3 rounded-xl bg-[#1D4ED8] hover:bg-[#1E40AF] text-white text-xs font-bold tracking-wide uppercase flex items-center justify-center gap-2 transition cursor-pointer shadow-md active:scale-[0.99]"
-                    >
-                      <span>View Full Malaysia Visa Detail Page</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </button>
-                  )}
-                  <button
-                    onClick={() => {
-                      if (selectedCard.title.toUpperCase().includes('MALAYSIA') && onSelectCountry) {
-                        onSelectCountry('MALAYSIA');
-                        setSelectedCard(null);
-                        return;
-                      }
-                      alert(`Application initiated for ${selectedCard.title}. Our concierge team will reach out immediately.`);
-                      setSelectedCard(null);
-                    }}
-                    className={`w-full py-2.5 rounded-xl text-xs font-bold tracking-wide uppercase flex items-center justify-center gap-2 transition cursor-pointer shadow-sm active:scale-[0.99] ${
-                      selectedCard.title.toUpperCase().includes('MALAYSIA')
-                        ? 'bg-neutral-100 hover:bg-neutral-200 text-neutral-800'
-                        : 'bg-[#1D4ED8] hover:bg-[#1E40AF] text-white'
-                    }`}
-                  >
-                    <span>Proceed with {selectedCard.title} Application</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+      {/* End of Filter Drawer */}
     </section>
+  </div>
   );
 };

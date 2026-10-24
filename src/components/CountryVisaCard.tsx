@@ -33,6 +33,8 @@ export const CountryVisaCard: React.FC<CountryVisaCardProps> = ({
   const [visaModalOpen, setVisaModalOpen] = useState(false);
   const [visaSubmitted, setVisaSubmitted] = useState(false);
 
+  const isDesktop = typeof window !== 'undefined' ? window.innerWidth >= 1024 : true;
+
   const currentFlagCode =
     flagCode || COUNTRY_FLAGS[country]?.code || 'ch';
 
@@ -46,41 +48,38 @@ export const CountryVisaCard: React.FC<CountryVisaCardProps> = ({
 
   return (
     <>
-      {/* Expandable Visa Card Widget - Horizontally centered in header alignment, anchored directly 14px above floating cards */}
+      {/* Expandable Visa Card Widget - Anchored by top position so header stays stable and expansion is silky smooth and calm */}
       <div
         style={{
           position: 'absolute',
-          bottom: viewportHeight - baseTop + 14,
+          top: baseTop - (isDesktop ? 64 : 56),
           left: '50%',
           transform: 'translateX(-50%)',
           zIndex: 40,
         }}
-        className="w-[270px] sm:w-[290px] max-w-[calc(100vw-32px)] select-none pointer-events-auto"
+        className="w-[275px] sm:w-[300px] max-w-[calc(100vw-32px)] select-none pointer-events-auto"
       >
-        {/* Part A: Main Upper Card */}
-        <div
-          onClick={() => {
-            // Clicking the card header or card collapses it when open, or opens it when closed
-            onToggleVisa(!isVisaOpen);
-          }}
-          className="bg-white/95 backdrop-blur-md border border-white/80 rounded-[20px] shadow-[0_12px_32px_rgba(0,0,0,0.20)] overflow-hidden transition-colors duration-200 cursor-pointer hover:bg-white"
-        >
-          {/* Header Row: Always visible */}
-          <div className="px-4 py-3 flex items-center justify-between gap-3">
+        {/* Unified Card Container with stable geometry */}
+        <div className="bg-white/98 backdrop-blur-md border border-white/85 rounded-[22px] shadow-[0_12px_36px_rgba(0,0,0,0.20)] overflow-hidden transition-shadow duration-200">
+          {/* Header Row: Always visible and anchored without shifting up/down */}
+          <div
+            onClick={() => onToggleVisa(!isVisaOpen)}
+            className="px-4 py-3 flex items-center justify-between gap-3 cursor-pointer hover:bg-neutral-50/60 transition-colors"
+          >
             <div className="flex flex-col">
-              <span className="text-[10px] font-medium text-[#8E96A6] leading-none mb-1">
+              <span className="text-[10px] font-semibold text-[#8E96A6] uppercase tracking-wider leading-none mb-1">
                 Visas
               </span>
 
-              {/* Dynamic Animated Country Name and Flag with Ultra-Smooth Dissolve & Vertical Glide */}
+              {/* Dynamic Animated Country Name and Flag */}
               <div className="relative h-[24px] min-w-[130px] overflow-hidden flex items-center">
                 <AnimatePresence mode="wait" initial={false}>
                   <motion.div
                     key={country}
-                    initial={{ opacity: 0, y: 6, filter: 'blur(3px)' }}
-                    animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                    exit={{ opacity: 0, y: -6, filter: 'blur(3px)' }}
-                    transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.22, ease: 'easeOut' }}
                     className="flex items-center gap-2"
                   >
                     <div className="w-[20px] h-[14px] rounded-[3px] overflow-hidden shadow-xs border border-black/15 shrink-0 bg-slate-100 flex items-center justify-center">
@@ -91,7 +90,7 @@ export const CountryVisaCard: React.FC<CountryVisaCardProps> = ({
                         loading="eager"
                       />
                     </div>
-                    <h4 className="font-sans text-[16px] font-semibold text-[#141821] leading-tight tracking-tight whitespace-nowrap">
+                    <h4 className="font-sans text-[15px] sm:text-[16px] font-bold text-[#141821] leading-tight tracking-tight whitespace-nowrap">
                       {country}
                     </h4>
                   </motion.div>
@@ -99,106 +98,64 @@ export const CountryVisaCard: React.FC<CountryVisaCardProps> = ({
               </div>
             </div>
 
-            {/* Right Trigger Button with soft crossfade */}
-            <div className="relative h-7 flex items-center justify-end">
-              <AnimatePresence mode="wait" initial={false}>
-                {!isVisaOpen ? (
-                  <motion.button
-                    key="open-btn"
-                    initial={{ opacity: 0, scale: 0.92 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.92 }}
-                    transition={{ duration: 0.16, ease: 'easeOut' }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onToggleVisa(true);
-                    }}
-                    aria-label="Expand Visa Details"
-                    className="h-7 px-3 rounded-full bg-[#0B0F17] hover:bg-[#1C2230] text-white text-[11px] font-medium flex items-center gap-1.5 transition-colors active:scale-95 cursor-pointer shrink-0 shadow-sm"
-                  >
-                    <span>Visa Details</span>
-                    <Plus className="w-3 h-3 text-white/90 stroke-[2.5]" />
-                  </motion.button>
-                ) : (
-                  <motion.button
-                    key="close-btn"
-                    initial={{ opacity: 0, scale: 0.92 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.92 }}
-                    transition={{ duration: 0.16, ease: 'easeOut' }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onToggleVisa(false);
-                    }}
-                    aria-label="Collapse Visa Details"
-                    className="w-7 h-7 rounded-full bg-[#0B0F17] hover:bg-[#1E2433] text-white flex items-center justify-center transition-colors hover:scale-105 active:scale-95 cursor-pointer shrink-0 shadow-sm"
-                  >
-                    <X className="w-3.5 h-3.5 stroke-[2.2]" />
-                  </motion.button>
-                )}
-              </AnimatePresence>
-            </div>
-          </div>
-
-          {/* Expandable Body Copy - Zero-stutter continuous height transition with overflow-hidden */}
-          <motion.div
-            initial={false}
-            animate={{
-              height: isVisaOpen ? 'auto' : 0,
-              opacity: isVisaOpen ? 1 : 0,
-            }}
-            transition={{
-              duration: 0.38,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-            className="overflow-hidden"
-          >
-            <div className="px-4 pb-3.5 pt-0.5">
-              <div className="w-full h-[1px] bg-black/6 mb-2.5" />
-              <p className="text-[11.5px] leading-[1.48] text-[#6C7484] font-normal">
-                We help you apply for urgent visas to{' '}
-                <span className="font-semibold text-[#141821]">{country}</span>
-                , the countries of the Schengen area, the USA, China, Japan, Australia, Canada,
-                Great Britain and India. We guarantee that you will receive a visa, even if you have
-                previously been refused.
-              </p>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Part B: Detached Bottom Price & CTA Card (Synchronized height collapse to prevent stutter) */}
-        <motion.div
-          initial={false}
-          animate={{
-            height: isVisaOpen ? 'auto' : 0,
-            opacity: isVisaOpen ? 1 : 0,
-            marginTop: isVisaOpen ? 5 : 0,
-          }}
-          transition={{
-            duration: 0.38,
-            ease: [0.16, 1, 0.3, 1],
-          }}
-          className="overflow-hidden"
-        >
-          <div className="bg-white/95 backdrop-blur-md rounded-[18px] px-4 py-3 shadow-[0_14px_32px_rgba(0,0,0,0.22)] border border-white/80 flex flex-col gap-2.5">
-            {/* Price Row */}
-            <div className="flex items-center justify-between">
-              <span className="text-[12px] font-medium text-[#6C7484]">Price from:</span>
-              <span className="font-sans text-[15px] font-bold text-[#141821] tracking-tight">
-                10.000$
-              </span>
-            </div>
-
-            {/* Primary Action CTA */}
+            {/* Right Trigger Button with clean state toggle */}
             <button
-              onClick={handleOpenVisaPage}
-              className="w-full h-8 px-3.5 rounded-[11px] bg-[#0B0F17] hover:bg-[#1D2434] text-white text-[11px] font-medium tracking-[0.01em] flex items-center justify-between transition group cursor-pointer shadow-sm active:scale-[0.99]"
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleVisa(!isVisaOpen);
+              }}
+              aria-label={isVisaOpen ? 'Collapse Visa Details' : 'Expand Visa Details'}
+              className="h-7 px-3 rounded-full bg-[#1C232D] hover:bg-[#141A22] text-white text-[11px] font-semibold flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer shrink-0 shadow-xs"
             >
-              <span>Check Visa Requirements</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-white/80 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              <span>{isVisaOpen ? 'Close' : 'Visa Details'}</span>
+              {isVisaOpen ? (
+                <X className="w-3.5 h-3.5 stroke-[2.2]" />
+              ) : (
+                <Plus className="w-3 h-3 text-white/90 stroke-[2.5]" />
+              )}
             </button>
           </div>
-        </motion.div>
+
+          {/* Calm, Smooth Expandable Content (Zero layout bouncing or vertical jitter) */}
+          <AnimatePresence initial={false}>
+            {isVisaOpen && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{
+                  duration: 0.32,
+                  ease: [0.25, 1, 0.35, 1],
+                }}
+                className="overflow-hidden"
+              >
+                <div className="px-4 pb-4 pt-1 border-t border-neutral-100 space-y-3">
+                  <p className="text-[11.5px] leading-[1.5] text-[#6C7484] font-normal pt-1">
+                    Direct consular verification for{' '}
+                    <span className="font-bold text-[#1C232D]">{country}</span>.
+                    Fast-track e-visa approvals with guaranteed delivery time for Pakistani citizens.
+                  </p>
+
+                  <div className="p-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl flex items-center justify-between">
+                    <span className="text-[11.5px] font-medium text-[#6C7484]">Official Package:</span>
+                    <span className="font-sans text-[14px] font-extrabold text-[#1C232D]">
+                      PKR 17,200
+                    </span>
+                  </div>
+
+                  <button
+                    onClick={handleOpenVisaPage}
+                    className="w-full py-2.5 px-3.5 rounded-xl bg-[#1C232D] hover:bg-[#141A22] text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition shadow-xs active:scale-[0.98] cursor-pointer"
+                  >
+                    <span>Check Visa Requirements</span>
+                    <ArrowUpRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
 
       {/* Full Visa Requirements Page Modal */}
