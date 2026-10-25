@@ -18,6 +18,32 @@ interface VisaCardItem {
 
 const EXPLORE_DATA: VisaCardItem[] = [
   {
+    id: 'exp-gb',
+    title: 'UNITED KINGDOM',
+    flagCode: 'gb',
+    type: 'STICKER',
+    valid: '180 DAYS',
+    fees: 'PKR 89,497',
+    date: '17 Nov 2026, 5:40 PM',
+    image: 'https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/GB.avif?tr=orig&v=1',
+    fallbackImage: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=80',
+    documents: 'Bank Statement, Employment Verification, Travel Itinerary, Valid Passport',
+    description: 'UK Standard Visitor Visa with priority biometric submission and digital consular status.',
+  },
+  {
+    id: 'exp-us',
+    title: 'UNITED STATES',
+    flagCode: 'us',
+    type: 'STICKER',
+    valid: '5 YEARS',
+    fees: 'PKR 54,000',
+    date: '18 Dec 2026, 2:30 PM',
+    image: 'https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/US.avif?tr=orig&v=1',
+    fallbackImage: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=800&q=80',
+    documents: 'Valid Passport, DS-160 Form Confirmation, Mock Interview Review, Financial Proof',
+    description: 'B1/B2 Visitor Visa with appointment slot monitoring, DS-160 guidance, and embassy interview prep.',
+  },
+  {
     id: 'exp-1',
     title: 'MALDIVES',
     flagCode: 'mv',
@@ -70,19 +96,6 @@ const EXPLORE_DATA: VisaCardItem[] = [
     description: 'Multiple-entry Canadian Temporary Resident Visa (TRV) valid up to passport validity.',
   },
   {
-    id: 'exp-5',
-    title: 'UNITED KINGDOM',
-    flagCode: 'gb',
-    type: 'E-VISA',
-    valid: '180 DAYS',
-    fees: 'PKR 89,497',
-    date: '17 Nov 2026, 5:40 PM',
-    image: 'https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/GB.avif?tr=orig&v=1',
-    fallbackImage: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=80',
-    documents: 'Bank Statement, Employment Verification, Travel Itinerary, Valid Passport',
-    description: 'UK Standard Visitor Visa with priority biometric submission and digital consular status.',
-  },
-  {
     id: 'exp-6',
     title: 'MOROCCO',
     flagCode: 'ma',
@@ -122,19 +135,6 @@ const EXPLORE_DATA: VisaCardItem[] = [
     description: 'Official electronic visa (e-VOA / B211A) for Bali and all Indonesian provinces.',
   },
   {
-    id: 'exp-9',
-    title: 'SAUDI ARABIA - UMRAH',
-    flagCode: 'sa',
-    type: 'E-VISA',
-    valid: '90 DAYS',
-    fees: 'PKR 84,893',
-    date: '5 Nov 2026, 6:02 PM',
-    image: 'https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/SA.avif?tr=orig&v=1',
-    fallbackImage: 'https://images.unsplash.com/photo-1565552645632-d725f8bfc19a?auto=format&fit=crop&w=800&q=80',
-    documents: 'Passport Copy, Passport-size Photo, Confirmed Flight, Vaccination Record',
-    description: 'Official Nusuk tourist and Umrah electronic visa with included mandatory medical insurance.',
-  },
-  {
     id: 'exp-10',
     title: 'TÜRKIYE',
     flagCode: 'tr',
@@ -151,17 +151,17 @@ const EXPLORE_DATA: VisaCardItem[] = [
 
 const EVENTS_DATA: VisaCardItem[] = [
   {
-    id: 'ev-1',
-    title: 'RAMADAN UMRAH 2027',
-    flagCode: 'sa',
-    type: 'FLIGHT + VISA',
-    valid: '30 DAYS',
-    fees: 'PKR 245,000',
-    date: '15 Jan 2027, 4:00 PM',
-    image: 'https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/SA.avif?tr=orig&v=1',
-    fallbackImage: 'https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?auto=format&fit=crop&w=800&q=80',
-    documents: 'Passport Bio Scan, White Background Photo, Nusuk Permit Application, Return Flight',
-    description: 'Complete pilgrimage bundle with priority flights, 5-star hotel transfers and confirmed Nusuk permits.',
+    id: 'ev-8',
+    title: 'LONDON FASHION WEEK',
+    flagCode: 'gb',
+    type: 'VISIT + FLIGHT',
+    valid: '180 DAYS',
+    fees: 'PKR 92,000',
+    date: '14 Nov 2026, 7:10 PM',
+    image: 'https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/GB.avif?tr=orig&v=1',
+    fallbackImage: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80',
+    documents: 'Accreditation Letter, Proof of Accommodation, UK Visa Form, Passport Scan',
+    description: 'British fashion council guest visa arrangement with Heathrow fast-track arrival and concierge.',
   },
   {
     id: 'ev-2',
@@ -175,6 +175,19 @@ const EVENTS_DATA: VisaCardItem[] = [
     fallbackImage: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=800&q=80',
     documents: 'Valid Passport, DS-160 Confirmation, Match Ticket Voucher, Financial Proof',
     description: 'Consular express sports appointment with match ticket verification and multi-state travel clearance.',
+  },
+  {
+    id: 'ev-1',
+    title: 'RAMADAN UMRAH 2027',
+    flagCode: 'sa',
+    type: 'FLIGHT + VISA',
+    valid: '30 DAYS',
+    fees: 'PKR 245,000',
+    date: '15 Jan 2027, 4:00 PM',
+    image: 'https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/SA.avif?tr=orig&v=1',
+    fallbackImage: 'https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?auto=format&fit=crop&w=800&q=80',
+    documents: 'Passport Bio Scan, White Background Photo, Nusuk Permit Application, Return Flight',
+    description: 'Complete pilgrimage bundle with priority flights, 5-star hotel transfers and confirmed Nusuk permits.',
   },
   {
     id: 'ev-3',
@@ -240,19 +253,6 @@ const EVENTS_DATA: VisaCardItem[] = [
     fallbackImage: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80',
     documents: 'Conference Badge, Corporate Letter, Bank Statement, Passport Scan',
     description: 'Canadian business visitor status for tech founders, corporate delegates, and trade exhibitors.',
-  },
-  {
-    id: 'ev-8',
-    title: 'LONDON FASHION WEEK',
-    flagCode: 'gb',
-    type: 'VISIT + FLIGHT',
-    valid: '180 DAYS',
-    fees: 'PKR 92,000',
-    date: '14 Nov 2026, 7:10 PM',
-    image: 'https://media.atlys.com/f_auto,w_800/b2c/Home%20page/version-3/images/GB.avif?tr=orig&v=1',
-    fallbackImage: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80',
-    documents: 'Accreditation Letter, Proof of Accommodation, UK Visa Form, Passport Scan',
-    description: 'British fashion council guest visa arrangement with Heathrow fast-track arrival and concierge.',
   },
   {
     id: 'ev-9',
@@ -334,6 +334,15 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
     });
   }, [activeDataset, searchQuery, typeFilter]);
 
+  // Check whether the featured horizontally long Kaaba card should be shown
+  const showWideCard = useMemo(() => {
+    if (activeTab !== 'explore') return false;
+    const q = searchQuery.toLowerCase().trim();
+    const matchesSearch = !q || 'saudi arabia umrah qaba kaaba makkah mecca nusuk'.includes(q);
+    const matchesType = typeFilter === 'All Visa Types' || typeFilter.toUpperCase().includes('E-VISA');
+    return matchesSearch && matchesType;
+  }, [activeTab, searchQuery, typeFilter]);
+
   const toggleDropdown = (key: string) => {
     setActiveDropdown((prev) => (prev === key ? null : key));
   };
@@ -365,6 +374,154 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
       }
     }
   };
+
+  // Horizontally long card (spans 2 columns on mobile, 2 columns on desktop) with sharp Kaaba on the left and blurred panel on the right
+  const renderWideKaabaCard = () => (
+    <div
+      key="wide-kaaba-card"
+      onClick={() => {
+        if (onSelectCountry) {
+          onSelectCountry('Saudi Arabia');
+        }
+      }}
+      className="col-span-2 md:col-span-2 lg:col-span-2 flex flex-col group select-none cursor-pointer"
+    >
+      {/* Upper Image Card with responsive height matching other cards */}
+      <div className="relative h-[235px] sm:h-[310px] lg:h-[350px] w-full rounded-[20px] sm:rounded-[24px] overflow-hidden shadow-sm group-hover:shadow-md transition-shadow duration-300 cursor-pointer bg-neutral-900 flex">
+        {/* Background Photo: Main Kaaba (Qaba) on the left, continuing behind the blurred right panel (mirrored horizontally) */}
+        <img
+          src="https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?auto=format&fit=crop&w=1400&q=85"
+          alt="Kaaba Makkah - Saudi Arabia"
+          className="absolute inset-0 w-full h-full object-cover object-center -scale-x-100 group-hover:-scale-x-105 group-hover:scale-y-105 transition-transform duration-700 ease-out"
+          loading="lazy"
+        />
+
+        {/* Subtle shadow gradient on left edge */}
+        <div className="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-black/40 to-transparent pointer-events-none" />
+
+        {/* 
+          Right Blurred Panel:
+          - Frosted glass overlay fading in HORIZONTALLY from left to right (feathered mask, no harsh vertical border)
+          - Contains Flag, Destination Name, Metadata, Inside Fees & Visa Delivery Date (in a single line), and Desktop Hoverstate
+        */}
+        <div className="absolute right-0 inset-y-0 w-[60%] sm:w-[54%] lg:w-[52%] flex flex-col justify-end p-2.5 sm:p-4 text-white overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]">
+          {/* Layer 1: Frosted Blur Mask with crisp 4px blur radius fading in horizontally from left to right */}
+          <div
+            className="absolute inset-0 backdrop-blur-[4px] bg-gradient-to-r from-transparent via-black/40 to-black/80 pointer-events-none"
+            style={{
+              backdropFilter: 'blur(4px)',
+              WebkitBackdropFilter: 'blur(4px)',
+              WebkitMaskImage: 'linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,0.35) 15%, rgba(0,0,0,0.85) 30%, rgba(0,0,0,1) 45%)',
+              maskImage: 'linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,0.35) 15%, rgba(0,0,0,0.85) 30%, rgba(0,0,0,1) 45%)',
+            }}
+          />
+
+          {/* Layer 2: Content inside blurred zone */}
+          <div className="relative z-10 flex flex-col items-center w-full justify-end">
+            {/* Country Flag Circle */}
+            <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full overflow-hidden border border-white/20 shadow-sm mb-1 sm:mb-1.5 flex items-center justify-center shrink-0 bg-white/10">
+              <img
+                src="https://flagcdn.com/w80/sa.png"
+                alt="Saudi Arabia flag"
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
+
+            {/* Destination Name */}
+            <h4 className="font-['Playfair_Display',serif] text-[13px] sm:text-[15px] font-semibold uppercase tracking-[0.04em] text-white text-center leading-tight drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)]">
+              SAUDI ARABIA
+            </h4>
+            <span className="text-[8px] sm:text-[9.5px] uppercase tracking-wider text-emerald-300 font-semibold mt-0.5 leading-tight">
+              UMRAH &amp; TOURIST
+            </span>
+
+            {/* Horizontal Divider */}
+            <div className="w-full h-[1px] bg-white/25 my-1.5 sm:my-2" />
+
+            {/* Metadata Row: TYPE, VALID, FEES */}
+            <div className="w-full flex items-end justify-between text-white">
+              <div className="text-left flex flex-col">
+                <span className="text-[7.5px] sm:text-[8.5px] uppercase tracking-wider text-white/80 mb-0.5 leading-none">
+                  TYPE
+                </span>
+                <span className="text-[9.5px] sm:text-[10.5px] font-bold tracking-tight text-white leading-tight">
+                  E-VISA
+                </span>
+              </div>
+              <div className="text-center flex flex-col">
+                <span className="text-[7.5px] sm:text-[8.5px] uppercase tracking-wider text-white/80 mb-0.5 leading-none">
+                  VALID
+                </span>
+                <span className="text-[9.5px] sm:text-[10.5px] font-bold tracking-tight text-white leading-tight">
+                  90 DAYS
+                </span>
+              </div>
+              <div className="text-right flex flex-col">
+                <span className="text-[7.5px] sm:text-[8.5px] uppercase tracking-wider text-white/80 mb-0.5 leading-none">
+                  FEES
+                </span>
+                <span className="text-[9.5px] sm:text-[10.5px] font-bold tracking-tight text-white leading-tight">
+                  PKR 84,893
+                </span>
+              </div>
+            </div>
+
+            {/* 
+              Visa Delivery Date & Fast-Track Direct E-Visa in ONE line without line breaks (INSIDE the card)
+            */}
+            <div className="w-full mt-2 pt-1.5 border-t border-white/20 flex items-center justify-between gap-1 text-white whitespace-nowrap text-[8px] sm:text-[9.5px] lg:text-[10px]">
+              <div className="flex items-center gap-1 min-w-0">
+                <span className="text-white/70 font-normal">Get your visa by</span>
+                <span className="font-bold text-white">28 Oct, 6:00 PM</span>
+              </div>
+              <div className="flex items-center gap-1 shrink-0">
+                <span className="font-bold text-[#86EFAC]">Direct E-Visa</span>
+              </div>
+            </div>
+
+            {/* 
+              Desktop Hoverstate Expansion (identical to other cards):
+              Reveals documents needed + emergency assistance button
+            */}
+            <div className="w-full grid grid-rows-[0fr] lg:group-hover:grid-rows-[1fr] opacity-0 lg:group-hover:opacity-100 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]">
+              <div className="overflow-hidden min-h-0 w-full flex flex-col">
+                <div className="w-full h-[1px] bg-white/15 my-2" />
+                <span className="text-[9px] font-semibold uppercase tracking-[0.08em] text-white/50 text-left mb-1 leading-none">
+                  DOCUMENTS NEEDED:
+                </span>
+                <p className="text-[10.5px] font-semibold text-white leading-[1.3] text-left line-clamp-2">
+                  Passport Bio Scan, White Background Photo, Nusuk Permit, Return Flight Ticket
+                </p>
+                <div className="w-full h-[1px] bg-white/15 my-2" />
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (onSelectCountry) {
+                      onSelectCountry('Saudi Arabia');
+                    }
+                  }}
+                  className="w-full py-1.5 px-3 rounded-full bg-white/[0.08] hover:bg-white/[0.14] border border-white/10 flex items-center justify-center gap-2 transition cursor-pointer active:scale-95 shadow-xs"
+                >
+                  <svg className="w-3.5 h-3.5 text-white/80 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="9" strokeDasharray="3 3" />
+                    <polyline points="12 7 12 12 15 14" />
+                  </svg>
+                  <span className="text-[11px] font-medium tracking-tight whitespace-nowrap">
+                    <span className="text-white">Get </span>
+                    <span className="bg-gradient-to-r from-white via-[#86EFAC] to-white bg-clip-text text-transparent font-medium">
+                      emergency assistance
+                    </span>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="w-full bg-white">
@@ -527,7 +684,7 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
       {/* 
         Floating 4-Column Filter Pill Bar (Desktop Only, hidden on mobile)
       */}
-      <div className="hidden md:grid max-w-[820px] mx-auto mb-10 bg-white rounded-full shadow-[0_10px_35px_rgba(0,0,0,0.07)] border border-neutral-100 px-3 py-2.5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 items-center divide-y sm:divide-y-0 sm:divide-x divide-neutral-200/70">
+      <div className="hidden md:grid max-w-[820px] mx-auto mb-10 bg-white rounded-[22px] shadow-[0_10px_35px_rgba(0,0,0,0.07)] border border-neutral-100 px-3 py-2.5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 items-center divide-y sm:divide-y-0 sm:divide-x divide-neutral-200/70">
         {/* Segment 1: Visa Delivery */}
         <div className="relative py-2 sm:py-0 px-3 flex items-center gap-2.5 cursor-pointer group" onClick={() => toggleDropdown('delivery')}>
           <div className="w-7 h-7 rounded-full bg-[#22C55E] text-white flex items-center justify-center shrink-0 shadow-xs">
@@ -682,10 +839,11 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
           transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
           className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-3.5 sm:gap-x-5 gap-y-6 sm:gap-y-9"
         >
-          {filteredCards.length > 0 ? (
-            filteredCards.map((card) => (
-              <div
-                key={card.id}
+          {filteredCards.length > 0 || showWideCard ? (
+            <>
+              {filteredCards.map((card, index) => (
+                <React.Fragment key={card.id}>
+                  <div
                 onClick={() => {
                   if (onSelectCountry) {
                     onSelectCountry(getCleanCountryName(card.title));
@@ -714,13 +872,21 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
                     - Expands height from h-[52%] to lg:group-hover:h-[82%]
                     - Lightened gradient to eliminate heavy darkness while maintaining blur aesthetic
                   */}
-                  <div className="absolute inset-x-0 bottom-0 h-[52%] lg:group-hover:h-[82%] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] flex flex-col justify-end p-3 sm:p-4">
-                    {/* Layer 1: Frosted Blur Mask with lighter, reduced darkness gradient */}
+                  {/* 
+                    Progressive Bottom Blur with reduced blur radius (crisp 4px frosted glass)
+                    Smooth desktop upward-slide reveal:
+                    - Subtle height coverage
+                    - Crisp 4px blur radius rather than deep fog
+                  */}
+                  <div className="absolute inset-x-0 bottom-0 h-[48%] lg:group-hover:h-[80%] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] flex flex-col justify-end p-3 sm:p-4">
+                    {/* Layer 1: Frosted Blur Mask with reduced 4px blur radius and clean gradient */}
                     <div
-                      className="absolute inset-0 backdrop-blur-md bg-gradient-to-t from-black/45 via-black/20 to-transparent pointer-events-none"
+                      className="absolute inset-0 backdrop-blur-[4px] bg-gradient-to-t from-black/40 via-black/15 to-transparent pointer-events-none"
                       style={{
-                        WebkitMaskImage: 'linear-gradient(to top, rgba(0,0,0,1) 65%, rgba(0,0,0,0) 100%)',
-                        maskImage: 'linear-gradient(to top, rgba(0,0,0,1) 65%, rgba(0,0,0,0) 100%)',
+                        backdropFilter: 'blur(4px)',
+                        WebkitBackdropFilter: 'blur(4px)',
+                        WebkitMaskImage: 'linear-gradient(to top, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%)',
+                        maskImage: 'linear-gradient(to top, rgba(0,0,0,1) 55%, rgba(0,0,0,0) 100%)',
                       }}
                     />
 
@@ -856,8 +1022,16 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
                   )}
                 </div>
               </div>
-            ))
-          ) : (
+
+              {/* Horizontally Long Kaaba Card: Placed directly after the first two cards */}
+              {index === 1 && showWideCard && renderWideKaabaCard()}
+            </React.Fragment>
+          ))}
+
+          {/* If fewer than 2 regular cards matched (e.g. searching specifically for "Saudi"), still render the wide card */}
+          {filteredCards.length < 2 && showWideCard && renderWideKaabaCard()}
+        </>
+      ) : (
             <div className="col-span-full py-16 flex flex-col items-center justify-center text-center">
               <Search className="w-10 h-10 text-neutral-300 mb-3" />
               <p className="text-neutral-800 font-semibold text-base">No destinations match "{searchQuery}"</p>

@@ -31,14 +31,31 @@ export default function App() {
 
   const activeSlide = SLIDES[activeIndex];
 
-  // Resize listener
+  // Resize listener - guarded against mobile scroll URL bar collapse to keep hero image consistent
   useEffect(() => {
+    let lastVw = typeof window !== 'undefined' ? window.innerWidth : 1200;
+    let lastVh = typeof window !== 'undefined' ? window.innerHeight : 800;
+
     const handleResize = () => {
+      const currentVw = window.innerWidth;
+      const currentVh = window.innerHeight;
+
+      // On mobile devices (< 1024px), vertical scrolling causes the browser address bar
+      // to collapse or expand, firing a window resize with identical width and a height shift of ~40-120px.
+      // We ignore these vertical-only URL bar shifts to keep the hero image completely consistent!
+      const isMobile = currentVw < 1024;
+      if (isMobile && currentVw === lastVw && Math.abs(currentVh - lastVh) < 140) {
+        return;
+      }
+
+      lastVw = currentVw;
+      lastVh = currentVh;
       setDimensions({
-        vw: window.innerWidth,
-        vh: window.innerHeight,
+        vw: currentVw,
+        vh: currentVh,
       });
     };
+
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -210,12 +227,13 @@ export default function App() {
         onNavigateToExplore={handleNavigateToExplore}
       />
 
-      {/* HERO SECTION (100dvh) */}
+      {/* HERO SECTION - Stable height on mobile so image never stretches or gets longer on scroll */}
       <section
         id="hero-section"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
-        className="relative w-full h-[100dvh] overflow-hidden select-none"
+        style={{ height: dimensions.vh }}
+        className="relative w-full h-[100svh] lg:h-[100dvh] overflow-hidden select-none"
       >
         {/* Expandable Country Visa Card widget positioned in header alignment, anchored directly above the floating cards */}
         <CountryVisaCard
