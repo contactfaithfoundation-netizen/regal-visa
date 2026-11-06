@@ -8,6 +8,7 @@ import { LiveCounterStripe } from './components/LiveCounterStripe';
 import { ExploreEventsSection } from './components/ExploreEventsSection';
 import { CountryVisaPage } from './components/CountryVisaPage';
 import { FaqSection } from './components/FaqSection';
+import { parseCurrentRoute, countryToSlug } from './utils/router';
 
 export default function App() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -17,8 +18,14 @@ export default function App() {
   const [isVisaOpen, setIsVisaOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCallOpen, setIsCallOpen] = useState(false);
-  const [currentView, setCurrentView] = useState<'home' | 'country-visa'>('home');
-  const [selectedCountry, setSelectedCountry] = useState<string>('Malaysia');
+
+  // Synchronized routing state
+  const [currentView, setCurrentView] = useState<'home' | 'country-visa'>(() => {
+    return parseCurrentRoute().view;
+  });
+  const [selectedCountry, setSelectedCountry] = useState<string>(() => {
+    return parseCurrentRoute().country || 'United Kingdom';
+  });
 
   // Viewport dimensions
   const [dimensions, setDimensions] = useState(() => ({
@@ -107,18 +114,73 @@ export default function App() {
     }, 950);
   };
 
+  // Navigate to country visa page and synchronize browser history & URL
+  const handleOpenCountryVisa = useCallback((country: string) => {
+    const canonicalCountry = country || activeSlide.country;
+    const slug = countryToSlug(canonicalCountry);
+    const targetUrl = `/visa/${slug}`;
+
+    // Ensure home state is recorded in history beneath the country page
+    if (!window.history.state || window.history.state.view !== 'home') {
+      window.history.replaceState({ view: 'home' }, 'Globe Express', '/');
+    }
+
+    window.history.pushState(
+      { view: 'country-visa', country: canonicalCountry },
+      `${canonicalCountry} Visa - Globe Express`,
+      targetUrl
+    );
+
+    setSelectedCountry(canonicalCountry);
+    setCurrentView('country-visa');
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [activeSlide.country]);
+
+  // Navigate back to Home cleanly without closing the application
+  const handleBackToHome = useCallback((options?: { section?: string }) => {
+    // If the browser history has a country-visa entry, calling history.back()
+    // pops the history stack back to home naturally!
+    if (window.history.state?.view === 'country-visa' && window.history.length > 1) {
+      window.history.back();
+      if (options?.section) {
+        setTimeout(() => {
+          const el = document.getElementById(options.section!);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }, 80);
+      }
+      return;
+    }
+
+    // Direct land or standalone fallback: push home state
+    const targetUrl = options?.section ? `/#${options.section}` : '/';
+    window.history.pushState({ view: 'home' }, 'Globe Express', targetUrl);
+    setCurrentView('home');
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+
+    if (options?.section) {
+      setTimeout(() => {
+        const el = document.getElementById(options.section!);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 80);
+    }
+  }, []);
+
   // Reset user back to the initial hero section view
   const handleResetToHero = useCallback(() => {
     setIsMenuOpen(false);
     setIsCallOpen(false);
     setIsVisaOpen(false);
+    if (currentView !== 'home') {
+      handleBackToHome({ section: 'hero-section' });
+      return;
+    }
     if (activeIndex !== 0) {
       setPrevIndex(activeIndex);
       setActiveIndex(0);
       setSlideTimerKey((k) => k + 1);
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [activeIndex]);
+  }, [activeIndex, currentView, handleBackToHome]);
 
   // Auto-play timer (4.5s) - paused when Visa Card is expanded, Sandwich Menu is open, or Call Directory is open
   useEffect(() => {
@@ -177,30 +239,98 @@ export default function App() {
   // Navigate to Explore & Events section smoothly from header plane button or country page
   const handleNavigateToExplore = useCallback(() => {
     if (currentView !== 'home') {
-      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-      setCurrentView('home');
-      setTimeout(() => {
-        const el = document.getElementById('explore-events');
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 80);
+      handleBackToHome({ section: 'explore-events' });
     } else {
       const el = document.getElementById('explore-events');
       if (el) {
         el.scrollIntoView({ behavior: 'smooth' });
       }
     }
-  }, [currentView]);
+  }, [currentView, handleBackToHome]);
+
+  // Synchronize document title with active route
+  useEffect(() => {
+    if (currentView === 'country-visa' && selectedCountry) {
+      document.title = `${selectedCountry} Visa for Pakistanis - Requirements, Fees & Fast-Track Application`;
+    } else {
+      document.title = 'Globe Express - Official Visa Concierge & Worldwide Entry Approvals';
+    }
+  }, [currentView, selectedCountry]);
+
+  // Handle browser back/forward buttons (popstate) & seed history on direct landing
+  useEffect(() => {
+    const initialRoute = parseCurrentRoute();
+
+    if (initialRoute.view === 'country-visa' && initialRoute.country) {
+      // Direct landing on country URL: seed home as underlying entry
+      // so pressing Back goes to home rather than exiting the site!
+      window.history.replaceState({ view: 'home' }, 'Globe Express', '/');
+      window.history.pushState(
+        { view: 'country-visa', country: initialRoute.country },
+        `${initialRoute.country} Visa - Globe Express`,
+        window.location.pathname + window.location.search + window.location.hash
+      );
+      setSelectedCountry(initialRoute.country);
+      setCurrentView('country-visa');
+    } else {
+      if (!window.history.state) {
+        window.history.replaceState(
+          { view: 'home' },
+          'Globe Express',
+          window.location.pathname + window.location.search + window.location.hash
+        );
+      }
+      if (initialRoute.section) {
+        setTimeout(() => {
+          const el = document.getElementById(initialRoute.section!);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }, 120);
+      }
+    }
+
+    const handlePopState = (e: PopStateEvent) => {
+      // 1. Check event state if available
+      if (e.state && typeof e.state === 'object' && 'view' in e.state) {
+        if (e.state.view === 'country-visa' && e.state.country) {
+          setSelectedCountry(e.state.country);
+          setCurrentView('country-visa');
+          window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+          return;
+        } else {
+          setCurrentView('home');
+          window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+          return;
+        }
+      }
+
+      // 2. Fallback to parsing current window location
+      const route = parseCurrentRoute();
+      if (route.view === 'country-visa' && route.country) {
+        setSelectedCountry(route.country);
+        setCurrentView('country-visa');
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      } else {
+        setCurrentView('home');
+        if (route.section) {
+          setTimeout(() => {
+            const el = document.getElementById(route.section!);
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          }, 60);
+        } else {
+          window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        }
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   if (currentView === 'country-visa') {
     return (
       <CountryVisaPage
         countryName={selectedCountry}
-        onBackToHome={() => {
-          window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-          setCurrentView('home');
-        }}
+        onBackToHome={() => handleBackToHome()}
         onOpenVisaModal={() => setIsVisaOpen(true)}
         onNavigateToExplore={handleNavigateToExplore}
       />
@@ -243,11 +373,7 @@ export default function App() {
           viewportHeight={dimensions.vh}
           isVisaOpen={isVisaOpen}
           onToggleVisa={setIsVisaOpen}
-          onOpenVisaPage={(country) => {
-            setSelectedCountry(country || activeSlide.country);
-            setCurrentView('country-visa');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }}
+          onOpenVisaPage={handleOpenCountryVisa}
         />
 
         {/* 1. Behind the array: ONE static image showing previous background */}
@@ -456,11 +582,7 @@ export default function App() {
       {/* EXPLORE & EVENTS VISA DISCOVERY SECTION (Pure White Background) */}
       <section className="w-full bg-white">
         <ExploreEventsSection
-          onSelectCountry={(country) => {
-            window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-            setSelectedCountry(country);
-            setCurrentView('country-visa');
-          }}
+          onSelectCountry={handleOpenCountryVisa}
         />
       </section>
 
