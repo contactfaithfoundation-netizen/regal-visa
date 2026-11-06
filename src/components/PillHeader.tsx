@@ -60,6 +60,22 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
     }
   };
 
+  // Pre-warm and decode sandwich menu banner images ahead of user tap
+  useEffect(() => {
+    const banners = [
+      'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=700&q=80',
+      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=700&q=80',
+      'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=700&q=80',
+    ];
+    banners.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+      if (typeof img.decode === 'function') {
+        img.decode().catch(() => {});
+      }
+    });
+  }, []);
+
   // Close menus on Escape key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -105,25 +121,23 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.24 }}
+            transition={{ duration: 0.16 }}
             onClick={() => {
               onToggleMenu(false);
               setCallMenuOpen(false);
             }}
-            className="fixed inset-0 z-40 bg-black/15 backdrop-blur-[2px]"
+            className="fixed inset-0 z-40 bg-black/25 transform-gpu"
           />
         )}
       </AnimatePresence>
 
       {/* Top Center Floating Sandwich Menu Container (z-50) */}
       <div className="fixed top-5 md:top-7 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center select-none pointer-events-auto">
-        {/* Top Header Pill with Framer Motion layout morphing */}
-        <motion.nav
-          layout
-          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        {/* Top Header Pill with hardware-accelerated width transition (zero layout reflow) */}
+        <nav
           aria-label="Main Navigation"
-          style={{ willChange: 'transform' }}
-          className={`flex items-center p-1 rounded-[22px] bg-white/98 backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.14)] border border-white transition-shadow transform-gpu ${
+          style={{ willChange: 'width, transform' }}
+          className={`flex items-center p-1 rounded-[22px] bg-white shadow-[0_8px_30px_rgba(0,0,0,0.14)] border border-white transition-[width,box-shadow] duration-200 ease-out transform-gpu ${
             isMenuOpen || isCallMenuOpen
               ? currentCountry
                 ? 'w-[350px] sm:w-[410px]'
@@ -183,15 +197,15 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
             >
               {/* Dynamic super-smooth crossfade between Logo image + Country and "Menu" title */}
               <div className="relative h-full flex-1 flex items-center justify-start overflow-hidden">
-                <AnimatePresence mode="wait" initial={false}>
+                <AnimatePresence initial={false}>
                   {!isMenuOpen ? (
                     <motion.div
                       key="logo-image"
-                      initial={{ opacity: 0, scale: 0.92 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.92 }}
-                      transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-                      style={{ willChange: 'transform, opacity' }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.15, ease: 'easeOut' }}
+                      style={{ willChange: 'opacity' }}
                       className="flex items-center justify-start h-full min-w-0 transform-gpu"
                     >
                       <img
@@ -225,11 +239,11 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
                   ) : (
                     <motion.span
                       key="menu-title"
-                      initial={{ opacity: 0, y: 5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -5 }}
-                      transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-                      style={{ willChange: 'transform, opacity' }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.15, ease: 'easeOut' }}
+                      style={{ willChange: 'opacity' }}
                       className="font-sans text-[14px] font-medium tracking-tight text-[#202530] pl-1.5 transform-gpu"
                     >
                       Menu
@@ -294,7 +308,7 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
               <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.57a1 1 0 01-.25 1.02l-2.2 2.2z" />
             </svg>
           </button>
-        </motion.nav>
+        </nav>
 
         {/* Detached Dropdown Sandwich Cards inside AnimatePresence (GPU optimized for slow mobiles, zero-filter lag) */}
         <AnimatePresence>
@@ -303,23 +317,21 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
               {/* Detached Middle Card: Centered Navigation Links (5px gap) */}
               <motion.div
                 key="sandwich-middle-card"
-                initial={{ opacity: 0, y: -10, scale: 0.98 }}
+                initial={{ opacity: 0, y: -8 }}
                 animate={{
                   opacity: 1,
                   y: 0,
-                  scale: 1,
-                  transition: { duration: 0.28, ease: [0.16, 1, 0.3, 1] },
+                  transition: { duration: 0.18, ease: [0.16, 1, 0.3, 1] },
                 }}
                 exit={{
                   opacity: 0,
-                  y: -8,
-                  scale: 0.98,
-                  transition: { duration: 0.18, ease: 'easeIn' },
+                  y: -6,
+                  transition: { duration: 0.12, ease: 'easeIn' },
                 }}
                 style={{ willChange: 'transform, opacity' }}
                 className={`mt-[5px] ${
                   currentCountry ? 'w-[350px] sm:w-[410px]' : 'w-[320px] sm:w-[340px]'
-                } rounded-[24px] bg-[#EFF2F8]/98 backdrop-blur-md py-6 px-6 shadow-[0_18px_40px_rgba(0,0,0,0.18)] border border-white/80 flex flex-col items-center justify-center gap-3.5 transform-gpu`}
+                } rounded-[24px] bg-[#EFF2F8] py-6 px-6 shadow-[0_12px_32px_rgba(0,0,0,0.15)] border border-white flex flex-col items-center justify-center gap-3.5 transform-gpu`}
               >
                 {[
                   { label: 'Services', key: 'services' as const },
@@ -340,33 +352,31 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
               {/* Detached Bottom Card: 3 Photographic Category Pills (5px gap) */}
               <motion.div
                 key="sandwich-bottom-card"
-                initial={{ opacity: 0, y: -14, scale: 0.98 }}
+                initial={{ opacity: 0, y: -10 }}
                 animate={{
                   opacity: 1,
                   y: 0,
-                  scale: 1,
-                  transition: { duration: 0.3, delay: 0.03, ease: [0.16, 1, 0.3, 1] },
+                  transition: { duration: 0.2, delay: 0.02, ease: [0.16, 1, 0.3, 1] },
                 }}
                 exit={{
                   opacity: 0,
-                  y: -10,
-                  scale: 0.98,
-                  transition: { duration: 0.16, ease: 'easeIn' },
+                  y: -6,
+                  transition: { duration: 0.12, ease: 'easeIn' },
                 }}
                 style={{ willChange: 'transform, opacity' }}
                 className={`mt-[5px] ${
                   currentCountry ? 'w-[350px] sm:w-[410px]' : 'w-[320px] sm:w-[340px]'
-                } rounded-[24px] bg-[#EFF2F8]/98 backdrop-blur-md p-1.5 shadow-[0_22px_45px_rgba(0,0,0,0.22)] border border-white/80 flex flex-col gap-1.5 transform-gpu`}
+                } rounded-[24px] bg-[#EFF2F8] p-1.5 shadow-[0_14px_36px_rgba(0,0,0,0.16)] border border-white flex flex-col gap-1.5 transform-gpu`}
               >
                 {/* Banner 1: Residence permit */}
                 <div
                   onClick={() => handleCategoryClick('residence')}
-                  className="relative h-[58px] w-full rounded-[17px] overflow-hidden flex items-center justify-between px-5 cursor-pointer group select-none shadow-sm bg-[#122649]"
+                  className="relative h-[58px] w-full rounded-[17px] overflow-hidden flex items-center justify-between px-5 cursor-pointer group select-none shadow-sm bg-[#122649] transform-gpu"
                 >
                   <img
                     src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=700&q=80"
                     alt="Residence permit"
-                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out transform-gpu"
                     loading="eager"
                     decoding="async"
                   />
@@ -382,12 +392,12 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
                 {/* Banner 2: Citizenship */}
                 <div
                   onClick={() => handleCategoryClick('citizenship')}
-                  className="relative h-[58px] w-full rounded-[17px] overflow-hidden flex items-center justify-between px-5 cursor-pointer group select-none shadow-sm bg-[#1C1B18]"
+                  className="relative h-[58px] w-full rounded-[17px] overflow-hidden flex items-center justify-between px-5 cursor-pointer group select-none shadow-sm bg-[#1C1B18] transform-gpu"
                 >
                   <img
                     src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=700&q=80"
                     alt="Citizenship"
-                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out transform-gpu"
                     loading="eager"
                     decoding="async"
                   />
@@ -403,12 +413,12 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
                 {/* Banner 3: Visa */}
                 <div
                   onClick={() => handleCategoryClick('visa')}
-                  className="relative h-[58px] w-full rounded-[17px] overflow-hidden flex items-center justify-between px-5 cursor-pointer group select-none shadow-sm bg-[#3B6496]"
+                  className="relative h-[58px] w-full rounded-[17px] overflow-hidden flex items-center justify-between px-5 cursor-pointer group select-none shadow-sm bg-[#3B6496] transform-gpu"
                 >
                   <img
                     src="https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=700&q=80"
                     alt="Visa"
-                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out transform-gpu"
                     loading="eager"
                     decoding="async"
                   />
@@ -429,23 +439,21 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
             <>
               <motion.div
                 key="sandwich-call-card"
-                initial={{ opacity: 0, y: -10, scale: 0.98 }}
+                initial={{ opacity: 0, y: -8 }}
                 animate={{
                   opacity: 1,
                   y: 0,
-                  scale: 1,
-                  transition: { duration: 0.28, ease: [0.16, 1, 0.3, 1] },
+                  transition: { duration: 0.18, ease: [0.16, 1, 0.3, 1] },
                 }}
                 exit={{
                   opacity: 0,
-                  y: -8,
-                  scale: 0.98,
-                  transition: { duration: 0.18, ease: 'easeIn' },
+                  y: -6,
+                  transition: { duration: 0.12, ease: 'easeIn' },
                 }}
                 style={{ willChange: 'transform, opacity' }}
                 className={`mt-[5px] ${
                   currentCountry ? 'w-[350px] sm:w-[410px]' : 'w-[320px] sm:w-[340px]'
-                } rounded-[24px] bg-white/98 backdrop-blur-md p-2.5 sm:p-3 shadow-[0_18px_40px_rgba(0,0,0,0.14)] border border-white flex flex-col gap-2 select-none transform-gpu`}
+                } rounded-[24px] bg-white p-2.5 sm:p-3 shadow-[0_12px_32px_rgba(0,0,0,0.14)] border border-white flex flex-col gap-2 select-none transform-gpu`}
               >
                 {/* 4 Numbers List - 4 buttons representing they have WhatsApp by using WhatsApp icon also with Call button, without extra clutter */}
                 {SUPPORT_NUMBERS.map((item, idx) => {
