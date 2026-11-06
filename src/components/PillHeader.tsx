@@ -10,6 +10,8 @@ interface PillHeaderProps {
   onOpenVisaModal?: () => void;
   onResetToHero?: () => void;
   onNavigateToExplore?: () => void;
+  onNavigateToBlogs?: () => void;
+  onNavigateToVisas?: () => void;
   currentCountry?: {
     name: string;
     flagCode: string;
@@ -31,6 +33,8 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
   onOpenVisaModal,
   onResetToHero,
   onNavigateToExplore,
+  onNavigateToBlogs,
+  onNavigateToVisas,
   currentCountry,
 }) => {
   const [internalCallOpen, setInternalCallOpen] = useState(false);
@@ -103,12 +107,28 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
         return;
       }
     }
+    if (item === 'blog') {
+      onToggleMenu(false);
+      if (onNavigateToBlogs) {
+        onNavigateToBlogs();
+        return;
+      }
+      const el = document.getElementById('blog-section');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+    }
     setActiveModal(item);
   };
 
   const handleCategoryClick = (category: 'residence' | 'citizenship' | 'visa') => {
     if (category === 'visa') {
       onToggleMenu(false);
+      if (onNavigateToVisas) {
+        onNavigateToVisas();
+        return;
+      }
       if (onOpenVisaModal) {
         onOpenVisaModal();
       } else {
@@ -244,7 +264,9 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
               e.stopPropagation();
               if (isMenuOpen) onToggleMenu(false);
               if (isCallMenuOpen) setCallMenuOpen(false);
-              if (onNavigateToExplore) {
+              if (onNavigateToVisas) {
+                onNavigateToVisas();
+              } else if (onNavigateToExplore) {
                 onNavigateToExplore();
               } else {
                 const el = document.getElementById('explore-events');

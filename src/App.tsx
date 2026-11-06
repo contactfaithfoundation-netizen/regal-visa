@@ -9,6 +9,10 @@ import { AboutSection } from './components/AboutSection';
 import { ExploreEventsSection } from './components/ExploreEventsSection';
 import { CountryVisaPage } from './components/CountryVisaPage';
 import { FaqSection } from './components/FaqSection';
+import { BlogSection } from './components/BlogSection';
+import { AllBlogsPage } from './components/AllBlogsPage';
+import { BlogPostPage } from './components/BlogPostPage';
+import { AllVisasPage } from './components/AllVisasPage';
 import { parseCurrentRoute, countryToSlug } from './utils/router';
 
 export default function App() {
@@ -22,11 +26,14 @@ export default function App() {
   const [isHeroVisible, setIsHeroVisible] = useState(true);
 
   // Synchronized routing state
-  const [currentView, setCurrentView] = useState<'home' | 'country-visa'>(() => {
+  const [currentView, setCurrentView] = useState<'home' | 'country-visa' | 'blogs' | 'blog-detail' | 'visas'>(() => {
     return parseCurrentRoute().view;
   });
   const [selectedCountry, setSelectedCountry] = useState<string>(() => {
     return parseCurrentRoute().country || 'United Kingdom';
+  });
+  const [selectedBlogSlug, setSelectedBlogSlug] = useState<string>(() => {
+    return parseCurrentRoute().blogSlug || 'bank-statement-rejections-pakistan';
   });
 
   // Viewport dimensions
@@ -153,11 +160,54 @@ export default function App() {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   }, [activeSlide.country]);
 
+  // Open a specific blog post in dedicated markdown page
+  const handleOpenBlog = useCallback((slug: string) => {
+    if (!window.history.state || window.history.state.view !== 'home') {
+      window.history.replaceState({ view: 'home' }, 'Globe Express', '/');
+    }
+    window.history.pushState(
+      { view: 'blog-detail', blogSlug: slug },
+      'Visa Intelligence Blog - Globe Express',
+      `/blog/${slug}`
+    );
+    setSelectedBlogSlug(slug);
+    setCurrentView('blog-detail');
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, []);
+
+  // Navigate to All Blogs page
+  const handleNavigateToBlogs = useCallback(() => {
+    if (!window.history.state || window.history.state.view !== 'home') {
+      window.history.replaceState({ view: 'home' }, 'Globe Express', '/');
+    }
+    window.history.pushState(
+      { view: 'blogs' },
+      'Pakistan Visa Blogs & Guides - Globe Express',
+      '/blogs'
+    );
+    setCurrentView('blogs');
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, []);
+
+  // Navigate to All Visas page
+  const handleNavigateToVisas = useCallback(() => {
+    if (!window.history.state || window.history.state.view !== 'home') {
+      window.history.replaceState({ view: 'home' }, 'Globe Express', '/');
+    }
+    window.history.pushState(
+      { view: 'visas' },
+      'Explore All Visas - Globe Express',
+      '/visas'
+    );
+    setCurrentView('visas');
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, []);
+
   // Navigate back to Home cleanly without closing the application
   const handleBackToHome = useCallback((options?: { section?: string }) => {
-    // If the browser history has a country-visa entry, calling history.back()
+    // If the browser history has a sub-view entry, calling history.back()
     // pops the history stack back to home naturally!
-    if (window.history.state?.view === 'country-visa' && window.history.length > 1) {
+    if (window.history.state?.view && window.history.state.view !== 'home' && window.history.length > 1) {
       window.history.back();
       if (options?.section) {
         setTimeout(() => {
@@ -269,6 +319,12 @@ export default function App() {
   useEffect(() => {
     if (currentView === 'country-visa' && selectedCountry) {
       document.title = `${selectedCountry} Visa for Pakistanis - Requirements, Fees & Fast-Track Application`;
+    } else if (currentView === 'blog-detail') {
+      document.title = 'Pakistan Visa Intelligence Blog - Globe Express';
+    } else if (currentView === 'blogs') {
+      document.title = 'Pakistan Visa Blogs, Guides & Case Studies - Globe Express';
+    } else if (currentView === 'visas') {
+      document.title = 'Explore All Visas & Worldwide Approvals - Globe Express';
     } else {
       document.title = 'Globe Express - Official Visa Concierge & Worldwide Entry Approvals';
     }
@@ -279,8 +335,6 @@ export default function App() {
     const initialRoute = parseCurrentRoute();
 
     if (initialRoute.view === 'country-visa' && initialRoute.country) {
-      // Direct landing on country URL: seed home as underlying entry
-      // so pressing Back goes to home rather than exiting the site!
       window.history.replaceState({ view: 'home' }, 'Globe Express', '/');
       window.history.pushState(
         { view: 'country-visa', country: initialRoute.country },
@@ -289,6 +343,31 @@ export default function App() {
       );
       setSelectedCountry(initialRoute.country);
       setCurrentView('country-visa');
+    } else if (initialRoute.view === 'blog-detail' && initialRoute.blogSlug) {
+      window.history.replaceState({ view: 'home' }, 'Globe Express', '/');
+      window.history.pushState(
+        { view: 'blog-detail', blogSlug: initialRoute.blogSlug },
+        'Visa Intelligence Blog - Globe Express',
+        window.location.pathname + window.location.search + window.location.hash
+      );
+      setSelectedBlogSlug(initialRoute.blogSlug);
+      setCurrentView('blog-detail');
+    } else if (initialRoute.view === 'blogs') {
+      window.history.replaceState({ view: 'home' }, 'Globe Express', '/');
+      window.history.pushState(
+        { view: 'blogs' },
+        'Pakistan Visa Blogs - Globe Express',
+        window.location.pathname + window.location.search + window.location.hash
+      );
+      setCurrentView('blogs');
+    } else if (initialRoute.view === 'visas') {
+      window.history.replaceState({ view: 'home' }, 'Globe Express', '/');
+      window.history.pushState(
+        { view: 'visas' },
+        'Explore All Visas - Globe Express',
+        window.location.pathname + window.location.search + window.location.hash
+      );
+      setCurrentView('visas');
     } else {
       if (!window.history.state) {
         window.history.replaceState(
@@ -311,13 +390,18 @@ export default function App() {
         if (e.state.view === 'country-visa' && e.state.country) {
           setSelectedCountry(e.state.country);
           setCurrentView('country-visa');
-          window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-          return;
+        } else if (e.state.view === 'blog-detail' && e.state.blogSlug) {
+          setSelectedBlogSlug(e.state.blogSlug);
+          setCurrentView('blog-detail');
+        } else if (e.state.view === 'blogs') {
+          setCurrentView('blogs');
+        } else if (e.state.view === 'visas') {
+          setCurrentView('visas');
         } else {
           setCurrentView('home');
-          window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-          return;
         }
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        return;
       }
 
       // 2. Fallback to parsing current window location
@@ -325,7 +409,13 @@ export default function App() {
       if (route.view === 'country-visa' && route.country) {
         setSelectedCountry(route.country);
         setCurrentView('country-visa');
-        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      } else if (route.view === 'blog-detail' && route.blogSlug) {
+        setSelectedBlogSlug(route.blogSlug);
+        setCurrentView('blog-detail');
+      } else if (route.view === 'blogs') {
+        setCurrentView('blogs');
+      } else if (route.view === 'visas') {
+        setCurrentView('visas');
       } else {
         setCurrentView('home');
         if (route.section) {
@@ -333,10 +423,9 @@ export default function App() {
             const el = document.getElementById(route.section!);
             if (el) el.scrollIntoView({ behavior: 'smooth' });
           }, 60);
-        } else {
-          window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
         }
       }
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     };
 
     window.addEventListener('popstate', handlePopState);
@@ -350,6 +439,42 @@ export default function App() {
         onBackToHome={() => handleBackToHome()}
         onOpenVisaModal={() => setIsVisaOpen(true)}
         onNavigateToExplore={handleNavigateToExplore}
+        onNavigateToBlogs={handleNavigateToBlogs}
+        onNavigateToVisas={handleNavigateToVisas}
+      />
+    );
+  }
+
+  if (currentView === 'blog-detail') {
+    return (
+      <BlogPostPage
+        slug={selectedBlogSlug}
+        onBackToBlogs={handleNavigateToBlogs}
+        onBackToHome={() => handleBackToHome()}
+        onSelectBlog={handleOpenBlog}
+        onOpenVisaModal={() => setIsVisaOpen(true)}
+      />
+    );
+  }
+
+  if (currentView === 'blogs') {
+    return (
+      <AllBlogsPage
+        onBackToHome={() => handleBackToHome()}
+        onSelectBlog={handleOpenBlog}
+        onOpenVisaModal={() => setIsVisaOpen(true)}
+        onNavigateToVisas={handleNavigateToVisas}
+      />
+    );
+  }
+
+  if (currentView === 'visas') {
+    return (
+      <AllVisasPage
+        onBackToHome={() => handleBackToHome()}
+        onSelectCountry={handleOpenCountryVisa}
+        onOpenVisaModal={() => setIsVisaOpen(true)}
+        onNavigateToBlogs={handleNavigateToBlogs}
       />
     );
   }
@@ -373,6 +498,8 @@ export default function App() {
         onOpenVisaModal={() => setIsVisaOpen(true)}
         onResetToHero={handleResetToHero}
         onNavigateToExplore={handleNavigateToExplore}
+        onNavigateToBlogs={handleNavigateToBlogs}
+        onNavigateToVisas={handleNavigateToVisas}
       />
 
       {/* HERO SECTION - Stable height on mobile so image never stretches or gets longer on scroll */}
@@ -616,6 +743,12 @@ export default function App() {
           onSelectCountry={handleOpenCountryVisa}
         />
       </section>
+
+      {/* VISA INTELLIGENCE & BLOG SECTION (Brand Colors, Pure White Background, Reference Style) */}
+      <BlogSection
+        onSelectBlog={handleOpenBlog}
+        onViewAllBlogs={handleNavigateToBlogs}
+      />
 
       {/* FREQUENTLY ASKED QUESTIONS SECTION (Pure White Background & Brand Colors) */}
       <FaqSection className="border-t border-neutral-100" />

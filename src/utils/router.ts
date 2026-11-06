@@ -58,8 +58,9 @@ export function slugToCountry(slug: string): string {
 }
 
 export interface RouteState {
-  view: 'home' | 'country-visa';
+  view: 'home' | 'country-visa' | 'blogs' | 'blog-detail' | 'visas';
   country?: string;
+  blogSlug?: string;
   section?: string;
 }
 
@@ -71,18 +72,56 @@ export function parseCurrentRoute(): RouteState {
 
   const { pathname, search, hash } = window.location;
 
-  // 1. Check pathname: /visa/:slug or /country/:slug
-  const visaPathMatch = pathname.match(/^\/(?:visa|country)\/([^/?#]+)/i);
-  if (visaPathMatch && visaPathMatch[1]) {
+  // 1. Check pathname: /blog/:slug
+  const blogDetailMatch = pathname.match(/^\/blog\/([^/?#]+)/i);
+  if (blogDetailMatch && blogDetailMatch[1]) {
+    const slug = decodeURIComponent(blogDetailMatch[1]);
+    if (slug === 'all' || slug === 'list') {
+      return { view: 'blogs' };
+    }
     return {
-      view: 'country-visa',
-      country: slugToCountry(decodeURIComponent(visaPathMatch[1])),
+      view: 'blog-detail',
+      blogSlug: slug,
     };
   }
 
-  // 2. Check query params: ?country=... or ?visa=...
+  // 2. Check pathname: /blogs
+  if (/^\/blogs\/?$/i.test(pathname)) {
+    return { view: 'blogs' };
+  }
+
+  // 3. Check pathname: /visas or /all-visas
+  if (/^\/(?:visas|all-visas)\/?$/i.test(pathname)) {
+    return { view: 'visas' };
+  }
+
+  // 4. Check pathname: /visa/:slug or /country/:slug
+  const visaPathMatch = pathname.match(/^\/(?:visa|country)\/([^/?#]+)/i);
+  if (visaPathMatch && visaPathMatch[1]) {
+    const val = decodeURIComponent(visaPathMatch[1]).toLowerCase();
+    if (val === 'all' || val === 'explore') {
+      return { view: 'visas' };
+    }
+    return {
+      view: 'country-visa',
+      country: slugToCountry(val),
+    };
+  }
+
+  // 5. Check query params: ?blog=... or ?view=...
   if (search) {
     const params = new URLSearchParams(search);
+    const blogParam = params.get('blog');
+    if (blogParam) {
+      return {
+        view: 'blog-detail',
+        blogSlug: blogParam,
+      };
+    }
+    const viewParam = params.get('view');
+    if (viewParam === 'blogs') return { view: 'blogs' };
+    if (viewParam === 'visas') return { view: 'visas' };
+
     const countryParam = params.get('country') || params.get('visa');
     if (countryParam) {
       return {
@@ -92,9 +131,26 @@ export function parseCurrentRoute(): RouteState {
     }
   }
 
-  // 3. Check hash: #/visa/:slug or #/country/:slug or #explore-events
+  // 6. Check hash
   if (hash) {
     const cleanHash = hash.replace(/^#/, '');
+
+    const hashBlogDetailMatch = cleanHash.match(/^\/?blog\/([^/?#]+)/i);
+    if (hashBlogDetailMatch && hashBlogDetailMatch[1]) {
+      return {
+        view: 'blog-detail',
+        blogSlug: decodeURIComponent(hashBlogDetailMatch[1]),
+      };
+    }
+
+    if (cleanHash === 'blogs' || cleanHash === '/blogs') {
+      return { view: 'blogs' };
+    }
+
+    if (cleanHash === 'visas' || cleanHash === '/visas') {
+      return { view: 'visas' };
+    }
+
     const hashVisaMatch = cleanHash.match(/^\/?(?:visa|country)\/([^/?#]+)/i);
     if (hashVisaMatch && hashVisaMatch[1]) {
       return {
@@ -113,6 +169,12 @@ export function parseCurrentRoute(): RouteState {
       return {
         view: 'home',
         section: 'hero-section',
+      };
+    }
+    if (cleanHash === 'blog-section' || cleanHash === 'blogs-section') {
+      return {
+        view: 'home',
+        section: 'blog-section',
       };
     }
   }

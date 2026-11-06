@@ -25,7 +25,7 @@ import {
   Plane,
   FileCheck2,
   ArrowLeft,
-  Send
+  Send,
 } from 'lucide-react';
 import { PillHeader } from './PillHeader';
 
@@ -34,6 +34,8 @@ export interface CountryVisaPageProps {
   onBackToHome?: () => void;
   onOpenVisaModal?: () => void;
   onNavigateToExplore?: () => void;
+  onNavigateToBlogs?: () => void;
+  onNavigateToVisas?: () => void;
 }
 
 interface CountryVisaData {
@@ -108,7 +110,7 @@ const COUNTRIES_REGISTRY: Record<string, CountryVisaData> = {
       },
     ],
     reviews: [
-      { name: 'Jashanpreet Kaur', date: '18 Oct 2026', country: 'Malaysia', rating: 5, text: 'Seamless experience applying from Lahore! The documents verification team called me within 30 minutes of submission to verify my passport bio-data and bank statement. Got the official Malaysian eVisa approved exactly on schedule without visiting any consulate.' },
+      { name: 'Syed Bilal Shah', date: '18 Oct 2026', country: 'Malaysia', rating: 5, text: 'Seamless experience applying from Lahore! The documents verification team called me within 30 minutes of submission to verify my passport bio-data and bank statement. Got the official Malaysian eVisa approved exactly on schedule without visiting any consulate.' },
       { name: 'Ahsanul Awan', date: '14 Oct 2026', country: 'Malaysia', rating: 5, text: 'Highly recommended for Pakistani travelers visiting Kuala Lumpur for business or holiday. Zero embassy visits needed, transparent government fee breakdown, and instantaneous WhatsApp updates throughout the entire process.' },
       { name: 'Kamran Khan', date: '9 Oct 2026', country: 'Malaysia', rating: 5, text: 'Applied for 4 family members together. The real-time consular tracking gave complete peace of mind. Every eVisa barcode was verified at Islamabad airport immigration with zero hassle.' },
     ],
@@ -744,6 +746,8 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
   onBackToHome,
   onOpenVisaModal,
   onNavigateToExplore,
+  onNavigateToBlogs,
+  onNavigateToVisas,
 }) => {
   const data = useMemo(() => getCountryData(countryName), [countryName]);
 
@@ -774,10 +778,10 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
   const [isWhatsAppModalOpen, setIsWhatsAppModalOpen] = useState(false);
 
-  // Checkout form state
+  // Simplified Lead Callback Form State
   const [applicantName, setApplicantName] = useState('');
-  const [applicantPassport, setApplicantPassport] = useState('');
   const [applicantPhone, setApplicantPhone] = useState('');
+  const [applicantCity, setApplicantCity] = useState('Lahore');
   const [checkoutSubmitted, setCheckoutSubmitted] = useState(false);
 
   const totalFee = data.govtFee + data.procFee;
@@ -821,6 +825,99 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
       .filter(Boolean) as { category: string; items: { question: string; answer: string }[] }[];
   }, [data.faqs, faqSearch, activeFaqCategory]);
 
+  const waInquiryUrl = `https://wa.me/923246883359?text=Hi%20Globe%20Express%2C%20I%20want%20to%20apply%20or%20know%20more%20about%20the%20${encodeURIComponent(data.name)}%20visa%20for%20Pakistanis.`;
+
+  const renderStartApplicationCard = (isMobileVariant = false) => (
+    <div
+      className={`rounded-[24px] bg-[#F8FAFC] p-1.5 border border-[#E2E8F0] shadow-[0_15px_40px_rgba(28,35,45,0.06)] ${
+        isMobileVariant ? 'w-full' : ''
+      }`}
+    >
+      {/* Top Banner */}
+      <div className="px-4 py-2.5 flex items-center justify-between text-[#1C232D] text-xs font-semibold">
+        <div className="flex items-center gap-2">
+          <Clock className="w-4 h-4 text-[#1C232D]" />
+          <span>Ready by {data.readyDate}, {data.dispatchTime}</span>
+        </div>
+        <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-[#10B981]/10 text-[#059669] border border-[#10B981]/20">
+          Fast-Track
+        </span>
+      </div>
+
+      {/* Inner White Card */}
+      <div className="bg-white rounded-[20px] p-4 sm:p-5 shadow-sm border border-[#E2E8F0]/60">
+        {/* Government Fees */}
+        <div className="flex justify-between items-center text-xs text-[#475569] mb-3">
+          <div className="flex items-center gap-2">
+            <Landmark className="w-3.5 h-3.5 text-[#64748B]" />
+            <span>Government Fees</span>
+          </div>
+          <span className="font-semibold text-[#0F172A]">
+            {data.govtFee > 0 ? `PKR ${data.govtFee.toLocaleString()}` : 'Included / Nil'}
+          </span>
+        </div>
+
+        {/* Processing Fees */}
+        <div className="flex justify-between items-center text-xs text-[#475569] pb-3.5 border-b border-dashed border-[#E2E8F0]">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-3.5 h-3.5 text-[#1C232D]" />
+            <span>Processing &amp; Verification</span>
+          </div>
+          <span className="font-semibold text-[#0F172A]">PKR {data.procFee.toLocaleString()}</span>
+        </div>
+
+        {/* Total Amount Row */}
+        <div className="flex justify-between items-center pt-3.5 mb-5">
+          <div className="flex items-center gap-2">
+            <Wallet className="w-4 h-4 text-[#1C232D]" />
+            <span className="text-sm font-bold text-[#0F172A]">Total Amount</span>
+          </div>
+          <span className="text-base sm:text-lg font-extrabold text-[#1C232D]">
+            PKR {totalFee.toLocaleString()}
+          </span>
+        </div>
+
+        {/* Dual High-Converting Action Buttons: Assessment CTA (Primary) + WhatsApp (Secondary) */}
+        <div className="flex flex-col gap-2.5">
+          {/* 1. Free Visa Assessment & Eligibility Lead Form CTA - Primary Hero Action */}
+          <button
+            onClick={() => setIsCheckoutModalOpen(true)}
+            className="w-full py-3.5 px-4 rounded-full bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs sm:text-[13px] font-bold shadow-[0_4px_16px_rgba(37,99,235,0.28)] transition cursor-pointer active:scale-98 flex items-center justify-center gap-2 select-none group"
+          >
+            <FileCheck2 className="w-4 h-4 text-white shrink-0 group-hover:scale-110 transition-transform" />
+            <span>Get Free Visa Assessment</span>
+            <ArrowRight className="w-3.5 h-3.5 opacity-80 group-hover:translate-x-0.5 transition-transform" />
+          </button>
+
+          {/* 2. WhatsApp Apply & Know More Button - Clean Branded Green */}
+          <a
+            href={waInquiryUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="w-full py-3 px-4 rounded-full bg-[#25D366] hover:bg-[#20BA5A] text-white text-xs sm:text-[13px] font-bold shadow-[0_4px_14px_rgba(37,211,102,0.2)] transition cursor-pointer active:scale-98 flex items-center justify-center gap-2 select-none"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 shrink-0">
+              <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67M9.53 7.35C9.37 7.35 9.1 7.41 8.88 7.65C8.65 7.89 8.02 8.48 8.02 9.71C8.02 10.93 8.91 12.11 9.03 12.27C9.15 12.44 10.74 14.9 13.21 15.96C15.26 16.84 15.68 16.66 16.12 16.63C16.57 16.59 17.55 16.05 17.76 15.48C17.96 14.9 17.96 14.41 17.9 14.31C17.84 14.21 17.68 14.15 17.44 14.03C17.2 13.91 16.01 13.33 15.79 13.25C15.57 13.17 15.41 13.13 15.25 13.37C15.09 13.61 14.62 14.15 14.48 14.31C14.34 14.47 14.2 14.49 13.96 14.37C13.72 14.25 12.95 14 12.03 13.18C11.31 12.54 10.83 11.76 10.69 11.52C10.55 11.28 10.67 11.14 10.79 11.02C10.9 10.91 11.04 10.73 11.16 10.59C11.28 10.45 11.32 10.35 11.4 10.19C11.48 10.03 11.44 9.89 11.38 9.77C11.32 9.65 10.85 8.5 10.65 8.03C10.46 7.57 10.26 7.63 10.11 7.63C9.97 7.62 9.81 7.35 9.53 7.35Z"/>
+            </svg>
+            <span>WhatsApp: Apply &amp; Know More</span>
+          </a>
+        </div>
+
+        {/* Trust guarantee micro badges */}
+        <div className="mt-4 pt-3.5 border-t border-[#F1F5F9] grid grid-cols-2 gap-2 text-center text-[10px] text-[#64748B]">
+          <div className="flex items-center justify-center gap-1 font-medium">
+            <ShieldCheck className="w-3.5 h-3.5 text-[#10B981]" />
+            <span>100% Secure</span>
+          </div>
+          <div className="flex items-center justify-center gap-1 font-medium">
+            <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981]" />
+            <span>Govt Accredited</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-white text-[#0F172A] font-sans pb-32 sm:pb-24 selection:bg-[#1C232D]/10 selection:text-[#1C232D]">
       {/* 
@@ -834,7 +931,9 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
         onToggleCall={setIsCallOpen}
         onOpenVisaModal={onOpenVisaModal}
         onResetToHero={onBackToHome}
-        onNavigateToExplore={onNavigateToExplore || onBackToHome}
+        onNavigateToExplore={onNavigateToVisas || onNavigateToExplore || onBackToHome}
+        onNavigateToBlogs={onNavigateToBlogs}
+        onNavigateToVisas={onNavigateToVisas}
         currentCountry={{
           name: data.name,
           flagCode: data.flagCode,
@@ -843,23 +942,28 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
 
       {/* Main Page Container with top padding to clear floating header */}
       <main className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28">
-        {/* Navigation Breadcrumb & Back to Home */}
+        {/* Navigation Breadcrumb & Back to Home - Single line layout */}
         <div className="flex items-center justify-between gap-4 mb-6">
-          <div className="flex items-center gap-2 text-xs text-[#64748B]">
+          <div className="flex items-center gap-1.5 text-xs text-[#64748B] whitespace-nowrap overflow-hidden text-ellipsis min-w-0">
             <button
               onClick={onBackToHome}
-              className="flex items-center gap-1.5 text-[#0F172A] hover:text-[#1C232D] transition cursor-pointer font-semibold"
+              className="flex items-center gap-1 text-[#0F172A] hover:text-[#1C232D] transition cursor-pointer font-semibold shrink-0"
             >
-              <ArrowLeft className="w-3.5 h-3.5" />
+              <ArrowLeft className="w-3.5 h-3.5 shrink-0" />
               <span>Home</span>
             </button>
-            <span className="text-[#CBD5E1]">/</span>
-            <span className="text-[#64748B]">Explore Visas</span>
-            <span className="text-[#CBD5E1]">/</span>
-            <span className="text-[#1C232D] font-semibold">{data.name} Visa for Pakistanis</span>
+            <span className="text-[#CBD5E1] shrink-0">/</span>
+            <button
+              onClick={onNavigateToVisas || onNavigateToExplore || onBackToHome}
+              className="text-[#64748B] hover:text-[#0F172A] transition cursor-pointer shrink-0"
+            >
+              Explore
+            </button>
+            <span className="text-[#CBD5E1] shrink-0">/</span>
+            <span className="text-[#1C232D] font-semibold truncate shrink-0">{data.name}</span>
           </div>
 
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-[#F8FAFC] border border-[#E2E8F0] text-xs text-[#475569] shadow-xs">
+          <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-[#F8FAFC] border border-[#E2E8F0] text-xs text-[#475569] shadow-xs shrink-0">
             <div className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
             <span>Consular Portal Operational</span>
           </div>
@@ -1081,6 +1185,21 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
                 </div>
               </div>
             </section>
+
+            {/* ========================================================
+                MOBILE VIEW ONLY: Start Application Card placed directly above Reviews
+            ======================================================== */}
+            <div className="lg:hidden">
+              <div className="mb-3">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#64748B]">
+                  Fast-Track Consular Portal
+                </span>
+                <h3 className="text-lg font-bold text-[#0F172A]">
+                  Apply for {data.name} Visa
+                </h3>
+              </div>
+              {renderStartApplicationCard(true)}
+            </div>
 
             {/* ========================================================
                 SECTION B: Reviews
@@ -1429,71 +1548,10 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
 
           {/* 
             RIGHT STICKY SIDEBAR COLUMN (4 Cols)
-            Section: Pricing & Checkout Card on White Background
+            Section: Pricing & Checkout Card on White Background (Desktop Only)
           */}
-          <aside className="lg:col-span-4 lg:sticky lg:top-28">
-            <div className="rounded-[24px] bg-[#F8FAFC] p-1.5 border border-[#E2E8F0] shadow-[0_15px_40px_rgba(28,35,45,0.06)]">
-              {/* Top Banner */}
-              <div className="px-4 py-2.5 flex items-center gap-2 text-[#1C232D] text-xs font-semibold">
-                <Clock className="w-4 h-4" />
-                <span>Ready by {data.readyDate}, {data.dispatchTime}</span>
-              </div>
-
-              {/* Inner White Card */}
-              <div className="bg-white rounded-[20px] p-5 shadow-sm border border-[#E2E8F0]/60">
-                {/* Government Fees */}
-                <div className="flex justify-between items-center text-xs text-[#475569] mb-3">
-                  <div className="flex items-center gap-2">
-                    <Landmark className="w-3.5 h-3.5 text-[#64748B]" />
-                    <span>Government Fees</span>
-                  </div>
-                  <span className="font-semibold text-[#0F172A]">
-                    {data.govtFee > 0 ? `PKR ${data.govtFee.toLocaleString()}` : 'Included / Nil'}
-                  </span>
-                </div>
-
-                {/* Processing Fees */}
-                <div className="flex justify-between items-center text-xs text-[#475569] pb-4 border-b border-dashed border-[#E2E8F0]">
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="w-3.5 h-3.5 text-[#1C232D]" />
-                    <span>Processing &amp; Verification</span>
-                  </div>
-                  <span className="font-semibold text-[#0F172A]">PKR {data.procFee.toLocaleString()}</span>
-                </div>
-
-                {/* Total Amount Row */}
-                <div className="flex justify-between items-center pt-4 mb-5">
-                  <div className="flex items-center gap-2">
-                    <Wallet className="w-4 h-4 text-[#1C232D]" />
-                    <span className="text-sm font-bold text-[#0F172A]">Total Amount</span>
-                  </div>
-                  <span className="text-base font-extrabold text-[#1C232D]">
-                    PKR {totalFee.toLocaleString()}
-                  </span>
-                </div>
-
-                {/* Primary Action Button */}
-                <button
-                  onClick={() => setIsCheckoutModalOpen(true)}
-                  className="w-full py-3.5 rounded-full bg-[#1C232D] hover:bg-[#141A22] text-white text-xs font-semibold shadow-[0_6px_20px_rgba(28,35,45,0.3)] transition cursor-pointer active:scale-98 flex items-center justify-center gap-2"
-                >
-                  <span>Start Application</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-
-                {/* Trust guarantee micro badges */}
-                <div className="mt-4 pt-3.5 border-t border-[#F1F5F9] grid grid-cols-2 gap-2 text-center text-[10px] text-[#64748B]">
-                  <div className="flex items-center justify-center gap-1 font-medium">
-                    <ShieldCheck className="w-3.5 h-3.5 text-[#10B981]" />
-                    <span>100% Secure</span>
-                  </div>
-                  <div className="flex items-center justify-center gap-1 font-medium">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981]" />
-                    <span>Govt Accredited</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <aside className="hidden lg:block lg:col-span-4 lg:sticky lg:top-28">
+            {renderStartApplicationCard(false)}
 
             {/* WhatsApp Support Row */}
             <div className="mt-4 px-2 flex items-center justify-between bg-white rounded-2xl p-3 border border-[#E2E8F0] shadow-xs">
@@ -1503,14 +1561,16 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
                   Connect on WhatsApp with us
                 </span>
               </div>
-              <button
-                onClick={() => setIsWhatsAppModalOpen(true)}
+              <a
+                href={waInquiryUrl}
+                target="_blank"
+                rel="noreferrer"
                 className="w-9 h-9 rounded-full bg-[#ECFDF5] text-[#10B981] border border-[#A7F3D0] flex items-center justify-center hover:scale-105 transition cursor-pointer shadow-xs active:scale-95"
                 title="Open WhatsApp Support"
                 aria-label="WhatsApp Support"
               >
                 <MessageCircle className="w-4 h-4 fill-[#10B981]" />
-              </button>
+              </a>
             </div>
           </aside>
         </div>
@@ -1621,11 +1681,11 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
             >
               <div className="flex items-center justify-between pb-3 border-b border-[#E2E8F0]">
                 <div>
-                  <h3 className="text-sm font-bold text-[#0F172A]">
-                    Start {data.name} Visa Application
+                  <h3 className="text-sm sm:text-base font-bold text-[#0F172A]">
+                    Free {data.name} Visa Assessment
                   </h3>
-                  <p className="text-[11px] text-[#64748B]">
-                    Total payable: <strong className="text-[#1C232D]">PKR {totalFee.toLocaleString()}</strong>
+                  <p className="text-[11px] text-[#64748B] mt-0.5">
+                    Submit your details below. Our consular team will evaluate your eligibility and guide you step-by-step.
                   </p>
                 </div>
                 <button
@@ -1637,25 +1697,38 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
               </div>
 
               {checkoutSubmitted ? (
-                <div className="py-8 text-center space-y-3">
+                <div className="py-7 text-center space-y-3.5">
                   <div className="w-12 h-12 rounded-full bg-[#ECFDF5] text-[#10B981] mx-auto flex items-center justify-center shadow-sm">
                     <CheckCircle2 className="w-6 h-6" />
                   </div>
-                  <h4 className="text-sm font-bold text-[#0F172A]">
-                    Application Docket Initialized!
+                  <h4 className="text-base font-bold text-[#0F172A]">
+                    Assessment Request Received!
                   </h4>
-                  <p className="text-xs text-[#64748B] leading-relaxed max-w-xs mx-auto">
-                    Reference docket #{data.flagCode.toUpperCase()}-PK-{Math.floor(100000 + Math.random() * 900000)} created for {applicantName || 'Applicant'}. Our consular verification officer will contact you via WhatsApp shortly.
+                  <p className="text-xs text-[#475569] leading-relaxed max-w-xs mx-auto">
+                    Thank you, <strong className="text-[#0F172A]">{applicantName || 'Applicant'}</strong>. Our senior {data.name} visa desk is reviewing your profile and will contact you via WhatsApp or call at <strong className="text-[#0F172A]">{applicantPhone}</strong> with your personalized eligibility assessment.
                   </p>
-                  <button
-                    onClick={() => {
-                      setCheckoutSubmitted(false);
-                      setIsCheckoutModalOpen(false);
-                    }}
-                    className="px-6 py-2.5 rounded-full bg-[#1C232D] text-white text-xs font-semibold hover:bg-[#141A22] transition cursor-pointer"
-                  >
-                    Done
-                  </button>
+                  <div className="pt-2 flex flex-col gap-2">
+                    <a
+                      href={waInquiryUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="w-full py-2.5 rounded-full bg-[#25D366] hover:bg-[#20BA5A] text-white text-xs font-bold transition flex items-center justify-center gap-2 shadow-xs cursor-pointer"
+                    >
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                        <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67M9.53 7.35C9.37 7.35 9.1 7.41 8.88 7.65C8.65 7.89 8.02 8.48 8.02 9.71C8.02 10.93 8.91 12.11 9.03 12.27C9.15 12.44 10.74 14.9 13.21 15.96C15.26 16.84 15.68 16.66 16.12 16.63C16.57 16.59 17.55 16.05 17.76 15.48C17.96 14.9 17.96 14.41 17.9 14.31C17.84 14.21 17.68 14.15 17.44 14.03C17.2 13.91 16.01 13.33 15.79 13.25C15.57 13.17 15.41 13.13 15.25 13.37C15.09 13.61 14.62 14.15 14.48 14.31C14.34 14.47 14.2 14.49 13.96 14.37C13.72 14.25 12.95 14 12.03 13.18C11.31 12.54 10.83 11.76 10.69 11.52C10.55 11.28 10.67 11.14 10.79 11.02C10.9 10.91 11.04 10.73 11.16 10.59C11.28 10.45 11.32 10.35 11.4 10.19C11.48 10.03 11.44 9.89 11.38 9.77C11.32 9.65 10.85 8.5 10.65 8.03C10.46 7.57 10.26 7.63 10.11 7.63C9.97 7.62 9.81 7.35 9.53 7.35Z"/>
+                      </svg>
+                      <span>Need Urgent Answer? Chat on WhatsApp</span>
+                    </a>
+                    <button
+                      onClick={() => {
+                        setCheckoutSubmitted(false);
+                        setIsCheckoutModalOpen(false);
+                      }}
+                      className="w-full py-2.5 rounded-full border border-[#CBD5E1] text-[#64748B] hover:bg-[#F8FAFC] text-xs font-semibold transition cursor-pointer"
+                    >
+                      Close Window
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <form
@@ -1663,72 +1736,73 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
                     e.preventDefault();
                     setCheckoutSubmitted(true);
                   }}
-                  className="py-4 space-y-3 text-xs"
+                  className="py-4 space-y-3.5 text-xs"
                 >
                   <div>
                     <label className="font-semibold text-[#0F172A] block mb-1">
-                      Applicant Full Name (As per Passport)
+                      Your Full Name
                     </label>
                     <input
                       type="text"
                       required
-                      placeholder="e.g. Muhammad Ali Khan"
+                      placeholder="e.g. Muhammad Usman"
                       value={applicantName}
                       onChange={(e) => setApplicantName(e.target.value)}
-                      className="w-full h-10 px-3 rounded-xl border border-[#CBD5E1] outline-none focus:border-[#1C232D] focus:ring-2 focus:ring-[#1C232D]/10 transition"
+                      className="w-full h-10 px-3 rounded-xl border border-[#CBD5E1] outline-none focus:border-[#1C232D] focus:ring-2 focus:ring-[#1C232D]/10 transition text-xs text-[#0F172A]"
                     />
                   </div>
 
                   <div>
                     <label className="font-semibold text-[#0F172A] block mb-1">
-                      Pakistani Passport Number
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. AB1234567"
-                      value={applicantPassport}
-                      onChange={(e) => setApplicantPassport(e.target.value)}
-                      className="w-full h-10 px-3 rounded-xl border border-[#CBD5E1] outline-none focus:border-[#1C232D] focus:ring-2 focus:ring-[#1C232D]/10 transition uppercase"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="font-semibold text-[#0F172A] block mb-1">
-                      WhatsApp Mobile Number
+                      WhatsApp / Mobile Number
                     </label>
                     <input
                       type="tel"
                       required
-                      placeholder="+92 300 1234567"
+                      placeholder="0300 1234567"
                       value={applicantPhone}
                       onChange={(e) => setApplicantPhone(e.target.value)}
-                      className="w-full h-10 px-3 rounded-xl border border-[#CBD5E1] outline-none focus:border-[#1C232D] focus:ring-2 focus:ring-[#1C232D]/10 transition"
+                      className="w-full h-10 px-3 rounded-xl border border-[#CBD5E1] outline-none focus:border-[#1C232D] focus:ring-2 focus:ring-[#1C232D]/10 transition text-xs text-[#0F172A]"
                     />
                   </div>
 
+                  <div>
+                    <label className="font-semibold text-[#0F172A] block mb-1">
+                      Your City in Pakistan
+                    </label>
+                    <select
+                      value={applicantCity}
+                      onChange={(e) => setApplicantCity(e.target.value)}
+                      className="w-full h-10 px-3 rounded-xl border border-[#CBD5E1] bg-white outline-none focus:border-[#1C232D] focus:ring-2 focus:ring-[#1C232D]/10 transition text-xs font-medium text-[#0F172A]"
+                    >
+                      <option value="Lahore">Lahore</option>
+                      <option value="Karachi">Karachi</option>
+                      <option value="Islamabad / Rawalpindi">Islamabad / Rawalpindi</option>
+                      <option value="Faisalabad">Faisalabad</option>
+                      <option value="Multan">Multan</option>
+                      <option value="Peshawar">Peshawar</option>
+                      <option value="Sialkot">Sialkot</option>
+                      <option value="Gujranwala">Gujranwala</option>
+                      <option value="Other">Other City</option>
+                    </select>
+                  </div>
+
                   <div className="p-3 bg-[#F8FAFC] rounded-xl border border-[#E2E8F0] space-y-1 text-[11px] text-[#64748B]">
-                    <div className="flex justify-between">
-                      <span>Government Consular Fee:</span>
-                      <span className="font-bold text-[#0F172A]">
-                        {data.govtFee > 0 ? `PKR ${data.govtFee.toLocaleString()}` : 'Nil / Included'}
-                      </span>
+                    <div className="flex items-center gap-1.5 font-semibold text-[#0F172A]">
+                      <ShieldCheck className="w-3.5 h-3.5 text-[#10B981]" />
+                      <span>100% Free Consultation &bull; No Payment Now</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span>Verification &amp; Processing Fee:</span>
-                      <span className="font-bold text-[#0F172A]">PKR {data.procFee.toLocaleString()}</span>
-                    </div>
-                    <div className="flex justify-between pt-1 border-t border-[#E2E8F0] font-bold text-[#0F172A]">
-                      <span>Total:</span>
-                      <span className="text-[#1C232D]">PKR {totalFee.toLocaleString()}</span>
-                    </div>
+                    <p className="text-[10.5px] text-[#64748B] leading-relaxed">
+                      Our senior consular consultant will call to review your bank statement, ties, and documentation before lodging.
+                    </p>
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full py-3 rounded-full bg-[#1C232D] hover:bg-[#141A22] text-white text-xs font-semibold shadow-[0_4px_16px_rgba(28,35,45,0.25)] transition cursor-pointer"
+                    className="w-full py-3.5 rounded-full bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs sm:text-[13px] font-bold shadow-[0_4px_16px_rgba(37,99,235,0.28)] transition cursor-pointer flex items-center justify-center gap-2 active:scale-98"
                   >
-                    Confirm &amp; Proceed to Payment
+                    <FileCheck2 className="w-4 h-4 text-white" />
+                    <span>Submit Free Assessment</span>
                   </button>
                 </form>
               )}
@@ -1797,34 +1871,58 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
 
       {/* ========================================================
           MOBILE STICKY BOTTOM CARD (Mobile View Only)
-          - Curved corners, attached to bottom margin
-          - Total price, 'See requirements' underline link
-          - 'Apply Now' CTA button in brand color #1C232D
+          - Attached flush to bottom margin of screen (no gap/margin below)
+          - Bottom corners NOT curved (square, attached to bottom margin of screen)
+          - Only top corners curved (rounded-t-[22px] rounded-b-none)
+          - Improved lead callback CTA button
           - White fill background
       ======================================================== */}
-      <div className="fixed bottom-2.5 inset-x-3 sm:hidden z-40 bg-white rounded-[20px] p-3 px-4 shadow-[0_8px_30px_rgba(0,0,0,0.16)] border border-[#E2E8F0] flex items-center justify-between gap-3 select-none pointer-events-auto">
-        <div className="flex flex-col min-w-0">
-          <div className="flex items-baseline gap-1.5">
-            <span className="text-base font-extrabold text-[#1C232D] tracking-tight">
+      <div className="fixed bottom-0 inset-x-0 sm:hidden z-40 bg-white rounded-t-[22px] rounded-b-none p-3 px-4 pb-[max(0.85rem,env(safe-area-inset-bottom))] shadow-[0_-8px_30px_rgba(0,0,0,0.14)] border-t border-[#E2E8F0] border-x-0 border-b-0 flex items-center justify-between gap-3 select-none pointer-events-auto">
+        {/* Left Side: Generous Price & Fees Display with no awkward cramping */}
+        <div className="flex flex-col min-w-0 pr-1 justify-center">
+          <div className="flex items-baseline gap-1.5 flex-nowrap">
+            <span className="text-[17px] font-black text-[#0F172A] tracking-tight whitespace-nowrap">
               PKR {totalFee.toLocaleString()}
             </span>
-            <span className="text-[10px] text-[#64748B] font-medium">all fees</span>
+            <span className="text-[10px] text-[#64748B] font-medium whitespace-nowrap">
+              all fees
+            </span>
           </div>
           <button
             type="button"
             onClick={() => setIsChecklistModalOpen(true)}
-            className="text-[11px] font-semibold text-[#1C232D] underline underline-offset-2 hover:opacity-80 transition cursor-pointer text-left w-fit mt-0.5"
+            className="text-[10px] font-semibold text-[#2563EB] hover:underline transition cursor-pointer text-left w-fit mt-0.5 leading-none"
           >
-            See requirements
+            Requirements
           </button>
         </div>
-        <button
-          type="button"
-          onClick={() => setIsCheckoutModalOpen(true)}
-          className="px-5 py-2.5 rounded-full bg-[#1C232D] hover:bg-[#141A22] text-white text-xs font-bold tracking-tight shadow-sm active:scale-95 transition cursor-pointer shrink-0"
-        >
-          Apply Now
-        </button>
+
+        {/* Right Side: Perfectly sized, non-conflicting action buttons */}
+        <div className="flex items-center gap-2 shrink-0">
+          {/* WhatsApp Button: Compact circular 40px icon button saving horizontal space */}
+          <a
+            href={waInquiryUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="w-10 h-10 rounded-full bg-[#25D366] hover:bg-[#20BA5A] text-white flex items-center justify-center shadow-[0_2px_8px_rgba(37,211,102,0.3)] active:scale-95 transition cursor-pointer shrink-0"
+            title="Chat on WhatsApp"
+            aria-label="Chat on WhatsApp"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+              <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67M9.53 7.35C9.37 7.35 9.1 7.41 8.88 7.65C8.65 7.89 8.02 8.48 8.02 9.71C8.02 10.93 8.91 12.11 9.03 12.27C9.15 12.44 10.74 14.9 13.21 15.96C15.26 16.84 15.68 16.66 16.12 16.63C16.57 16.59 17.55 16.05 17.76 15.48C17.96 14.9 17.96 14.41 17.9 14.31C17.84 14.21 17.68 14.15 17.44 14.03C17.2 13.91 16.01 13.33 15.79 13.25C15.57 13.17 15.41 13.13 15.25 13.37C15.09 13.61 14.62 14.15 14.48 14.31C14.34 14.47 14.2 14.49 13.96 14.37C13.72 14.25 12.95 14 12.03 13.18C11.31 12.54 10.83 11.76 10.69 11.52C10.55 11.28 10.67 11.14 10.79 11.02C10.9 10.91 11.04 10.73 11.16 10.59C11.28 10.45 11.32 10.35 11.4 10.19C11.48 10.03 11.44 9.89 11.38 9.77C11.32 9.65 10.85 8.5 10.65 8.03C10.46 7.57 10.26 7.63 10.11 7.63C9.97 7.62 9.81 7.35 9.53 7.35Z"/>
+            </svg>
+          </a>
+
+          {/* Free Assessment Primary Button: Vibrant Brand Blue */}
+          <button
+            type="button"
+            onClick={() => setIsCheckoutModalOpen(true)}
+            className="h-10 px-4 rounded-full bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-[11.5px] font-bold tracking-tight shadow-[0_4px_14px_rgba(37,99,235,0.28)] active:scale-95 transition cursor-pointer flex items-center gap-1.5 shrink-0"
+          >
+            <FileCheck2 className="w-3.5 h-3.5 text-white" />
+            <span>Free Assessment</span>
+          </button>
+        </div>
       </div>
     </div>
   );

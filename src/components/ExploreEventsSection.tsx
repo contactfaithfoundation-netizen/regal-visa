@@ -403,9 +403,9 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
         {/* 
           Right Blurred Panel:
           - Frosted glass overlay fading in HORIZONTALLY from left to right (feathered mask, no harsh vertical border)
-          - Contains Flag, Destination Name, Metadata, Inside Fees & Visa Delivery Date (in a single line), and Desktop Hoverstate
+          - Contains Flag, Destination Name, and Metadata Row (TYPE, VALID, FEES) only
         */}
-        <div className="absolute right-0 inset-y-0 w-[60%] sm:w-[54%] lg:w-[52%] flex flex-col justify-end p-2.5 sm:p-4 text-white overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]">
+        <div className="absolute right-0 inset-y-0 w-[55%] sm:w-[50%] lg:w-[48%] flex flex-col justify-end p-3 sm:p-4 text-white overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]">
           {/* Layer 1: Frosted Blur Mask with crisp 4px blur radius fading in horizontally from left to right */}
           <div
             className="absolute inset-0 backdrop-blur-[4px] bg-gradient-to-r from-transparent via-black/40 to-black/80 pointer-events-none"
@@ -417,10 +417,10 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
             }}
           />
 
-          {/* Layer 2: Content inside blurred zone */}
+          {/* Layer 2: Content inside blurred zone: Flag, Country, Type, Valid, Fees details only */}
           <div className="relative z-10 flex flex-col items-center w-full justify-end">
             {/* Country Flag Circle */}
-            <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full overflow-hidden border border-white/20 shadow-sm mb-1 sm:mb-1.5 flex items-center justify-center shrink-0 bg-white/10">
+            <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full overflow-hidden border border-white/20 shadow-sm mb-1.5 sm:mb-2 flex items-center justify-center shrink-0 bg-white/10">
               <img
                 src="https://flagcdn.com/w80/sa.png"
                 alt="Saudi Arabia flag"
@@ -433,93 +433,62 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
             <h4 className="font-['Playfair_Display',serif] text-[13px] sm:text-[15px] font-semibold uppercase tracking-[0.04em] text-white text-center leading-tight drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)]">
               SAUDI ARABIA
             </h4>
-            <span className="text-[8px] sm:text-[9.5px] uppercase tracking-wider text-emerald-300 font-semibold mt-0.5 leading-tight">
-              UMRAH &amp; TOURIST
-            </span>
 
-            {/* Horizontal Divider */}
-            <div className="w-full h-[1px] bg-white/25 my-1.5 sm:my-2" />
+            {/* Horizontal Divider with width matching other cards */}
+            <div className="w-full max-w-[170px] sm:max-w-[195px] h-[1px] bg-white/25 my-2 sm:my-2.5" />
 
-            {/* Metadata Row: TYPE, VALID, FEES */}
-            <div className="w-full flex items-end justify-between text-white">
+            {/* 
+              Bottom Metadata Row:
+              - In exact same manner and equal distance as other cards
+              - On mobile: TYPE is left-aligned, VALID is right-aligned
+              - On tablet/desktop (md:): 3 columns (TYPE left, VALID center, FEES right)
+            */}
+            <div className="w-full max-w-[170px] sm:max-w-[195px] flex items-end justify-between text-white">
+              {/* TYPE */}
               <div className="text-left flex flex-col">
-                <span className="text-[7.5px] sm:text-[8.5px] uppercase tracking-wider text-white/80 mb-0.5 leading-none">
+                <span className="text-[7.5px] sm:text-[8.5px] uppercase tracking-wider text-white/80 mb-0.5 leading-none drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]">
                   TYPE
                 </span>
-                <span className="text-[9.5px] sm:text-[10.5px] font-bold tracking-tight text-white leading-tight">
+                <span className="text-[9.5px] sm:text-[10.5px] font-bold tracking-tight text-white leading-tight drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]">
                   E-VISA
                 </span>
               </div>
-              <div className="text-center flex flex-col">
-                <span className="text-[7.5px] sm:text-[8.5px] uppercase tracking-wider text-white/80 mb-0.5 leading-none">
+
+              {/* VALID: text-right on mobile (<768px), text-center on md+ with equal distance */}
+              <div className="text-right md:text-center flex flex-col">
+                <span className="text-[7.5px] sm:text-[8.5px] uppercase tracking-wider text-white/80 mb-0.5 leading-none drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]">
                   VALID
                 </span>
-                <span className="text-[9.5px] sm:text-[10.5px] font-bold tracking-tight text-white leading-tight">
+                <span className="text-[9.5px] sm:text-[10.5px] font-bold tracking-tight text-white leading-tight drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]">
                   90 DAYS
                 </span>
               </div>
-              <div className="text-right flex flex-col">
-                <span className="text-[7.5px] sm:text-[8.5px] uppercase tracking-wider text-white/80 mb-0.5 leading-none">
+
+              {/* FEES: Hidden on mobile, shown on tablet/desktop */}
+              <div className="hidden md:flex text-right flex-col">
+                <span className="text-[8.5px] uppercase tracking-wider text-white/55 mb-0.5 leading-none">
                   FEES
                 </span>
-                <span className="text-[9.5px] sm:text-[10.5px] font-bold tracking-tight text-white leading-tight">
+                <span className="text-[10.5px] font-bold tracking-tight text-white leading-tight">
                   PKR 84,893
                 </span>
               </div>
             </div>
-
-            {/* 
-              Visa Delivery Date & Fast-Track Direct E-Visa in ONE line without line breaks (INSIDE the card)
-            */}
-            <div className="w-full mt-2 pt-1.5 border-t border-white/20 flex items-center justify-between gap-1 text-white whitespace-nowrap text-[8px] sm:text-[9.5px] lg:text-[10px]">
-              <div className="flex items-center gap-1 min-w-0">
-                <span className="text-white/70 font-normal">Get your visa by</span>
-                <span className="font-bold text-white">28 Oct, 6:00 PM</span>
-              </div>
-              <div className="flex items-center gap-1 shrink-0">
-                <span className="font-bold text-[#86EFAC]">Direct E-Visa</span>
-              </div>
-            </div>
-
-            {/* 
-              Desktop Hoverstate Expansion (identical to other cards):
-              Reveals documents needed + emergency assistance button
-            */}
-            <div className="w-full grid grid-rows-[0fr] lg:group-hover:grid-rows-[1fr] opacity-0 lg:group-hover:opacity-100 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]">
-              <div className="overflow-hidden min-h-0 w-full flex flex-col">
-                <div className="w-full h-[1px] bg-white/15 my-2" />
-                <span className="text-[9px] font-semibold uppercase tracking-[0.08em] text-white/50 text-left mb-1 leading-none">
-                  DOCUMENTS NEEDED:
-                </span>
-                <p className="text-[10.5px] font-semibold text-white leading-[1.3] text-left line-clamp-2">
-                  Passport Bio Scan, White Background Photo, Nusuk Permit, Return Flight Ticket
-                </p>
-                <div className="w-full h-[1px] bg-white/15 my-2" />
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (onSelectCountry) {
-                      onSelectCountry('Saudi Arabia');
-                    }
-                  }}
-                  className="w-full py-1.5 px-3 rounded-full bg-white/[0.08] hover:bg-white/[0.14] border border-white/10 flex items-center justify-center gap-2 transition cursor-pointer active:scale-95 shadow-xs"
-                >
-                  <svg className="w-3.5 h-3.5 text-white/80 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="9" strokeDasharray="3 3" />
-                    <polyline points="12 7 12 12 15 14" />
-                  </svg>
-                  <span className="text-[11px] font-medium tracking-tight whitespace-nowrap">
-                    <span className="text-white">Get </span>
-                    <span className="bg-gradient-to-r from-white via-[#86EFAC] to-white bg-clip-text text-transparent font-medium">
-                      emergency assistance
-                    </span>
-                  </span>
-                </button>
-              </div>
-            </div>
           </div>
         </div>
+      </div>
+
+      {/* External Text Below Card (identical to other cards) */}
+      <div className="mt-2 sm:mt-2.5 px-0.5">
+        <div className="text-[11px] sm:text-[12px] text-neutral-500 font-normal leading-tight">
+          {activeTab === 'explore' ? 'Get your visa by' : 'Flights & visa ready by'}
+        </div>
+        <div className="text-[11.5px] sm:text-[12.5px] font-bold text-neutral-900 mt-0.5 leading-snug">
+          28 Oct, 6:00 PM
+        </div>
+        <p className="md:hidden text-[11px] font-medium text-neutral-500 mt-0.5 leading-tight">
+          Fees: PKR 84,893
+        </p>
       </div>
     </div>
   );
