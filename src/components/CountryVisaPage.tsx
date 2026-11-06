@@ -1042,8 +1042,9 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="overflow-hidden pt-4 mt-3 border-t border-[#E2E8F0]/80 space-y-3"
+                        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                        style={{ willChange: 'height, opacity' }}
+                        className="overflow-hidden pt-4 mt-3 border-t border-[#E2E8F0]/80 space-y-3 transform-gpu"
                       >
                         <div className="flex items-start gap-3">
                           <div className="w-5 h-5 rounded-full bg-[#F1F5F9] text-[#1C232D] flex items-center justify-center shrink-0 mt-0.5">
@@ -1394,7 +1395,8 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
                               animate={{ opacity: 1, height: 'auto' }}
                               exit={{ opacity: 0, height: 0 }}
                               transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
-                              className="overflow-hidden pb-4 pt-1 space-y-3 px-1"
+                              style={{ willChange: 'height, opacity' }}
+                              className="overflow-hidden pb-4 pt-1 space-y-3 px-1 transform-gpu"
                             >
                               {group.items.map((item, idx) => (
                                 <div
@@ -1531,7 +1533,9 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-[#E2E8F0] p-6 z-10 max-h-[90vh] overflow-y-auto"
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              style={{ willChange: 'transform, opacity' }}
+              className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-[#E2E8F0] p-6 z-10 max-h-[90vh] overflow-y-auto transform-gpu"
             >
               <div className="flex items-center justify-between pb-3 border-b border-[#E2E8F0]">
                 <div className="flex items-center gap-2">
@@ -1611,7 +1615,9 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl border border-[#E2E8F0] p-6 z-10"
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              style={{ willChange: 'transform, opacity' }}
+              className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl border border-[#E2E8F0] p-6 z-10 transform-gpu"
             >
               <div className="flex items-center justify-between pb-3 border-b border-[#E2E8F0]">
                 <div>
@@ -1748,7 +1754,9 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              className="relative w-full max-w-sm bg-white rounded-3xl shadow-2xl border border-[#E2E8F0] p-6 z-10 text-center"
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              style={{ willChange: 'transform, opacity' }}
+              className="relative w-full max-w-sm bg-white rounded-3xl shadow-2xl border border-[#E2E8F0] p-6 z-10 text-center transform-gpu"
             >
               <div className="w-12 h-12 rounded-full bg-[#ECFDF5] text-[#10B981] border border-[#A7F3D0] mx-auto flex items-center justify-center mb-3">
                 <MessageCircle className="w-6 h-6 fill-[#10B981]" />

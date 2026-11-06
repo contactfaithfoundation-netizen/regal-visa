@@ -58,10 +58,10 @@ export const CountryVisaCard: React.FC<CountryVisaCardProps> = ({
           position: 'absolute',
           bottom: bottomOffset,
           left: '50%',
-          transform: 'translateX(-50%)',
+          transform: 'translateX(-50%) translateZ(0)',
           zIndex: 40,
         }}
-        className="w-[280px] sm:w-[310px] max-w-[calc(100vw-32px)] select-none pointer-events-auto"
+        className="w-[280px] sm:w-[310px] max-w-[calc(100vw-32px)] select-none pointer-events-auto transform-gpu"
       >
         {/* Unified Card Container with stable upward expansion geometry */}
         <div className="bg-white/98 backdrop-blur-md border border-white/90 rounded-[22px] shadow-[0_12px_36px_rgba(0,0,0,0.22)] overflow-hidden transition-shadow duration-200">
@@ -84,7 +84,8 @@ export const CountryVisaCard: React.FC<CountryVisaCardProps> = ({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -4 }}
                     transition={{ duration: 0.22, ease: 'easeOut' }}
-                    className="flex items-center gap-2"
+                    style={{ willChange: 'transform, opacity' }}
+                    className="flex items-center gap-2 transform-gpu"
                   >
                     <div className="w-[20px] h-[14px] rounded-[3px] overflow-hidden shadow-xs border border-black/15 shrink-0 bg-slate-100 flex items-center justify-center">
                       <img
@@ -92,6 +93,7 @@ export const CountryVisaCard: React.FC<CountryVisaCardProps> = ({
                         alt={`${country} flag`}
                         className="w-full h-full object-cover"
                         loading="eager"
+                        decoding="async"
                       />
                     </div>
                     <h4 className="font-sans text-[15px] sm:text-[16px] font-bold text-[#141821] leading-tight tracking-tight whitespace-nowrap">
@@ -132,7 +134,8 @@ export const CountryVisaCard: React.FC<CountryVisaCardProps> = ({
                   duration: 0.32,
                   ease: [0.25, 1, 0.35, 1],
                 }}
-                className="overflow-hidden"
+                style={{ willChange: 'height, opacity' }}
+                className="overflow-hidden transform-gpu"
               >
                 <div className="px-4 pb-4 pt-1 border-t border-neutral-100 space-y-3">
                   <p className="text-[11.5px] leading-[1.5] text-[#6C7484] font-normal pt-1">

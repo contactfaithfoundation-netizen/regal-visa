@@ -120,9 +120,10 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
         {/* Top Header Pill with Framer Motion layout morphing */}
         <motion.nav
           layout
-          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
           aria-label="Main Navigation"
-          className={`flex items-center p-1 rounded-[22px] bg-white/98 backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.14)] border border-white transition-shadow ${
+          style={{ willChange: 'transform' }}
+          className={`flex items-center p-1 rounded-[22px] bg-white/98 backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.14)] border border-white transition-shadow transform-gpu ${
             isMenuOpen || isCallMenuOpen
               ? currentCountry
                 ? 'w-[350px] sm:w-[410px]'
@@ -190,7 +191,8 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.92 }}
                       transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-                      className="flex items-center justify-start h-full min-w-0"
+                      style={{ willChange: 'transform, opacity' }}
+                      className="flex items-center justify-start h-full min-w-0 transform-gpu"
                     >
                       <img
                         src="https://res.cloudinary.com/dacyy7rkn/image/upload/v1792480449/image_tqqmok.avif"
@@ -199,6 +201,7 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
                           currentCountry ? 'h-[32px] sm:h-[35px]' : 'h-[44px] sm:h-[48px]'
                         } w-auto max-w-none object-contain shrink-0 drop-shadow-xs -ml-0.5 sm:-ml-1 transition-all duration-200`}
                         loading="eager"
+                        decoding="async"
                       />
 
                       {currentCountry && (
@@ -210,6 +213,7 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
                               alt={currentCountry.name}
                               className="w-full h-full object-cover"
                               loading="eager"
+                              decoding="async"
                             />
                           </div>
                           <span className="text-[12px] sm:text-[13px] font-bold text-[#141821] truncate max-w-[85px] sm:max-w-[125px] tracking-tight">
@@ -225,7 +229,8 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -5 }}
                       transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-                      className="font-sans text-[14px] font-medium tracking-tight text-[#202530] pl-1.5"
+                      style={{ willChange: 'transform, opacity' }}
+                      className="font-sans text-[14px] font-medium tracking-tight text-[#202530] pl-1.5 transform-gpu"
                     >
                       Menu
                     </motion.span>
@@ -452,11 +457,12 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
                       initial={{ opacity: 0, y: 6 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{
-                        duration: 0.25,
-                        delay: 0.04 + idx * 0.03,
+                        duration: 0.22,
+                        delay: 0.03 + idx * 0.02,
                         ease: [0.22, 1, 0.36, 1],
                       }}
-                      className="bg-[#F8FAFC] hover:bg-[#F1F5F9] border border-[#E2E8F0] rounded-[18px] py-2.5 px-3.5 flex items-center justify-between transition-colors duration-150"
+                      style={{ willChange: 'transform, opacity' }}
+                      className="bg-[#F8FAFC] hover:bg-[#F1F5F9] border border-[#E2E8F0] rounded-[18px] py-2.5 px-3.5 flex items-center justify-between transition-colors duration-150 transform-gpu"
                     >
                       {/* Number Display */}
                       <span className="font-sans text-[15px] sm:text-[16px] font-semibold text-[#1C232D] tracking-tight">

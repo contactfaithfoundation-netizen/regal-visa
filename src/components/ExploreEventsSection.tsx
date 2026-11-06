@@ -387,13 +387,14 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
       className="col-span-2 md:col-span-2 lg:col-span-2 flex flex-col group select-none cursor-pointer"
     >
       {/* Upper Image Card with responsive height matching other cards */}
-      <div className="relative h-[235px] sm:h-[310px] lg:h-[350px] w-full rounded-[20px] sm:rounded-[24px] overflow-hidden shadow-sm group-hover:shadow-md transition-shadow duration-300 cursor-pointer bg-neutral-900 flex">
+      <div className="relative h-[235px] sm:h-[310px] lg:h-[350px] w-full rounded-[20px] sm:rounded-[24px] overflow-hidden shadow-sm group-hover:shadow-md transition-shadow duration-300 cursor-pointer bg-neutral-900 flex transform-gpu">
         {/* Background Photo: Main Kaaba (Qaba) on the left, continuing behind the blurred right panel (mirrored horizontally) */}
         <img
           src="https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?auto=format&fit=crop&w=1400&q=85"
           alt="Kaaba Makkah - Saudi Arabia"
-          className="absolute inset-0 w-full h-full object-cover object-center -scale-x-100 group-hover:-scale-x-105 group-hover:scale-y-105 transition-transform duration-700 ease-out"
+          className="absolute inset-0 w-full h-full object-cover object-center -scale-x-100 group-hover:-scale-x-105 group-hover:scale-y-105 transition-transform duration-700 ease-out transform-gpu"
           loading="lazy"
+          decoding="async"
         />
 
         {/* Subtle shadow gradient on left edge */}
@@ -569,7 +570,7 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
             {activeTab === 'explore' ? (
               <motion.div
                 layoutId="activeTabLine"
-                className="w-5 h-[2.5px] bg-neutral-900 rounded-full mt-1.5"
+                className="w-5 h-[2.5px] bg-neutral-900 rounded-full mt-1.5 transform-gpu"
                 transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
               />
             ) : (
@@ -613,7 +614,7 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
             {activeTab === 'events' ? (
               <motion.div
                 layoutId="activeTabLine"
-                className="w-5 h-[2.5px] bg-neutral-900 rounded-full mt-1.5"
+                className="w-5 h-[2.5px] bg-neutral-900 rounded-full mt-1.5 transform-gpu"
                 transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
               />
             ) : (
@@ -833,11 +834,12 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
       <AnimatePresence mode="wait">
         <motion.div
           key={activeTab}
-          initial={{ opacity: 0, y: 12, scale: 0.99 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: -10, scale: 0.99 }}
-          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-3.5 sm:gap-x-5 gap-y-6 sm:gap-y-9"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -6 }}
+          transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
+          style={{ willChange: 'opacity, transform' }}
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-3.5 sm:gap-x-5 gap-y-6 sm:gap-y-9 transform-gpu"
         >
           {filteredCards.length > 0 || showWideCard ? (
             <>
@@ -852,7 +854,7 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
                 className="flex flex-col group select-none cursor-pointer"
               >
                 {/* Upper Image Card with responsive mobile height */}
-                <div className="relative h-[235px] sm:h-[310px] lg:h-[350px] w-full rounded-[20px] sm:rounded-[24px] overflow-hidden shadow-sm group-hover:shadow-md transition-shadow duration-300 cursor-pointer bg-neutral-100">
+                <div className="relative h-[235px] sm:h-[310px] lg:h-[350px] w-full rounded-[20px] sm:rounded-[24px] overflow-hidden shadow-sm group-hover:shadow-md transition-shadow duration-300 cursor-pointer bg-neutral-100 transform-gpu">
                   {/* Background Photo */}
                   <img
                     src={card.image}
@@ -862,8 +864,9 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
                         e.currentTarget.src = card.fallbackImage;
                       }
                     }}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out transform-gpu"
                     loading="lazy"
+                    decoding="async"
                   />
 
                   {/* 
@@ -1066,7 +1069,8 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-              className="relative w-full max-w-lg bg-white rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl z-10 max-h-[85vh] overflow-y-auto"
+              style={{ willChange: 'transform' }}
+              className="relative w-full max-w-lg bg-white rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl z-10 max-h-[85vh] overflow-y-auto transform-gpu"
             >
               <div className="flex items-center justify-between pb-4 border-b border-neutral-100">
                 <div className="flex items-center gap-2">

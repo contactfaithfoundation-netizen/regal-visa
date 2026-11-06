@@ -284,7 +284,8 @@ export const FaqSection: React.FC<FaqSectionProps> = ({
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
-                        className="overflow-hidden pb-4 pt-1 space-y-3 px-1"
+                        style={{ willChange: 'height, opacity' }}
+                        className="overflow-hidden pb-4 pt-1 space-y-3 px-1 transform-gpu"
                       >
                         {group.items.map((item, idx) => (
                           <div

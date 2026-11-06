@@ -12,6 +12,7 @@ export const LiveCounterStripe: React.FC = () => {
       ([entry]) => {
         if (entry.isIntersecting) {
           setInView(true);
+          observer.disconnect();
         }
       },
       { threshold: 0.15 }
@@ -29,6 +30,7 @@ export const LiveCounterStripe: React.FC = () => {
     if (!inView) return;
 
     let startTime: number | null = null;
+    let lastRenderTime = 0;
     const duration = 1600;
 
     const animate = (currentTime: number) => {
@@ -36,11 +38,14 @@ export const LiveCounterStripe: React.FC = () => {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
       
-      // Cubic ease out
-      const easeProgress = 1 - Math.pow(1 - progress, 3);
-
-      setApprovalCount(easeProgress * 98.4);
-      setVisasCount(Math.floor(easeProgress * 12000));
+      // Throttle to 60fps max for 120/144Hz displays to avoid redundant React render passes
+      if (currentTime - lastRenderTime >= 15 || progress === 1) {
+        lastRenderTime = currentTime;
+        // Cubic ease out
+        const easeProgress = 1 - Math.pow(1 - progress, 3);
+        setApprovalCount(easeProgress * 98.4);
+        setVisasCount(Math.floor(easeProgress * 12000));
+      }
 
       if (progress < 1) {
         requestAnimationFrame(animate);
@@ -57,7 +62,7 @@ export const LiveCounterStripe: React.FC = () => {
   return (
     <div
       ref={stripeRef}
-      className="w-full bg-[#1C232D] text-white py-5 xs:py-6 sm:py-9 lg:py-11 px-3 xs:px-5 sm:px-10 lg:px-16 select-none rounded-none"
+      className="w-full bg-[#1C232D] text-white py-5 xs:py-6 sm:py-9 lg:py-11 px-3 xs:px-5 sm:px-10 lg:px-16 select-none rounded-none transform-gpu"
     >
       <div className="max-w-6xl mx-auto">
         {/* 
@@ -69,7 +74,7 @@ export const LiveCounterStripe: React.FC = () => {
         <div className="grid grid-cols-3 gap-x-2 xs:gap-x-4 sm:gap-x-8 lg:gap-12 items-center">
           {/* Stat 1: 98.4% Approval Rate */}
           <div className="flex flex-col items-center justify-center text-center">
-            <span className="font-sans font-semibold text-white text-[19px] xs:text-[23px] sm:text-4xl lg:text-[46px] xl:text-[52px] tracking-tight leading-none whitespace-nowrap">
+            <span className="font-sans font-semibold text-white tabular-nums text-[19px] xs:text-[23px] sm:text-4xl lg:text-[46px] xl:text-[52px] tracking-tight leading-none whitespace-nowrap">
               {approvalCount.toFixed(1)}%
             </span>
             <span className="font-sans font-medium text-white/75 text-[8px] xs:text-[9.5px] sm:text-[11px] lg:text-[12.5px] tracking-wider uppercase mt-1.5 sm:mt-2.5 leading-tight whitespace-nowrap">
@@ -79,7 +84,7 @@ export const LiveCounterStripe: React.FC = () => {
 
           {/* Stat 2: 12,000+ Visas Processed */}
           <div className="flex flex-col items-center justify-center text-center">
-            <span className="font-sans font-semibold text-white text-[19px] xs:text-[23px] sm:text-4xl lg:text-[46px] xl:text-[52px] tracking-tight leading-none whitespace-nowrap">
+            <span className="font-sans font-semibold text-white tabular-nums text-[19px] xs:text-[23px] sm:text-4xl lg:text-[46px] xl:text-[52px] tracking-tight leading-none whitespace-nowrap">
               {visasCount.toLocaleString()}+
             </span>
             <span className="font-sans font-medium text-white/75 text-[8px] xs:text-[9.5px] sm:text-[11px] lg:text-[12.5px] tracking-wider uppercase mt-1.5 sm:mt-2.5 leading-tight whitespace-nowrap">
@@ -89,7 +94,7 @@ export const LiveCounterStripe: React.FC = () => {
 
           {/* Stat 3: 24/7 Dedicated Case Officer */}
           <div className="flex flex-col items-center justify-center text-center">
-            <span className="font-sans font-semibold text-white text-[19px] xs:text-[23px] sm:text-4xl lg:text-[46px] xl:text-[52px] tracking-tight leading-none whitespace-nowrap">
+            <span className="font-sans font-semibold text-white tabular-nums text-[19px] xs:text-[23px] sm:text-4xl lg:text-[46px] xl:text-[52px] tracking-tight leading-none whitespace-nowrap">
               24/7
             </span>
             <span className="font-sans font-medium text-white/75 text-[8px] xs:text-[9.5px] sm:text-[11px] lg:text-[12.5px] tracking-wider uppercase mt-1.5 sm:mt-2.5 leading-tight whitespace-nowrap">

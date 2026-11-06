@@ -67,11 +67,14 @@ export default function App() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Preload all photography
+  // Preload and decode all photography in GPU memory
   useEffect(() => {
     SLIDES.forEach((slide) => {
       const img = new Image();
       img.src = slide.image;
+      if (typeof img.decode === 'function') {
+        img.decode().catch(() => {});
+      }
     });
   }, []);
 
@@ -473,11 +476,15 @@ export default function App() {
               style={{
                 position: 'absolute',
                 zIndex: zIndex,
-                willChange: 'top, left, width, height, border-radius, transform',
+                willChange: isAnimating ? 'top, left, width, height, border-radius' : 'auto',
+                transform: 'translateZ(0)',
+                backfaceVisibility: 'hidden',
+                WebkitBackfaceVisibility: 'hidden',
               }}
-              className={`overflow-hidden ${
+              whileHover={isClickable && !isAnimating ? { scale: 1.04 } : undefined}
+              className={`overflow-hidden transform-gpu ${
                 isClickable
-                  ? 'cursor-pointer group hover:scale-[1.04] transition-transform duration-300'
+                  ? 'cursor-pointer group'
                   : 'pointer-events-none'
               }`}
             >
@@ -495,8 +502,14 @@ export default function App() {
                     ? { duration: 1.15, ease: [0.22, 1, 0.36, 1] }
                     : { duration: 0.6 }
                 }
-                className="w-full h-full object-cover object-center pointer-events-none group-hover:scale-105 transition-transform duration-700 ease-out"
+                style={{
+                  transformOrigin: 'center center',
+                  backfaceVisibility: 'hidden',
+                  WebkitBackfaceVisibility: 'hidden',
+                }}
+                className="w-full h-full object-cover object-center pointer-events-none transform-gpu"
                 loading="eager"
+                decoding="async"
               />
 
               {/* Glass Rim Border */}
