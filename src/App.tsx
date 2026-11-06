@@ -5,6 +5,7 @@ import { PillHeader } from './components/PillHeader';
 import { ProgressBar } from './components/ProgressBar';
 import { CountryVisaCard } from './components/CountryVisaCard';
 import { LiveCounterStripe } from './components/LiveCounterStripe';
+import { AboutSection } from './components/AboutSection';
 import { ExploreEventsSection } from './components/ExploreEventsSection';
 import { CountryVisaPage } from './components/CountryVisaPage';
 import { FaqSection } from './components/FaqSection';
@@ -18,6 +19,7 @@ export default function App() {
   const [isVisaOpen, setIsVisaOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCallOpen, setIsCallOpen] = useState(false);
+  const [isHeroVisible, setIsHeroVisible] = useState(true);
 
   // Synchronized routing state
   const [currentView, setCurrentView] = useState<'home' | 'country-visa'>(() => {
@@ -35,6 +37,18 @@ export default function App() {
 
   const autoPlayTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const touchStartXRef = useRef<number | null>(null);
+
+  // Track scroll position to hide top loading progress bar when scrolling down past the hero section
+  useEffect(() => {
+    const handleScroll = () => {
+      const isPastHero = window.scrollY > dimensions.vh * 0.65;
+      setIsHeroVisible(!isPastHero);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [dimensions.vh]);
 
   const activeSlide = SLIDES[activeIndex];
 
@@ -342,10 +356,11 @@ export default function App() {
 
   return (
     <div className="relative w-full min-h-screen bg-[#0f1419] font-sans">
-      {/* 4px Gold Auto-Play Progress Bar at very top edge (paused while visa card, call directory, or sandwich menu is open) */}
+      {/* 4px Auto-Play Progress Bar at very top edge (only visible while hero section is in view) */}
       <ProgressBar
         slideKey={slideTimerKey}
         isPaused={isVisaOpen || isMenuOpen || isCallOpen}
+        isVisible={isHeroVisible}
         duration={4.5}
       />
 
@@ -584,10 +599,13 @@ export default function App() {
         </div>
       </section>
 
-      {/* SECTION AFTER HERO: Squared impact stripe in #1C232D touching below hero */}
+      {/* ABOUT SECTION: High-converting Pakistan context statement with kinetic ScrollReveal on pure white */}
+      <AboutSection />
+
+      {/* STATS STRIPE: Impact stripe in white background matching reference design */}
       <section
         id="consular-verification-section"
-        className="relative w-full bg-[#1C232D]"
+        className="relative w-full bg-white border-b border-neutral-100"
       >
         <LiveCounterStripe />
       </section>

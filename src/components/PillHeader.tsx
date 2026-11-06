@@ -95,6 +95,14 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
       setCallMenuOpen(true);
       return;
     }
+    if (item === 'about') {
+      onToggleMenu(false);
+      const el = document.getElementById('about-section');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+    }
     setActiveModal(item);
   };
 
@@ -192,64 +200,40 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
                   onResetToHero();
                 }
               }}
-              aria-label={isMenuOpen ? 'Back to Hero Section' : 'Globe Express - Back to Hero'}
+              aria-label="Globe Express - Back to Hero"
               className="flex-1 px-1 sm:px-1.5 h-full flex items-center justify-start cursor-pointer hover:bg-black/4 active:scale-95 transition-all duration-150 overflow-hidden"
             >
-              {/* Dynamic super-smooth crossfade between Logo image + Country and "Menu" title */}
+              {/* Show the Globe Express logo as-is permanently (without switching to Menu text) */}
               <div className="relative h-full flex-1 flex items-center justify-start overflow-hidden">
-                <AnimatePresence initial={false}>
-                  {!isMenuOpen ? (
-                    <motion.div
-                      key="logo-image"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.15, ease: 'easeOut' }}
-                      style={{ willChange: 'opacity' }}
-                      className="flex items-center justify-start h-full min-w-0 transform-gpu"
-                    >
-                      <img
-                        src="https://res.cloudinary.com/dacyy7rkn/image/upload/v1792480449/image_tqqmok.avif"
-                        alt="Globe Express"
-                        className={`${
-                          currentCountry ? 'h-[32px] sm:h-[35px]' : 'h-[44px] sm:h-[48px]'
-                        } w-auto max-w-none object-contain shrink-0 drop-shadow-xs -ml-0.5 sm:-ml-1 transition-all duration-200`}
-                        loading="eager"
-                        decoding="async"
-                      />
+                <div className="flex items-center justify-start h-full min-w-0">
+                  <img
+                    src="https://res.cloudinary.com/dacyy7rkn/image/upload/v1792480449/image_tqqmok.avif"
+                    alt="Globe Express"
+                    className={`${
+                      currentCountry ? 'h-[32px] sm:h-[35px]' : 'h-[44px] sm:h-[48px]'
+                    } w-auto max-w-none object-contain shrink-0 drop-shadow-xs -ml-0.5 sm:-ml-1 transition-all duration-200`}
+                    loading="eager"
+                    decoding="async"
+                  />
 
-                      {currentCountry && (
-                        <div className="flex items-center gap-1.5 min-w-0 pl-1 sm:pl-1.5">
-                          <div className="w-[1px] h-3.5 sm:h-4 bg-[#CBD5E1] shrink-0" />
-                          <div className="w-4 h-4 rounded-full overflow-hidden shrink-0 border border-black/10 shadow-xs flex items-center justify-center bg-white">
-                            <img
-                              src={`https://flagcdn.com/w40/${currentCountry.flagCode.toLowerCase()}.png`}
-                              alt={currentCountry.name}
-                              className="w-full h-full object-cover"
-                              loading="eager"
-                              decoding="async"
-                            />
-                          </div>
-                          <span className="text-[12px] sm:text-[13px] font-bold text-[#141821] truncate max-w-[85px] sm:max-w-[125px] tracking-tight">
-                            {currentCountry.name}
-                          </span>
-                        </div>
-                      )}
-                    </motion.div>
-                  ) : (
-                    <motion.span
-                      key="menu-title"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.15, ease: 'easeOut' }}
-                      style={{ willChange: 'opacity' }}
-                      className="font-sans text-[14px] font-medium tracking-tight text-[#202530] pl-1.5 transform-gpu"
-                    >
-                      Menu
-                    </motion.span>
+                  {currentCountry && (
+                    <div className="flex items-center gap-1.5 min-w-0 pl-1 sm:pl-1.5">
+                      <div className="w-[1px] h-3.5 sm:h-4 bg-[#CBD5E1] shrink-0" />
+                      <div className="w-4 h-4 rounded-full overflow-hidden shrink-0 border border-black/10 shadow-xs flex items-center justify-center bg-white">
+                        <img
+                          src={`https://flagcdn.com/w40/${currentCountry.flagCode.toLowerCase()}.png`}
+                          alt={currentCountry.name}
+                          className="w-full h-full object-cover"
+                          loading="eager"
+                          decoding="async"
+                        />
+                      </div>
+                      <span className="text-[12px] sm:text-[13px] font-bold text-[#141821] truncate max-w-[85px] sm:max-w-[125px] tracking-tight">
+                        {currentCountry.name}
+                      </span>
+                    </div>
                   )}
-                </AnimatePresence>
+                </div>
               </div>
             </button>
           </div>
