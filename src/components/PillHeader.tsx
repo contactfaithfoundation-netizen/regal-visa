@@ -12,6 +12,7 @@ interface PillHeaderProps {
   onNavigateToExplore?: () => void;
   onNavigateToBlogs?: () => void;
   onNavigateToVisas?: () => void;
+  isVisasPage?: boolean;
   currentCountry?: {
     name: string;
     flagCode: string;
@@ -35,8 +36,14 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
   onNavigateToExplore,
   onNavigateToBlogs,
   onNavigateToVisas,
+  isVisasPage,
   currentCountry,
 }) => {
+  const isVisasActive =
+    isVisasPage ??
+    (typeof window !== 'undefined' &&
+      (window.location.pathname === '/visas' || window.location.pathname.startsWith('/visas/')));
+
   const [internalCallOpen, setInternalCallOpen] = useState(false);
   const isCallMenuOpen = isCallOpen !== undefined ? isCallOpen : internalCallOpen;
   const setCallMenuOpen = onToggleCall || setInternalCallOpen;
@@ -94,6 +101,14 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
   }, [onToggleMenu, setCallMenuOpen]);
 
   const handleLinkClick = (item: 'services' | 'about' | 'blog' | 'contact') => {
+    if (item === 'services') {
+      onToggleMenu(false);
+      const el = document.getElementById('services-section');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+    }
     if (item === 'contact') {
       onToggleMenu(false);
       setCallMenuOpen(true);
@@ -188,14 +203,18 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
                 }
               }}
               aria-label="Toggle Navigation Menu"
-              className="w-11 h-full flex items-center justify-center hover:bg-black/5 active:scale-95 transition-all duration-150 cursor-pointer shrink-0"
+              className={`w-11 h-full flex items-center justify-center active:scale-95 transition-all duration-150 cursor-pointer shrink-0 ${
+                isMenuOpen
+                  ? 'bg-[#2563EB] text-white shadow-xs'
+                  : 'hover:bg-[#2563EB] hover:text-white text-[#202530]'
+              }`}
             >
               <svg
                 width="16"
                 height="12"
                 viewBox="0 0 16 12"
                 fill="none"
-                className="text-[#202530]"
+                className="transition-colors"
               >
                 <rect x="0" y="0.5" width="16" height="1.6" rx="0.8" fill="currentColor" />
                 <rect x="0" y="5.2" width="16" height="1.6" rx="0.8" fill="currentColor" />
@@ -277,12 +296,18 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
             }}
             aria-label="Explore and Events"
             title="Explore Visas & Events"
-            className="w-11 h-11 rounded-[16px] bg-[#F1F4F8] hover:bg-[#EAEFF6] mr-1.5 flex items-center justify-center active:scale-95 transition-all duration-150 cursor-pointer shrink-0 border border-black/[0.02]"
+            className={`w-11 h-11 rounded-[16px] mr-1.5 flex items-center justify-center active:scale-95 transition-all duration-150 cursor-pointer shrink-0 border border-black/[0.02] ${
+              isVisasActive
+                ? 'bg-[#2563EB] text-white shadow-[0_2px_10px_rgba(37,99,235,0.35)]'
+                : 'bg-[#F1F4F8] hover:bg-[#2563EB] text-[#7E889B] hover:text-white'
+            }`}
           >
             <svg
               viewBox="0 0 24 24"
               fill="currentColor"
-              className="w-[18px] h-[18px] text-[#7E889B] hover:text-[#1C232D] transition-colors"
+              className={`w-[18px] h-[18px] transition-colors ${
+                isVisasActive ? 'text-white' : 'text-[#7E889B] group-hover:text-white'
+              }`}
             >
               <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" />
             </svg>
@@ -302,14 +327,14 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
             title="Show Phone Numbers"
             className={`w-11 h-11 rounded-[16px] flex items-center justify-center active:scale-95 transition-all duration-150 cursor-pointer shrink-0 border border-black/[0.02] ${
               isCallMenuOpen
-                ? 'bg-[#1C232D] text-white shadow-sm'
-                : 'bg-[#F1F4F8] hover:bg-[#EAEFF6] text-[#7E889B] hover:text-[#1C232D]'
+                ? 'bg-[#2563EB] text-white shadow-[0_2px_10px_rgba(37,99,235,0.35)]'
+                : 'bg-[#F1F4F8] hover:bg-[#2563EB] text-[#7E889B] hover:text-white'
             }`}
           >
             <svg
               viewBox="0 0 24 24"
               fill="currentColor"
-              className="w-[16px] h-[16px]"
+              className="w-[16px] h-[16px] transition-colors"
             >
               <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.57a1 1 0 01-.25 1.02l-2.2 2.2z" />
             </svg>
@@ -506,7 +531,7 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
                           onClick={(e) => e.stopPropagation()}
                           title="Call directly"
                           aria-label={`Call ${item.number}`}
-                          className="w-8 h-8 rounded-[12px] bg-[#1C232D] hover:bg-[#141A22] text-white flex items-center justify-center transition-all duration-150 active:scale-95 cursor-pointer shadow-xs"
+                          className="w-8 h-8 rounded-[12px] bg-[#2563EB] hover:bg-[#1D4ED8] text-white flex items-center justify-center transition-all duration-150 active:scale-95 cursor-pointer shadow-xs"
                         >
                           <PhoneCall className="w-4 h-4" />
                         </a>

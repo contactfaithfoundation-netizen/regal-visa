@@ -35,6 +35,7 @@ export const AllVisasPage: React.FC<AllVisasPageProps> = ({
         onResetToHero={onBackToHome}
         onOpenVisaModal={onOpenVisaModal}
         onNavigateToBlogs={onNavigateToBlogs}
+        isVisasPage={true}
       />
 
       {/* Main Container: Explore Visas Whole Section with appropriate top padding for floating header */}

@@ -13,6 +13,7 @@ import { BlogSection } from './components/BlogSection';
 import { AllBlogsPage } from './components/AllBlogsPage';
 import { BlogPostPage } from './components/BlogPostPage';
 import { AllVisasPage } from './components/AllVisasPage';
+import { ServicesSection } from './components/ServicesSection';
 import { parseCurrentRoute, countryToSlug } from './utils/router';
 
 export default function App() {
@@ -743,6 +744,9 @@ export default function App() {
           onSelectCountry={handleOpenCountryVisa}
         />
       </section>
+
+      {/* INTERACTIVE 3-COLUMN SCROLL SERVICES SECTION */}
+      <ServicesSection />
 
       {/* VISA INTELLIGENCE & BLOG SECTION (Brand Colors, Pure White Background, Reference Style) */}
       <BlogSection
