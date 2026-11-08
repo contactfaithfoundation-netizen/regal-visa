@@ -11,7 +11,7 @@ interface PillHeaderProps {
   onResetToHero?: () => void;
   onNavigateToExplore?: () => void;
   onNavigateToBlogs?: () => void;
-  onNavigateToVisas?: () => void;
+  onNavigateToVisas?: (filter?: string) => void;
   onNavigateToServices?: () => void;
   onNavigateToProcess?: () => void;
   onNavigateToAbout?: () => void;
@@ -59,7 +59,7 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
   const [activeModal, setActiveModal] = useState<
-    'flights' | 'contact' | 'services' | 'about' | 'blog' | 'residence' | 'citizenship' | null
+    'flights' | 'contact' | 'services' | 'about' | 'blog' | 'hajj-umrah' | 'visas' | 'visa-appointments' | null
   >(null);
 
   const handleCopyNumber = async (num: string, index: number) => {
@@ -82,9 +82,9 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
   // Pre-warm and decode sandwich menu banner images ahead of user tap
   useEffect(() => {
     const banners = [
-      'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=700&q=80',
-      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=700&q=80',
-      'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=700&q=80',
+      'https://res.cloudinary.com/rpphjsst/image/upload/v1794176824/b77fd228-0e46-4e5c-858c-a315910b594e.png',
+      'https://res.cloudinary.com/rpphjsst/image/upload/v1794176835/61e2a841-ea17-4e16-bc7e-a7563fdbec77.png',
+      'https://res.cloudinary.com/rpphjsst/image/upload/v1794176849/0b310ac4-0991-4219-8605-d6719bb0842c.png',
     ];
     banners.forEach((src) => {
       const img = new Image();
@@ -182,20 +182,30 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
     }
   };
 
-  const handleCategoryClick = (category: 'residence' | 'citizenship' | 'visa') => {
-    if (category === 'visa') {
+  const handleCategoryClick = (category: 'hajj-umrah' | 'visas' | 'visa-appointments') => {
+    if (category === 'hajj-umrah') {
       onToggleMenu(false);
       if (onNavigateToVisas) {
-        onNavigateToVisas();
+        onNavigateToVisas('Hajj');
         return;
       }
-      if (onOpenVisaModal) {
-        onOpenVisaModal();
-      } else {
-        setActiveModal('services');
+      return;
+    }
+    if (category === 'visas') {
+      onToggleMenu(false);
+      if (onNavigateToVisas) {
+        onNavigateToVisas('');
+        return;
       }
-    } else {
-      setActiveModal(category);
+      if (onNavigateToExplore) {
+        onNavigateToExplore();
+        return;
+      }
+      return;
+    }
+    if (category === 'visa-appointments') {
+      // Intentionally do nothing as requested
+      return;
     }
   };
 
@@ -446,66 +456,79 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
                   currentCountry ? 'w-[350px] sm:w-[410px]' : 'w-[320px] sm:w-[340px]'
                 } rounded-[24px] bg-[#EFF2F8] p-1.5 shadow-[0_14px_36px_rgba(0,0,0,0.16)] border border-white flex flex-col gap-1.5 transform-gpu`}
               >
-                {/* Banner 1: Residence permit */}
+                {/* Banner 1: Hajj & Umrah */}
                 <div
-                  onClick={() => handleCategoryClick('residence')}
-                  className="relative h-[58px] w-full rounded-[17px] overflow-hidden flex items-center justify-between px-5 cursor-pointer group select-none shadow-sm bg-[#122649] transform-gpu"
+                  onClick={() => handleCategoryClick('hajj-umrah')}
+                  className="relative h-[54px] w-full rounded-[16px] overflow-hidden flex items-center justify-between px-5 cursor-pointer group select-none shadow-sm bg-[#0B1528] transform-gpu"
                 >
                   <img
-                    src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=700&q=80"
-                    alt="Residence permit"
-                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out transform-gpu"
+                    src="https://res.cloudinary.com/rpphjsst/image/upload/v1794176824/b77fd228-0e46-4e5c-858c-a315910b594e.png"
+                    alt="Hajj & Umrah"
+                    className="absolute inset-0 w-full h-full object-cover object-right group-hover:scale-105 transition-transform duration-500 ease-out transform-gpu"
                     loading="eager"
                     decoding="async"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/45 via-black/20 to-black/45 pointer-events-none" />
-                  <span className="text-[14px] font-medium text-white tracking-[-0.01em] z-10">
-                    Residence permit
+                  {/* Gradient to keep text crisp while displaying the graphic on the right */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/40 to-transparent pointer-events-none" />
+                  <span className="text-[14px] font-semibold text-white tracking-[-0.01em] z-10 drop-shadow-sm">
+                    Hajj &amp; Umrah
                   </span>
-                  <span className="text-[14px] font-medium text-white z-10">
-                    3
-                  </span>
+                  <svg
+                    className="w-4 h-4 text-white/70 group-hover:text-white group-hover:translate-x-0.5 transition-all z-10 drop-shadow-sm"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
                 </div>
 
-                {/* Banner 2: Citizenship */}
+                {/* Banner 2: Visas */}
                 <div
-                  onClick={() => handleCategoryClick('citizenship')}
-                  className="relative h-[58px] w-full rounded-[17px] overflow-hidden flex items-center justify-between px-5 cursor-pointer group select-none shadow-sm bg-[#1C1B18] transform-gpu"
+                  onClick={() => handleCategoryClick('visas')}
+                  className="relative h-[54px] w-full rounded-[16px] overflow-hidden flex items-center justify-between px-5 cursor-pointer group select-none shadow-sm bg-[#111827] transform-gpu"
                 >
                   <img
-                    src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=700&q=80"
-                    alt="Citizenship"
-                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out transform-gpu"
+                    src="https://res.cloudinary.com/rpphjsst/image/upload/v1794176835/61e2a841-ea17-4e16-bc7e-a7563fdbec77.png"
+                    alt="Visas"
+                    className="absolute inset-0 w-full h-full object-cover object-[right_28%] group-hover:scale-105 transition-transform duration-500 ease-out transform-gpu"
                     loading="eager"
                     decoding="async"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/45 via-black/20 to-black/45 pointer-events-none" />
-                  <span className="text-[14px] font-medium text-white tracking-[-0.01em] z-10">
-                    Citizenship
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/40 to-transparent pointer-events-none" />
+                  <span className="text-[14px] font-semibold text-white tracking-[-0.01em] z-10 drop-shadow-sm">
+                    Visas
                   </span>
-                  <span className="text-[14px] font-medium text-white z-10">
-                    3
-                  </span>
+                  <svg
+                    className="w-4 h-4 text-white/70 group-hover:text-white group-hover:translate-x-0.5 transition-all z-10 drop-shadow-sm"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
                 </div>
 
-                {/* Banner 3: Visa */}
+                {/* Banner 3: Visa Appointments (No navigation) */}
                 <div
-                  onClick={() => handleCategoryClick('visa')}
-                  className="relative h-[58px] w-full rounded-[17px] overflow-hidden flex items-center justify-between px-5 cursor-pointer group select-none shadow-sm bg-[#3B6496] transform-gpu"
+                  className="relative h-[54px] w-full rounded-[16px] overflow-hidden flex items-center justify-between px-5 select-none shadow-sm bg-[#1E3A8A] transform-gpu"
                 >
                   <img
-                    src="https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=700&q=80"
-                    alt="Visa"
-                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out transform-gpu"
+                    src="https://res.cloudinary.com/rpphjsst/image/upload/v1794176849/0b310ac4-0991-4219-8605-d6719bb0842c.png"
+                    alt="Visa Appointments"
+                    className="absolute inset-0 w-full h-full object-cover object-[right_24%] group-hover:scale-105 transition-transform duration-500 ease-out transform-gpu"
                     loading="eager"
                     decoding="async"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/45 via-black/20 to-black/45 pointer-events-none" />
-                  <span className="text-[14px] font-medium text-white tracking-[-0.01em] z-10">
-                    Visa
-                  </span>
-                  <span className="text-[14px] font-medium text-white z-10">
-                    5
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/40 to-transparent pointer-events-none" />
+                  <span className="text-[14px] font-semibold text-white tracking-[-0.01em] z-10 drop-shadow-sm">
+                    Visa Appointments
                   </span>
                 </div>
               </motion.div>
@@ -618,8 +641,9 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
                   {activeModal === 'services' && 'Express Services'}
                   {activeModal === 'about' && 'About Globe Express'}
                   {activeModal === 'blog' && 'Expedition Journal'}
-                  {activeModal === 'residence' && 'Residence Permit Programs'}
-                  {activeModal === 'citizenship' && 'Citizenship by Investment'}
+                  {activeModal === 'hajj-umrah' && 'Hajj & Umrah Luxury Packages'}
+                  {activeModal === 'visas' && 'Global Visa Services'}
+                  {activeModal === 'visa-appointments' && 'Fast-Track Visa Appointments'}
                 </div>
                 <button
                   onClick={() => setActiveModal(null)}
@@ -682,28 +706,40 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
                 </div>
               )}
 
-              {activeModal === 'residence' && (
+              {activeModal === 'hajj-umrah' && (
                 <div className="mt-3.5 space-y-2.5 text-xs">
                   <div className="p-3 bg-white/5 border border-white/10 rounded-xl space-y-1.5">
-                    <div className="font-semibold text-white">3 Available Programs:</div>
+                    <div className="font-semibold text-white">5-Star &amp; Tailored Pilgrimage Services:</div>
                     <ul className="text-white/70 text-[11.5px] space-y-1 list-disc pl-4">
-                      <li>Switzerland Cantonal Residence Permit (L/B)</li>
-                      <li>EU Golden Visa &amp; Real Estate Residence</li>
-                      <li>UAE 10-Year Golden Nomad Residency</li>
+                      <li>VIP Makkah Clock Tower &amp; Madinah Direct Haram Hotels</li>
+                      <li>Express Umrah e-Visa Processing (24–48 hours)</li>
+                      <li>Luxury Private GMC / Chauffeur Ground Transfers</li>
+                      <li>Full Executive Guidance &amp; Ziyarat Itineraries</li>
                     </ul>
                   </div>
                 </div>
               )}
 
-              {activeModal === 'citizenship' && (
+              {activeModal === 'visas' && (
                 <div className="mt-3.5 space-y-2.5 text-xs">
                   <div className="p-3 bg-white/5 border border-white/10 rounded-xl space-y-1.5">
-                    <div className="font-semibold text-white">3 Available Direct Pathways:</div>
+                    <div className="font-semibold text-white">Global Visa Solutions:</div>
                     <ul className="text-white/70 text-[11.5px] space-y-1 list-disc pl-4">
-                      <li>Malta Exceptional Direct Citizenship by Investment</li>
-                      <li>Caribbean Commonwealth Dual Passports (St. Kitts &amp; Nevis)</li>
-                      <li>Vanuatu Fast-Track Honorary Citizenship</li>
+                      <li>UK, US, Canada &amp; Australia Tourist/Business Visas</li>
+                      <li>Schengen 29-Nation Multi-Entry Clearance</li>
+                      <li>Gulf eVisa &amp; Southeast Asia Tourism Passports</li>
                     </ul>
+                  </div>
+                </div>
+              )}
+
+              {activeModal === 'visa-appointments' && (
+                <div className="mt-3.5 space-y-2.5 text-xs">
+                  <div className="p-3 bg-white/5 border border-white/10 rounded-xl space-y-1.5">
+                    <div className="font-semibold text-white">Appointment Desk:</div>
+                    <p className="text-white/70 text-[11.5px] leading-relaxed">
+                      Securing urgent biometric slots at VFS Global, BLS International, Gerry’s, and US Consulates across Islamabad, Lahore, and Karachi.
+                    </p>
                   </div>
                 </div>
               )}

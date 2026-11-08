@@ -96,6 +96,14 @@ export function parseCurrentRoute(): RouteState {
     return { view: 'visas' };
   }
 
+  // Check 404 or offline routes
+  if (/^\/(?:404|not-found)\/?$/i.test(pathname)) {
+    return { view: '404' as any };
+  }
+  if (/^\/(?:offline|no-internet)\/?$/i.test(pathname)) {
+    return { view: 'offline' as any };
+  }
+
   // Check pathname: /services, /process, /about, /contact
   if (/^\/(?:services|all-services)\/?$/i.test(pathname)) {
     return { view: 'services' };
@@ -154,6 +162,8 @@ export function parseCurrentRoute(): RouteState {
     if (viewParam === 'process') return { view: 'process' };
     if (viewParam === 'about') return { view: 'about' };
     if (viewParam === 'contact') return { view: 'contact' };
+    if (viewParam === '404') return { view: '404' as any };
+    if (viewParam === 'offline') return { view: 'offline' as any };
 
     const countryParam = params.get('country') || params.get('visa');
     if (countryParam) {
@@ -196,6 +206,12 @@ export function parseCurrentRoute(): RouteState {
     if (cleanHash === 'contact' || cleanHash === '/contact' || cleanHash === 'contacts') {
       return { view: 'contact' };
     }
+    if (cleanHash === '404' || cleanHash === '/404') {
+      return { view: '404' as any };
+    }
+    if (cleanHash === 'offline' || cleanHash === '/offline') {
+      return { view: 'offline' as any };
+    }
 
     const hashVisaMatch = cleanHash.match(/^\/?(?:visa|country)\/([^/?#]+)/i);
     if (hashVisaMatch && hashVisaMatch[1]) {
@@ -223,6 +239,11 @@ export function parseCurrentRoute(): RouteState {
         section: 'blog-section',
       };
     }
+  }
+
+  // If pathname is not root and didn't match any known page, route to 404
+  if (pathname && pathname !== '/' && pathname !== '') {
+    return { view: '404' as any };
   }
 
   return { view: 'home' };

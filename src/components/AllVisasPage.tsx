@@ -9,11 +9,12 @@ interface AllVisasPageProps {
   onSelectCountry: (country: string) => void;
   onOpenVisaModal: () => void;
   onNavigateToBlogs: () => void;
-  onNavigateToVisas?: () => void;
+  onNavigateToVisas?: (filter?: string) => void;
   onNavigateToServices?: () => void;
   onNavigateToProcess?: () => void;
   onNavigateToAbout?: () => void;
   onNavigateToContact?: () => void;
+  initialFilter?: string;
 }
 
 export const AllVisasPage: React.FC<AllVisasPageProps> = ({
@@ -26,6 +27,7 @@ export const AllVisasPage: React.FC<AllVisasPageProps> = ({
   onNavigateToProcess,
   onNavigateToAbout,
   onNavigateToContact,
+  initialFilter,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCallOpen, setIsCallOpen] = useState(false);
@@ -58,7 +60,7 @@ export const AllVisasPage: React.FC<AllVisasPageProps> = ({
       {/* Main Container: Explore Visas Whole Section with appropriate top padding for floating header */}
       <main className="pt-24 sm:pt-32 bg-white">
         {/* Whole Explore & Events Visa Section */}
-        <ExploreEventsSection onSelectCountry={onSelectCountry} />
+        <ExploreEventsSection onSelectCountry={onSelectCountry} initialFilter={initialFilter} />
 
         {/* FAQs Underneath (same as FAQ of home page) */}
         <section className="border-t border-neutral-100 bg-white">

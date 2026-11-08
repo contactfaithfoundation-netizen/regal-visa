@@ -41,15 +41,13 @@ export const LiveCounterStripe: React.FC = () => {
       if (currentTime - lastRenderTime >= 15 || progress === 1) {
         lastRenderTime = currentTime;
         const easeProgress = 1 - Math.pow(1 - progress, 3);
-        setApprovalCount(easeProgress * 98.4);
-        setVisasCount(Math.floor(easeProgress * 12000));
+        setVisasCount(Math.floor(easeProgress * 1000));
       }
 
       if (progress < 1) {
         requestAnimationFrame(animate);
       } else {
-        setApprovalCount(98.4);
-        setVisasCount(12000);
+        setVisasCount(1000);
       }
     };
 
@@ -67,25 +65,22 @@ export const LiveCounterStripe: React.FC = () => {
         <div className="sm:hidden flex flex-col items-center gap-5">
           {/* Row 1: Stat 1 & Stat 2 */}
           <div className="w-full flex items-center justify-center">
-            {/* Stat 1: 98.4% Approval Rate */}
+            {/* Stat 1: Highest Visa Ratio */}
             <div className="flex-1 flex flex-col items-center justify-center text-center px-2">
               <div className="flex items-baseline justify-center tracking-tight leading-none whitespace-nowrap">
-                <span className="font-sans font-bold text-neutral-950 tabular-nums text-3xl tracking-tight">
-                  {approvalCount.toFixed(1)}
-                </span>
-                <span className="font-sans font-bold text-[#2563EB] text-xl ml-0.5">
-                  %
+                <span className="font-sans font-bold text-neutral-950 text-2xl xs:text-3xl tracking-tight">
+                  Highest
                 </span>
               </div>
               <span className="font-sans text-neutral-500 font-normal text-xs mt-1.5 leading-tight whitespace-nowrap">
-                Approval Rate
+                Visa Ratio
               </span>
             </div>
 
             {/* Thin Vertical Divider */}
             <div className="w-[1px] h-10 bg-neutral-200/90 shrink-0" />
 
-            {/* Stat 2: 12,000+ Visas Processed */}
+            {/* Stat 2: 1000+ Visas Processed */}
             <div className="flex-1 flex flex-col items-center justify-center text-center px-2">
               <div className="flex items-baseline justify-center tracking-tight leading-none whitespace-nowrap">
                 <span className="font-sans font-bold text-neutral-950 tabular-nums text-3xl tracking-tight">
@@ -119,25 +114,22 @@ export const LiveCounterStripe: React.FC = () => {
 
         {/* Tablet & Desktop View: All 3 stats in a single row */}
         <div className="hidden sm:flex items-center justify-center">
-          {/* Stat 1: 98.4% Approval Rate */}
+          {/* Stat 1: Highest Visa Ratio */}
           <div className="flex-1 flex flex-col items-center justify-center text-center px-4">
             <div className="flex items-baseline justify-center tracking-tight leading-none whitespace-nowrap">
-              <span className="font-sans font-bold text-neutral-950 tabular-nums sm:text-4xl md:text-5xl lg:text-6xl tracking-tight">
-                {approvalCount.toFixed(1)}
-              </span>
-              <span className="font-sans font-bold text-[#2563EB] sm:text-2xl md:text-3xl lg:text-4xl ml-1">
-                %
+              <span className="font-sans font-bold text-neutral-950 sm:text-3xl md:text-4xl lg:text-5xl tracking-tight">
+                Highest
               </span>
             </div>
             <span className="font-sans text-neutral-500 font-normal sm:text-sm md:text-base mt-2.5 leading-tight whitespace-nowrap">
-              Approval Rate
+              Visa Ratio
             </span>
           </div>
 
           {/* Thin Vertical Divider */}
           <div className="w-[1px] h-14 md:h-16 bg-neutral-200/90 shrink-0" />
 
-          {/* Stat 2: 12,000+ Visas Processed */}
+          {/* Stat 2: 1,000+ Visas Processed */}
           <div className="flex-1 flex flex-col items-center justify-center text-center px-4">
             <div className="flex items-baseline justify-center tracking-tight leading-none whitespace-nowrap">
               <span className="font-sans font-bold text-neutral-950 tabular-nums sm:text-4xl md:text-5xl lg:text-6xl tracking-tight">

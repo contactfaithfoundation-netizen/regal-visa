@@ -13,7 +13,13 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
   const [isFinished, setIsFinished] = useState(false);
 
   useEffect(() => {
-    // Preload the primary hero images & fonts
+    // 1. Immediately remove/fade the native HTML pre-hydration screen as soon as React mounts
+    const preloaderEl = document.getElementById('initial-loader');
+    if (preloaderEl) {
+      preloaderEl.remove();
+    }
+
+    // 2. Preload high-res hero images in the background
     const heroImageUrls = [
       'https://res.cloudinary.com/dacyy7rkn/image/upload/v1792480449/image_tqqmok.avif',
       'https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?q=85&w=2560&auto=format&fit=crop',
@@ -49,26 +55,24 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
     <AnimatePresence>
       {!isFinished && (
         <motion.div
-          key="initial-loading-screen"
+          key="react-loading-screen"
           initial={{ opacity: 1 }}
           exit={{
             opacity: 0,
-            transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
+            transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
           }}
           className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white pointer-events-auto"
         >
-          {/* Subtle ambient luxury glow */}
+          {/* Ambient luxury glow */}
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(29,78,216,0.04)_0%,transparent_70%)] pointer-events-none" />
 
-          {/* Centered Logo Container with smooth scale & fade breathing animation */}
+          {/* Centered Logo */}
           <div className="relative flex flex-col items-center justify-center">
             <motion.div
-              initial={{ opacity: 0, scale: 0.92, y: 8 }}
+              initial={{ opacity: 1, scale: 1 }}
               animate={{
-                opacity: 1,
-                scale: 1,
-                y: 0,
-                transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+                scale: [1, 1.02, 1],
+                transition: { repeat: Infinity, duration: 2, ease: 'easeInOut' },
               }}
               className="relative"
             >
@@ -81,16 +85,8 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
               />
             </motion.div>
 
-            {/* Elegant minimalist hairline loader */}
-            <motion.div
-              initial={{ opacity: 0, width: 0 }}
-              animate={{
-                opacity: 1,
-                width: 72,
-                transition: { delay: 0.2, duration: 0.4 },
-              }}
-              className="mt-6 h-[2.5px] rounded-full bg-slate-100 overflow-hidden"
-            >
+            {/* Hairline shimmer bar */}
+            <div className="mt-6 h-[2.5px] w-[72px] rounded-full bg-slate-100 overflow-hidden relative">
               <motion.div
                 initial={{ x: '-100%' }}
                 animate={{ x: '100%' }}
@@ -101,7 +97,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
                 }}
                 className="w-full h-full bg-gradient-to-r from-transparent via-[#1D4ED8] to-transparent"
               />
-            </motion.div>
+            </div>
           </div>
         </motion.div>
       )}

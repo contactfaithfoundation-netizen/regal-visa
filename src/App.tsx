@@ -21,6 +21,7 @@ import { LocationSection } from './components/LocationSection';
 import { PoliciesPage, PolicyTab } from './components/PoliciesPage';
 import { AboutPage } from './components/AboutPage';
 import { ContactPage } from './components/ContactPage';
+import { CustomErrorScreen } from './components/CustomErrorScreen';
 import { LoadingScreen } from './components/LoadingScreen';
 import { parseCurrentRoute, countryToSlug } from './utils/router';
 import Lenis from 'lenis';
@@ -36,7 +37,7 @@ export default function App() {
   const [isHeroVisible, setIsHeroVisible] = useState(true);
 
   // Synchronized routing state
-  const [currentView, setCurrentView] = useState<'home' | 'country-visa' | 'blogs' | 'blog-detail' | 'visas' | 'policies' | 'about' | 'contact'>(() => {
+  const [currentView, setCurrentView] = useState<'home' | 'country-visa' | 'blogs' | 'blog-detail' | 'visas' | 'policies' | 'about' | 'contact' | '404' | 'offline'>(() => {
     const parsed = parseCurrentRoute().view;
     if (parsed === 'services' || parsed === 'process') {
       return 'home';
@@ -52,6 +53,7 @@ export default function App() {
   const [selectedPolicyTab, setSelectedPolicyTab] = useState<PolicyTab>(() => {
     return (parseCurrentRoute().policyTab as PolicyTab) || 'terms';
   });
+  const [visasFilter, setVisasFilter] = useState<string>('');
 
   // Viewport dimensions
   const [dimensions, setDimensions] = useState(() => ({
@@ -231,15 +233,17 @@ export default function App() {
   }, []);
 
   // Navigate to All Visas page
-  const handleNavigateToVisas = useCallback(() => {
+  const handleNavigateToVisas = useCallback((filter: string = '') => {
     if (!window.history.state || window.history.state.view !== 'home') {
       window.history.replaceState({ view: 'home' }, 'Globe Express', '/');
     }
+    const path = filter ? `/visas?q=${encodeURIComponent(filter)}` : '/visas';
     window.history.pushState(
-      { view: 'visas' },
+      { view: 'visas', filter },
       'Explore All Visas - Globe Express',
-      '/visas'
+      path
     );
+    setVisasFilter(filter);
     setCurrentView('visas');
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   }, []);
@@ -696,6 +700,7 @@ export default function App() {
         onNavigateToProcess={handleNavigateToProcess}
         onNavigateToAbout={handleNavigateToAbout}
         onNavigateToContact={handleNavigateToContact}
+        initialFilter={visasFilter}
       />
     );
   }
@@ -704,6 +709,22 @@ export default function App() {
     return (
       <PoliciesPage
         initialTab={selectedPolicyTab}
+        onBackToHome={() => handleBackToHome()}
+        onOpenVisaModal={() => setIsVisaOpen(true)}
+        onNavigateToVisas={handleNavigateToVisas}
+        onNavigateToBlogs={handleNavigateToBlogs}
+        onNavigateToServices={handleNavigateToServices}
+        onNavigateToProcess={handleNavigateToProcess}
+        onNavigateToAbout={handleNavigateToAbout}
+        onNavigateToContact={handleNavigateToContact}
+      />
+    );
+  }
+
+  if (currentView === '404' || currentView === 'offline') {
+    return (
+      <CustomErrorScreen
+        type={currentView}
         onBackToHome={() => handleBackToHome()}
         onOpenVisaModal={() => setIsVisaOpen(true)}
         onNavigateToVisas={handleNavigateToVisas}

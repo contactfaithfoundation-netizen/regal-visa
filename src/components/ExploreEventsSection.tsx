@@ -307,15 +307,26 @@ function getCleanCountryName(title: string): string {
 
 interface ExploreEventsSectionProps {
   onSelectCountry?: (country: string) => void;
+  initialFilter?: string;
 }
 
-export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSelectCountry }) => {
+export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSelectCountry, initialFilter }) => {
   const [activeTab, setActiveTab] = useState<'explore' | 'events'>('explore');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(initialFilter || '');
   const [deliveryFilter, setDeliveryFilter] = useState('Any Time');
   const [typeFilter, setTypeFilter] = useState('All Visa Types');
-  const [documentsFilter, setDocumentsFilter] = useState('Any Documents');
-  const [holidaysFilter, setHolidaysFilter] = useState('Select Dates');
+  const [categoryFilter, setCategoryFilter] = useState('All Categories');
+
+  useEffect(() => {
+    if (initialFilter !== undefined) {
+      if (initialFilter.toLowerCase().includes('hajj')) {
+        setCategoryFilter('Hajj & Umrah');
+        setSearchQuery('');
+      } else {
+        setSearchQuery(initialFilter);
+      }
+    }
+  }, [initialFilter]);
   
   // Interactive Filter dropdown states for desktop
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -330,9 +341,12 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
     return activeDataset.filter((item) => {
       const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase().trim());
       const matchesType = typeFilter === 'All Visa Types' || item.type.toUpperCase().includes(typeFilter.toUpperCase());
-      return matchesSearch && matchesType;
+      const matchesCategory =
+        categoryFilter === 'All Categories' ||
+        (categoryFilter === 'Hajj & Umrah' && (item.title.toLowerCase().includes('hajj') || item.title.toLowerCase().includes('saudi') || item.description?.toLowerCase().includes('hajj') || item.description?.toLowerCase().includes('nusuk')));
+      return matchesSearch && matchesType && matchesCategory;
     });
-  }, [activeDataset, searchQuery, typeFilter]);
+  }, [activeDataset, searchQuery, typeFilter, categoryFilter]);
 
   // Check whether the featured horizontally long Kaaba card should be shown
   const showWideCard = useMemo(() => {
@@ -340,8 +354,9 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
     const q = searchQuery.toLowerCase().trim();
     const matchesSearch = !q || 'saudi arabia umrah qaba kaaba makkah mecca nusuk'.includes(q);
     const matchesType = typeFilter === 'All Visa Types' || typeFilter.toUpperCase().includes('E-VISA');
-    return matchesSearch && matchesType;
-  }, [activeTab, searchQuery, typeFilter]);
+    const matchesCategory = categoryFilter === 'All Categories' || categoryFilter === 'Hajj & Umrah';
+    return matchesSearch && matchesType && matchesCategory;
+  }, [activeTab, searchQuery, typeFilter, categoryFilter]);
 
   const toggleDropdown = (key: string) => {
     setActiveDropdown((prev) => (prev === key ? null : key));
@@ -652,10 +667,45 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
       </div>
 
       {/* 
-        Floating 4-Column Filter Pill Bar (Desktop Only, hidden on mobile)
+        Floating 3-Column Filter Pill Bar (Hajj & Umrah, Visa Delivery, Type)
       */}
-      <div className="hidden md:grid max-w-[820px] mx-auto mb-10 bg-white rounded-[22px] shadow-[0_10px_35px_rgba(0,0,0,0.07)] border border-neutral-100 px-3 py-2.5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 items-center divide-y sm:divide-y-0 sm:divide-x divide-neutral-200/70">
-        {/* Segment 1: Visa Delivery */}
+      <div className="hidden md:grid max-w-[700px] mx-auto mb-10 bg-white rounded-[22px] shadow-[0_10px_35px_rgba(0,0,0,0.07)] border border-neutral-100 px-3 py-2.5 grid-cols-3 items-center divide-x divide-neutral-200/70">
+        {/* Segment 1: Hajj & Umrah Filter */}
+        <div className="relative py-2 sm:py-0 px-3 flex items-center gap-2.5 cursor-pointer group" onClick={() => toggleDropdown('category')}>
+          <div className="w-7 h-7 rounded-full bg-[#10B981] text-white flex items-center justify-center shrink-0 shadow-xs">
+            <Palmtree className="w-3.5 h-3.5 stroke-[2.2]" />
+          </div>
+          <div className="flex flex-col min-w-0 flex-1">
+            <span className="text-[11px] text-neutral-400 leading-tight">Category:</span>
+            <span className="text-[12.5px] font-semibold text-neutral-900 flex items-center justify-between gap-1 leading-tight mt-0.5">
+              <span className="truncate">{categoryFilter}</span>
+              <ChevronDown className={`w-3.5 h-3.5 text-neutral-400 transition-transform ${activeDropdown === 'category' ? 'rotate-180' : ''}`} />
+            </span>
+          </div>
+
+          {/* Dropdown Menu */}
+          {activeDropdown === 'category' && (
+            <div className="absolute top-full left-0 mt-3 w-48 bg-white border border-neutral-100 rounded-2xl shadow-xl p-1.5 z-40 text-xs">
+              {['All Categories', 'Hajj & Umrah'].map((opt) => (
+                <div
+                  key={opt}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setCategoryFilter(opt);
+                    setActiveDropdown(null);
+                  }}
+                  className={`px-3 py-2 rounded-xl cursor-pointer hover:bg-neutral-50 transition ${
+                    categoryFilter === opt ? 'font-bold text-[#1D4ED8] bg-blue-50/60' : 'text-neutral-700'
+                  }`}
+                >
+                  {opt}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Segment 2: Visa Delivery */}
         <div className="relative py-2 sm:py-0 px-3 flex items-center gap-2.5 cursor-pointer group" onClick={() => toggleDropdown('delivery')}>
           <div className="w-7 h-7 rounded-full bg-[#22C55E] text-white flex items-center justify-center shrink-0 shadow-xs">
             <Zap className="w-3.5 h-3.5 fill-current" />
@@ -690,7 +740,7 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
           )}
         </div>
 
-        {/* Segment 2: Type */}
+        {/* Segment 3: Type */}
         <div className="relative py-2 sm:py-0 px-3 flex items-center gap-2.5 cursor-pointer group" onClick={() => toggleDropdown('type')}>
           <div className="w-7 h-7 rounded-full bg-[#3B82F6] text-white flex items-center justify-center shrink-0 shadow-xs">
             <Plane className="w-3.5 h-3.5 fill-current" />
@@ -705,7 +755,7 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
 
           {/* Dropdown Menu */}
           {activeDropdown === 'type' && (
-            <div className="absolute top-full left-0 mt-3 w-48 bg-white border border-neutral-100 rounded-2xl shadow-xl p-1.5 z-40 text-xs">
+            <div className="absolute top-full right-0 mt-3 w-48 bg-white border border-neutral-100 rounded-2xl shadow-xl p-1.5 z-40 text-xs">
               {['All Visa Types', 'E-VISA', 'STICKER', 'BUSINESS'].map((opt) => (
                 <div
                   key={opt}
@@ -716,76 +766,6 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
                   }}
                   className={`px-3 py-2 rounded-xl cursor-pointer hover:bg-neutral-50 transition ${
                     typeFilter === opt ? 'font-bold text-[#1D4ED8] bg-blue-50/60' : 'text-neutral-700'
-                  }`}
-                >
-                  {opt}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Segment 3: Documents */}
-        <div className="relative py-2 sm:py-0 px-3 flex items-center gap-2.5 cursor-pointer group" onClick={() => toggleDropdown('documents')}>
-          <div className="w-7 h-7 rounded-full bg-[#F59E0B] text-white flex items-center justify-center shrink-0 shadow-xs">
-            <FileText className="w-3.5 h-3.5 stroke-[2.2]" />
-          </div>
-          <div className="flex flex-col min-w-0 flex-1">
-            <span className="text-[11px] text-neutral-400 leading-tight">Documents:</span>
-            <span className="text-[12.5px] font-semibold text-neutral-900 flex items-center justify-between gap-1 leading-tight mt-0.5">
-              <span className="truncate">{documentsFilter}</span>
-              <ChevronDown className={`w-3.5 h-3.5 text-neutral-400 transition-transform ${activeDropdown === 'documents' ? 'rotate-180' : ''}`} />
-            </span>
-          </div>
-
-          {/* Dropdown Menu */}
-          {activeDropdown === 'documents' && (
-            <div className="absolute top-full left-0 mt-3 w-48 bg-white border border-neutral-100 rounded-2xl shadow-xl p-1.5 z-40 text-xs">
-              {['Any Documents', 'Passport Scan Only', 'Full Dossier Support', 'Bank Statement'].map((opt) => (
-                <div
-                  key={opt}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setDocumentsFilter(opt);
-                    setActiveDropdown(null);
-                  }}
-                  className={`px-3 py-2 rounded-xl cursor-pointer hover:bg-neutral-50 transition ${
-                    documentsFilter === opt ? 'font-bold text-[#1D4ED8] bg-blue-50/60' : 'text-neutral-700'
-                  }`}
-                >
-                  {opt}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Segment 4: Holidays */}
-        <div className="relative py-2 sm:py-0 px-3 flex items-center gap-2.5 cursor-pointer group" onClick={() => toggleDropdown('holidays')}>
-          <div className="w-7 h-7 rounded-full bg-[#EC4899] text-white flex items-center justify-center shrink-0 shadow-xs">
-            <Palmtree className="w-3.5 h-3.5 stroke-[2.2]" />
-          </div>
-          <div className="flex flex-col min-w-0 flex-1">
-            <span className="text-[11px] text-neutral-400 leading-tight">Holidays:</span>
-            <span className="text-[12.5px] font-semibold text-neutral-900 flex items-center justify-between gap-1 leading-tight mt-0.5">
-              <span className="truncate">{holidaysFilter}</span>
-              <ChevronDown className={`w-3.5 h-3.5 text-neutral-400 transition-transform ${activeDropdown === 'holidays' ? 'rotate-180' : ''}`} />
-            </span>
-          </div>
-
-          {/* Dropdown Menu */}
-          {activeDropdown === 'holidays' && (
-            <div className="absolute top-full right-0 mt-3 w-48 bg-white border border-neutral-100 rounded-2xl shadow-xl p-1.5 z-40 text-xs">
-              {['Select Dates', 'October 2026', 'November 2026', 'December 2026', 'Spring 2027'].map((opt) => (
-                <div
-                  key={opt}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setHolidaysFilter(opt);
-                    setActiveDropdown(null);
-                  }}
-                  className={`px-3 py-2 rounded-xl cursor-pointer hover:bg-neutral-50 transition ${
-                    holidaysFilter === opt ? 'font-bold text-[#1D4ED8] bg-blue-50/60' : 'text-neutral-700'
                   }`}
                 >
                   {opt}
@@ -1057,19 +1037,19 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
               {/* Filter categories */}
               <div className="py-4 space-y-4 text-xs">
                 <div>
-                  <label className="font-semibold text-neutral-500 uppercase tracking-wider text-[10px] block mb-2">Visa Type</label>
+                  <label className="font-semibold text-neutral-500 uppercase tracking-wider text-[10px] block mb-2">Category</label>
                   <div className="flex flex-wrap gap-2">
-                    {['All Visa Types', 'E-VISA', 'STICKER', 'BUSINESS'].map((t) => (
+                    {['All Categories', 'Hajj & Umrah'].map((c) => (
                       <button
-                        key={t}
-                        onClick={() => setTypeFilter(t)}
+                        key={c}
+                        onClick={() => setCategoryFilter(c)}
                         className={`px-3 py-1.5 rounded-full text-xs font-medium border transition ${
-                          typeFilter === t
+                          categoryFilter === c
                             ? 'bg-neutral-900 text-white border-neutral-900'
                             : 'bg-neutral-50 text-neutral-700 border-neutral-200'
                         }`}
                       >
-                        {t}
+                        {c}
                       </button>
                     ))}
                   </div>
@@ -1095,38 +1075,19 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
                 </div>
 
                 <div>
-                  <label className="font-semibold text-neutral-500 uppercase tracking-wider text-[10px] block mb-2">Documents</label>
+                  <label className="font-semibold text-neutral-500 uppercase tracking-wider text-[10px] block mb-2">Visa Type</label>
                   <div className="flex flex-wrap gap-2">
-                    {['Any Documents', 'Passport Scan Only', 'Full Dossier Support', 'Bank Statement'].map((doc) => (
+                    {['All Visa Types', 'E-VISA', 'STICKER', 'BUSINESS'].map((t) => (
                       <button
-                        key={doc}
-                        onClick={() => setDocumentsFilter(doc)}
+                        key={t}
+                        onClick={() => setTypeFilter(t)}
                         className={`px-3 py-1.5 rounded-full text-xs font-medium border transition ${
-                          documentsFilter === doc
+                          typeFilter === t
                             ? 'bg-neutral-900 text-white border-neutral-900'
                             : 'bg-neutral-50 text-neutral-700 border-neutral-200'
                         }`}
                       >
-                        {doc}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="font-semibold text-neutral-500 uppercase tracking-wider text-[10px] block mb-2">Holidays</label>
-                  <div className="flex flex-wrap gap-2">
-                    {['Select Dates', 'October 2026', 'November 2026', 'December 2026', 'Spring 2027'].map((h) => (
-                      <button
-                        key={h}
-                        onClick={() => setHolidaysFilter(h)}
-                        className={`px-3 py-1.5 rounded-full text-xs font-medium border transition ${
-                          holidaysFilter === h
-                            ? 'bg-neutral-900 text-white border-neutral-900'
-                            : 'bg-neutral-50 text-neutral-700 border-neutral-200'
-                        }`}
-                      >
-                        {h}
+                        {t}
                       </button>
                     ))}
                   </div>
