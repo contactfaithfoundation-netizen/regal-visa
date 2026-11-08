@@ -1,10 +1,13 @@
 import React from 'react';
 
+export type PolicyTabType = 'terms' | 'privacy' | 'refund' | 'disclaimer';
+
 interface SecondaryCtaBannerProps {
   onOpenVisaModal?: () => void;
   onNavigateHome?: () => void;
   onNavigateToVisas?: () => void;
   onNavigateToBlogs?: () => void;
+  onNavigateToPolicies?: (tab?: PolicyTabType) => void;
   className?: string;
 }
 
@@ -13,6 +16,7 @@ export const SecondaryCtaBanner: React.FC<SecondaryCtaBannerProps> = ({
   onNavigateHome,
   onNavigateToVisas,
   onNavigateToBlogs,
+  onNavigateToPolicies,
   className = '',
 }) => {
   const handleScrollTo = (id: string) => {
@@ -27,6 +31,14 @@ export const SecondaryCtaBanner: React.FC<SecondaryCtaBannerProps> = ({
       onNavigateHome();
     } else {
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const handlePolicyClick = (tab: PolicyTabType) => {
+    if (onNavigateToPolicies) {
+      onNavigateToPolicies(tab);
+    } else {
+      window.location.href = `/${tab === 'terms' ? 'terms' : tab === 'privacy' ? 'privacy' : 'refund-policy'}`;
     }
   };
 
@@ -80,113 +92,189 @@ export const SecondaryCtaBanner: React.FC<SecondaryCtaBannerProps> = ({
             </button>
           </div>
 
-          {/* Footer Navigation Section: Logo & Page Links */}
-          <div className="relative z-20 w-full mt-12 pt-8 border-t border-[#E2E8F0] flex flex-col md:flex-row md:items-center justify-between gap-6">
-            {/* Brand Logo & Tagline */}
-            <div className="flex items-center gap-3.5">
+          {/* Footer Navigation Section: Logo & 3 Columns Links (No line above logo, subtext removed, logo kept big) */}
+          <div className="relative z-20 w-full mt-14 pt-2 flex flex-col lg:flex-row lg:items-start justify-between gap-10">
+            {/* Big Brand Logo (Subtext removed, logo kept big) */}
+            <div className="flex flex-col items-start shrink-0">
               <button
                 type="button"
                 onClick={handleHomeClick}
-                className="group flex items-center gap-3 cursor-pointer text-left focus:outline-none"
+                className="group flex items-center cursor-pointer text-left focus:outline-none"
                 aria-label="Regal Visa Solutions - Back to Top"
               >
                 <img
                   src="https://res.cloudinary.com/dacyy7rkn/image/upload/v1792480449/image_tqqmok.avif"
                   alt="Regal Visa Solutions"
-                  className="h-10 sm:h-11 w-auto object-contain transition-transform group-hover:scale-105"
+                  className="h-14 sm:h-16 md:h-18 lg:h-20 w-auto object-contain transition-transform group-hover:scale-105"
                   loading="lazy"
                 />
               </button>
-              <div className="hidden sm:block h-7 w-[1px] bg-[#E2E8F0]" />
-              <span className="hidden sm:inline-block text-xs text-[#64748B] font-medium tracking-tight">
-                Consular Clearance & Premium Travel Advisory
-              </span>
             </div>
 
-            {/* Pages Navigation Links */}
-            <nav className="flex flex-wrap items-center gap-x-6 sm:gap-x-8 gap-y-2.5" aria-label="Footer Navigation">
-              <button
-                type="button"
-                onClick={handleHomeClick}
-                className="text-xs sm:text-[13px] font-semibold text-[#334155] hover:text-[#1D4ED8] transition-colors cursor-pointer"
-              >
-                Home
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  if (onNavigateToVisas) {
-                    onNavigateToVisas();
-                  } else {
-                    handleScrollTo('explore-events');
-                  }
-                }}
-                className="text-xs sm:text-[13px] font-semibold text-[#334155] hover:text-[#1D4ED8] transition-colors cursor-pointer"
-              >
-                Explore Visas
-              </button>
-              <button
-                type="button"
-                onClick={() => handleScrollTo('services-section')}
-                className="text-xs sm:text-[13px] font-semibold text-[#334155] hover:text-[#1D4ED8] transition-colors cursor-pointer"
-              >
-                Services
-              </button>
-              <button
-                type="button"
-                onClick={() => handleScrollTo('process-section')}
-                className="text-xs sm:text-[13px] font-semibold text-[#334155] hover:text-[#1D4ED8] transition-colors cursor-pointer"
-              >
-                Process
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  if (onNavigateToBlogs) {
-                    onNavigateToBlogs();
-                  } else {
-                    handleScrollTo('blog-section');
-                  }
-                }}
-                className="text-xs sm:text-[13px] font-semibold text-[#334155] hover:text-[#1D4ED8] transition-colors cursor-pointer"
-              >
-                Visa Intelligence
-              </button>
-              <button
-                type="button"
-                onClick={() => handleScrollTo('faqs')}
-                className="text-xs sm:text-[13px] font-semibold text-[#334155] hover:text-[#1D4ED8] transition-colors cursor-pointer"
-              >
-                FAQs
-              </button>
-              <button
-                type="button"
-                onClick={onOpenVisaModal}
-                className="text-xs sm:text-[13px] font-semibold text-[#1D4ED8] hover:text-[#1E40AF] transition-colors cursor-pointer"
-              >
-                Book Consultation
-              </button>
+            {/* 3 Columns of Footer Links */}
+            <nav className="flex-1 max-w-3xl grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-6 lg:gap-10" aria-label="Footer Navigation">
+              {/* Column 1: Navigation & Exploration */}
+              <div className="flex flex-col space-y-2.5">
+                <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#0F172A]">
+                  Navigation
+                </span>
+                <button
+                  type="button"
+                  onClick={handleHomeClick}
+                  className="text-xs sm:text-[13px] text-left font-medium text-[#475569] hover:text-[#1D4ED8] transition-colors cursor-pointer"
+                >
+                  Home
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onNavigateToVisas) {
+                      onNavigateToVisas();
+                    } else {
+                      handleScrollTo('explore-events');
+                    }
+                  }}
+                  className="text-xs sm:text-[13px] text-left font-medium text-[#475569] hover:text-[#1D4ED8] transition-colors cursor-pointer"
+                >
+                  Explore Visas
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleScrollTo('services-section')}
+                  className="text-xs sm:text-[13px] text-left font-medium text-[#475569] hover:text-[#1D4ED8] transition-colors cursor-pointer"
+                >
+                  Services
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleScrollTo('process-section')}
+                  className="text-xs sm:text-[13px] text-left font-medium text-[#475569] hover:text-[#1D4ED8] transition-colors cursor-pointer"
+                >
+                  Consular Process
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleScrollTo('faqs')}
+                  className="text-xs sm:text-[13px] text-left font-medium text-[#475569] hover:text-[#1D4ED8] transition-colors cursor-pointer"
+                >
+                  FAQs
+                </button>
+              </div>
+
+              {/* Column 2: Intelligence & Advisory */}
+              <div className="flex flex-col space-y-2.5">
+                <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#0F172A]">
+                  Visa Intelligence
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onNavigateToBlogs) {
+                      onNavigateToBlogs();
+                    } else {
+                      handleScrollTo('blog-section');
+                    }
+                  }}
+                  className="text-xs sm:text-[13px] text-left font-medium text-[#475569] hover:text-[#1D4ED8] transition-colors cursor-pointer"
+                >
+                  Latest Visa Articles
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onNavigateToVisas) {
+                      onNavigateToVisas();
+                    } else {
+                      handleScrollTo('explore-events');
+                    }
+                  }}
+                  className="text-xs sm:text-[13px] text-left font-medium text-[#475569] hover:text-[#1D4ED8] transition-colors cursor-pointer"
+                >
+                  Schengen Compliance
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onNavigateToVisas) {
+                      onNavigateToVisas();
+                    } else {
+                      handleScrollTo('explore-events');
+                    }
+                  }}
+                  className="text-xs sm:text-[13px] text-left font-medium text-[#475569] hover:text-[#1D4ED8] transition-colors cursor-pointer"
+                >
+                  US & Canada Filings
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onNavigateToVisas) {
+                      onNavigateToVisas();
+                    } else {
+                      handleScrollTo('explore-events');
+                    }
+                  }}
+                  className="text-xs sm:text-[13px] text-left font-medium text-[#475569] hover:text-[#1D4ED8] transition-colors cursor-pointer"
+                >
+                  5-Star Hajj & Umrah
+                </button>
+              </div>
+
+              {/* Column 3: Policies & Legal Terms */}
+              <div className="flex flex-col space-y-2.5">
+                <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#0F172A]">
+                  Policies & Legal
+                </span>
+                <button
+                  type="button"
+                  onClick={() => handlePolicyClick('terms')}
+                  className="text-xs sm:text-[13px] text-left font-medium text-[#475569] hover:text-[#1D4ED8] transition-colors cursor-pointer"
+                >
+                  Terms & Conditions
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handlePolicyClick('privacy')}
+                  className="text-xs sm:text-[13px] text-left font-medium text-[#475569] hover:text-[#1D4ED8] transition-colors cursor-pointer"
+                >
+                  Privacy Policy
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handlePolicyClick('refund')}
+                  className="text-xs sm:text-[13px] text-left font-medium text-[#475569] hover:text-[#1D4ED8] transition-colors cursor-pointer"
+                >
+                  Refund & Cancellation
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handlePolicyClick('disclaimer')}
+                  className="text-xs sm:text-[13px] text-left font-medium text-[#475569] hover:text-[#1D4ED8] transition-colors cursor-pointer"
+                >
+                  Consular Disclaimer
+                </button>
+              </div>
             </nav>
           </div>
 
           {/* Bottom Sub-Bar: Copyright & 3 Social Media Links */}
-          <div className="relative z-20 w-full mt-6 pt-5 border-t border-[#F1F5F9] flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="relative z-20 w-full mt-10 pt-6 border-t border-[#F1F5F9] flex flex-col sm:flex-row items-center justify-between gap-4">
             {/* Copyright */}
             <p className="text-[11px] sm:text-xs text-[#94A3B8] font-normal">
               &copy; {new Date().getFullYear()} Regal Visa Solutions. All rights reserved.
             </p>
 
-            {/* 3 Social Media Links (Instagram, Facebook, TikTok) */}
-            <div className="flex flex-wrap items-center gap-6">
+            {/* 3 Social Media Links (Instagram, Facebook, TikTok) - Compact on mobile to always fit in one row */}
+            <div className="flex items-center justify-center sm:justify-end gap-2.5 xs:gap-3.5 sm:gap-6 flex-nowrap">
               {/* Instagram */}
               <a
                 href="https://www.instagram.com/regalvisasoloutions"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-[11px] sm:text-xs font-bold uppercase tracking-[0.14em] text-[#0F172A] hover:text-[#1D4ED8] transition-colors group"
+                className="flex items-center gap-1 xs:gap-1.5 sm:gap-2 text-[9.5px] xs:text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.05em] xs:tracking-[0.09em] sm:tracking-[0.14em] text-[#0F172A] hover:text-[#1D4ED8] transition-colors group shrink-0 whitespace-nowrap"
               >
                 <svg
-                  className="w-4 h-4 text-[#0F172A] group-hover:text-[#1D4ED8] transition-colors"
+                  className="w-3 h-3 xs:w-3.5 xs:h-3.5 sm:w-4 sm:h-4 text-[#0F172A] group-hover:text-[#1D4ED8] transition-colors shrink-0"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -207,10 +295,10 @@ export const SecondaryCtaBanner: React.FC<SecondaryCtaBannerProps> = ({
                 href="https://www.facebook.com/regalvisasolutions"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-[11px] sm:text-xs font-bold uppercase tracking-[0.14em] text-[#0F172A] hover:text-[#1D4ED8] transition-colors group"
+                className="flex items-center gap-1 xs:gap-1.5 sm:gap-2 text-[9.5px] xs:text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.05em] xs:tracking-[0.09em] sm:tracking-[0.14em] text-[#0F172A] hover:text-[#1D4ED8] transition-colors group shrink-0 whitespace-nowrap"
               >
                 <svg
-                  className="w-4 h-4 text-[#0F172A] group-hover:text-[#1D4ED8] transition-colors"
+                  className="w-3 h-3 xs:w-3.5 xs:h-3.5 sm:w-4 sm:h-4 text-[#0F172A] group-hover:text-[#1D4ED8] transition-colors shrink-0"
                   viewBox="0 0 24 24"
                   fill="currentColor"
                   aria-hidden="true"
@@ -225,10 +313,10 @@ export const SecondaryCtaBanner: React.FC<SecondaryCtaBannerProps> = ({
                 href="https://www.tiktok.com/@regalvisasolutions"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-[11px] sm:text-xs font-bold uppercase tracking-[0.14em] text-[#0F172A] hover:text-[#1D4ED8] transition-colors group"
+                className="flex items-center gap-1 xs:gap-1.5 sm:gap-2 text-[9.5px] xs:text-[10.5px] sm:text-xs font-bold uppercase tracking-[0.05em] xs:tracking-[0.09em] sm:tracking-[0.14em] text-[#0F172A] hover:text-[#1D4ED8] transition-colors group shrink-0 whitespace-nowrap"
               >
                 <svg
-                  className="w-4 h-4 text-[#0F172A] group-hover:text-[#1D4ED8] transition-colors"
+                  className="w-3 h-3 xs:w-3.5 xs:h-3.5 sm:w-4 sm:h-4 text-[#0F172A] group-hover:text-[#1D4ED8] transition-colors shrink-0"
                   viewBox="0 0 24 24"
                   fill="currentColor"
                   aria-hidden="true"

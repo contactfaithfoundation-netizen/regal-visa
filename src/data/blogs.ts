@@ -1,3 +1,10 @@
+import bankStatementImg from '../assets/images/pkr_bank_statement_1794153940679.jpg';
+import dummyTicketImg from '../assets/images/pakistan_airport_tickets_1794153957606.jpg';
+import travelHistoryImg from '../assets/images/pakistan_passport_stamps_1794153974277.jpg';
+import sponsorshipImg from '../assets/images/pakistani_family_consular_1794153990939.jpg';
+import freelancerImg from '../assets/images/pakistan_tech_freelancer_1794154004714.jpg';
+import appealBriefImg from '../assets/images/consular_appeal_brief_1794154021130.jpg';
+
 export interface BlogPostData {
   slug: string;
   title: string;
@@ -19,7 +26,7 @@ export const BLOGS_DATABASE: BlogPostData[] = [
     readTime: '6 min read',
     author: 'Advocate Zeeshan Tariq',
     authorRole: 'Senior Consular Legal Counsel',
-    image: 'https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=1200&q=85',
+    image: bankStatementImg,
     content: `# How Pakistani Applicants Trigger 214(b) Rejections with Unexplained Bank Deposits
 
 For Pakistani passport holders applying for Schengen, US, UK, or Canadian visitor visas, financial documentation represents over **70% of the refusal rationale**. Contrary to popular belief in Pakistan, having a closing balance of PKR 4M or PKR 8M does not guarantee visa approval. In reality, how that money entered your account is scrutinized ten times more thoroughly than the final figure.
@@ -76,7 +83,7 @@ Never borrow money to inflate your visa bank statement. A modest, steady bank st
     readTime: '5 min read',
     author: 'Hamza Farooq',
     authorRole: 'Head of Global GDS Ticketing & Accreditation',
-    image: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1200&q=85',
+    image: dummyTicketImg,
     content: `# The Agent "Dummy Ticket" Scam in Lahore & Karachi Causing 10-Year Embassy Bans
 
 Every week across visa service centres in Islamabad, Lahore, and Karachi (VFS Global, Gerry's, and TLScontact), applicants receive devastating refusal letters citing **"Presentation of False or Misleading Documents."** 
@@ -134,7 +141,7 @@ From the visa officer's legal perspective, submitting an expired or fabricated f
     readTime: '5 min read',
     author: 'Barrister Daniyal Khan',
     authorRole: 'Immigration Specialist & Appeals Consultant',
-    image: 'https://images.unsplash.com/photo-1530521954074-e64f6810b32d?auto=format&fit=crop&w=1200&q=85',
+    image: travelHistoryImg,
     content: `# Overcoming "Weak Travel History" on a Fresh Green Pakistani Passport
 
 One of the most disheartening visa refusal reasons stamped on Pakistani passports reads:
@@ -190,7 +197,7 @@ At Globe Express, every single cover brief is customized to your individual biog
     readTime: '6 min read',
     author: 'Advocate Zeeshan Tariq',
     authorRole: 'Senior Consular Legal Counsel',
-    image: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1200&q=85',
+    image: sponsorshipImg,
     content: `# The Sponsorship Letter Trap: Why Relative Invitations Cause More Refusals than Approvals
 
 In Pakistan, it is almost instinctual: the moment someone decides to apply for a UK, Schengen, or Canadian visitor visa, they immediately call a relative living abroad asking for an **"Invitation Letter."**
@@ -232,7 +239,7 @@ Presenting yourself as a **Self-Funded Business Executive or Tourist** elevates 
     readTime: '7 min read',
     author: 'Hamza Farooq',
     authorRole: 'Head of Global GDS Ticketing & Accreditation',
-    image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=85',
+    image: freelancerImg,
     content: `# Visa Solutions for Pakistani Freelancers, IT Consultants & Remote Workers
 
 Pakistan is currently the 4th largest freelancing and software development hub in the world. However, when software engineers, UI/UX designers, and remote contractors apply for Western visas, traditional consulates often treat them as unemployed or transient workers.
@@ -286,7 +293,7 @@ Establishing international remote residency or holding these visas transforms yo
     readTime: '6 min read',
     author: 'Barrister Daniyal Khan',
     authorRole: 'Immigration Specialist & Appeals Consultant',
-    image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1200&q=85',
+    image: appealBriefImg,
     content: `# How to Legally Overturn a Past Visa Refusal: The Consular Appeal Framework
 
 Receiving a visa rejection letter from a foreign embassy in Islamabad can be deeply frustrating. Most Pakistani applicants make one of two critical mistakes after a refusal:

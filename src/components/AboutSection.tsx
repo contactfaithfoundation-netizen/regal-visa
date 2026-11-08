@@ -44,9 +44,9 @@ export const AboutSection: React.FC = () => {
             wordAnimationStart="top 78%"
             wordAnimationEnd="bottom 42%"
             containerClassName="w-full"
-            textClassName="font-sans text-neutral-600 text-2xl sm:text-3xl md:text-4xl lg:text-[42px] xl:text-[46px] font-normal sm:font-medium leading-[1.3] sm:leading-[1.35] tracking-tight sm:tracking-normal text-center"
+            textClassName="font-sans text-neutral-600 text-2xl sm:text-[34px] md:text-[44px] lg:text-[50px] xl:text-[54px] font-normal sm:font-medium leading-[1.28] sm:leading-[1.32] tracking-tight sm:tracking-normal text-center"
           >
-            Visas fail on paperwork, not your profile. We turn Pakistani passports into trusted global gateways with verified consular filings.
+            Most visas are rejected for simple paperwork mistakes, not your profile. We prepare, verify, and submit your application correctly so your visa gets approved the first time.
           </ScrollReveal>
         </div>
 

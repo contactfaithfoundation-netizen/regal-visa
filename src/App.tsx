@@ -14,8 +14,10 @@ import { AllBlogsPage } from './components/AllBlogsPage';
 import { BlogPostPage } from './components/BlogPostPage';
 import { AllVisasPage } from './components/AllVisasPage';
 import { ServicesSection } from './components/ServicesSection';
+import { ReadyToBeginCard } from './components/ReadyToBeginCard';
 import { ProcessSection } from './components/ProcessSection';
 import { SecondaryCtaBanner } from './components/SecondaryCtaBanner';
+import { PoliciesPage, PolicyTab } from './components/PoliciesPage';
 import { parseCurrentRoute, countryToSlug } from './utils/router';
 
 export default function App() {
@@ -29,7 +31,7 @@ export default function App() {
   const [isHeroVisible, setIsHeroVisible] = useState(true);
 
   // Synchronized routing state
-  const [currentView, setCurrentView] = useState<'home' | 'country-visa' | 'blogs' | 'blog-detail' | 'visas'>(() => {
+  const [currentView, setCurrentView] = useState<'home' | 'country-visa' | 'blogs' | 'blog-detail' | 'visas' | 'policies'>(() => {
     return parseCurrentRoute().view;
   });
   const [selectedCountry, setSelectedCountry] = useState<string>(() => {
@@ -37,6 +39,9 @@ export default function App() {
   });
   const [selectedBlogSlug, setSelectedBlogSlug] = useState<string>(() => {
     return parseCurrentRoute().blogSlug || 'bank-statement-rejections-pakistan';
+  });
+  const [selectedPolicyTab, setSelectedPolicyTab] = useState<PolicyTab>(() => {
+    return (parseCurrentRoute().policyTab as PolicyTab) || 'terms';
   });
 
   // Viewport dimensions
@@ -203,6 +208,22 @@ export default function App() {
       '/visas'
     );
     setCurrentView('visas');
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, []);
+
+  // Navigate to Policies, Terms & Conditions page
+  const handleNavigateToPolicies = useCallback((tab: PolicyTab = 'terms') => {
+    if (!window.history.state || window.history.state.view !== 'home') {
+      window.history.replaceState({ view: 'home' }, 'Globe Express', '/');
+    }
+    const path = tab === 'privacy' ? '/privacy' : tab === 'refund' ? '/refund-policy' : '/terms';
+    window.history.pushState(
+      { view: 'policies', policyTab: tab },
+      `${tab === 'privacy' ? 'Privacy Policy' : tab === 'refund' ? 'Refund Policy' : 'Terms & Conditions'} - Globe Express`,
+      path
+    );
+    setSelectedPolicyTab(tab);
+    setCurrentView('policies');
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   }, []);
 
@@ -400,6 +421,9 @@ export default function App() {
           setCurrentView('blogs');
         } else if (e.state.view === 'visas') {
           setCurrentView('visas');
+        } else if (e.state.view === 'policies') {
+          setSelectedPolicyTab((e.state.policyTab as PolicyTab) || 'terms');
+          setCurrentView('policies');
         } else {
           setCurrentView('home');
         }
@@ -419,6 +443,9 @@ export default function App() {
         setCurrentView('blogs');
       } else if (route.view === 'visas') {
         setCurrentView('visas');
+      } else if (route.view === 'policies') {
+        setSelectedPolicyTab((route.policyTab as PolicyTab) || 'terms');
+        setCurrentView('policies');
       } else {
         setCurrentView('home');
         if (route.section) {
@@ -477,6 +504,18 @@ export default function App() {
         onBackToHome={() => handleBackToHome()}
         onSelectCountry={handleOpenCountryVisa}
         onOpenVisaModal={() => setIsVisaOpen(true)}
+        onNavigateToBlogs={handleNavigateToBlogs}
+      />
+    );
+  }
+
+  if (currentView === 'policies') {
+    return (
+      <PoliciesPage
+        initialTab={selectedPolicyTab}
+        onBackToHome={() => handleBackToHome()}
+        onOpenVisaModal={() => setIsVisaOpen(true)}
+        onNavigateToVisas={handleNavigateToVisas}
         onNavigateToBlogs={handleNavigateToBlogs}
       />
     );
@@ -750,6 +789,12 @@ export default function App() {
       {/* INTERACTIVE 3-COLUMN SCROLL SERVICES SECTION */}
       <ServicesSection />
 
+      {/* FAST-TRACK ASSESSMENT CALLOUT CARD WITH 3D SPHERES VIDEO */}
+      <ReadyToBeginCard
+        onOpenVisaModal={() => setIsVisaOpen(true)}
+        onNavigateToExplore={handleNavigateToExplore}
+      />
+
       {/* 4-STEP CONSULAR CLEARANCE PROCESS SECTION */}
       <ProcessSection
         onOpenVisaModal={() => setIsVisaOpen(true)}
@@ -765,12 +810,13 @@ export default function App() {
       {/* FREQUENTLY ASKED QUESTIONS SECTION (Pure White Background & Brand Colors) */}
       <FaqSection className="border-t border-neutral-100" />
 
-      {/* FOOTER & SECONDARY CTA BANNER (Logo, Page Navigation, 3D Spheres Video, Social Links) */}
+      {/* FOOTER & SECONDARY CTA BANNER (Big Logo, 3 Columns Navigation with Policies, 3D Spheres Video, Social Links) */}
       <SecondaryCtaBanner
         onOpenVisaModal={() => setIsVisaOpen(true)}
         onNavigateHome={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         onNavigateToVisas={handleNavigateToVisas}
         onNavigateToBlogs={handleNavigateToBlogs}
+        onNavigateToPolicies={handleNavigateToPolicies}
       />
     </div>
   );

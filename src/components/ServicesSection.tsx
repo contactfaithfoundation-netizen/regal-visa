@@ -151,12 +151,6 @@ export const ServicesSection: React.FC = () => {
 
   const planeTop = useTransform(smoothProgress, [0, 1], ['4%', '96%']);
 
-  const planeRotate = useTransform(
-    smoothProgress,
-    [0, 0.25, 0.5, 0.75, 1],
-    [0, 5, -5, 4, 0]
-  );
-
   const calculateScrollProgress = useCallback(() => {
     const card0 = cardRefs.current[0];
     const card4 = cardRefs.current[4];
@@ -320,9 +314,9 @@ export const ServicesSection: React.FC = () => {
                 })}
               </div>
 
-              {/* AIRPLANE GRAPHIC - Clean image with slight ripple behind it and shadows removed */}
+              {/* AIRPLANE GRAPHIC - Travels straight without wobbling */}
               <motion.div
-                style={{ top: planeTop, rotate: planeRotate }}
+                style={{ top: planeTop }}
                 className="absolute left-[36%] sm:left-[42%] lg:left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 flex flex-col items-center pointer-events-none transform-gpu"
               >
                 <div className="relative flex items-center justify-center">

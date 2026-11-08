@@ -58,10 +58,11 @@ export function slugToCountry(slug: string): string {
 }
 
 export interface RouteState {
-  view: 'home' | 'country-visa' | 'blogs' | 'blog-detail' | 'visas';
+  view: 'home' | 'country-visa' | 'blogs' | 'blog-detail' | 'visas' | 'policies';
   country?: string;
   blogSlug?: string;
   section?: string;
+  policyTab?: 'terms' | 'privacy' | 'refund' | 'disclaimer';
 }
 
 // Parse current browser location into RouteState
@@ -93,6 +94,20 @@ export function parseCurrentRoute(): RouteState {
   // 3. Check pathname: /visas or /all-visas
   if (/^\/(?:visas|all-visas)\/?$/i.test(pathname)) {
     return { view: 'visas' };
+  }
+
+  // 4. Check pathname: /policies, /terms, /privacy, /refund-policy
+  if (/^\/terms\/?$/i.test(pathname)) {
+    return { view: 'policies', policyTab: 'terms' };
+  }
+  if (/^\/privacy\/?$/i.test(pathname)) {
+    return { view: 'policies', policyTab: 'privacy' };
+  }
+  if (/^\/(?:refund|refund-policy)\/?$/i.test(pathname)) {
+    return { view: 'policies', policyTab: 'refund' };
+  }
+  if (/^\/(?:policies|legal)\/?$/i.test(pathname)) {
+    return { view: 'policies', policyTab: 'terms' };
   }
 
   // 4. Check pathname: /visa/:slug or /country/:slug
