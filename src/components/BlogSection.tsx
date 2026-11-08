@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { BLOGS_DATABASE } from '../data/blogs';
+import { PatternWaves } from './PatternWaves';
 
 interface BlogSectionProps {
   onSelectBlog: (slug: string) => void;
@@ -17,9 +18,31 @@ export const BlogSection: React.FC<BlogSectionProps> = ({
   return (
     <section
       id="blog-section"
-      className="relative w-full bg-white text-neutral-900 py-16 sm:py-20 md:py-24 px-4 sm:px-8 lg:px-14 border-t border-neutral-100 select-none font-sans"
+      className="relative w-full bg-white text-neutral-900 py-16 sm:py-20 md:py-24 px-4 sm:px-8 lg:px-14 border-t border-neutral-100 select-none font-sans overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto">
+      {/* Background Pattern Waves */}
+      <div className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden">
+        <PatternWaves
+          preset="pond"
+          color="#2563eb"
+          backgroundColor="#ffffff"
+          fade="edges"
+          interactive={false}
+          cursorSize={50}
+          cursorStrength={0.6}
+          wave="ripple"
+          spacing={10}
+          markSize={0.9}
+          depth={0.3}
+          shine={2}
+          contrast={0.75}
+          speed={1.05}
+          scale={1.7}
+          direction={57}
+        />
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto">
         {/* Sculpted Our Blogs Heading matching About US style */}
         <div className="relative flex flex-col items-center justify-center mb-10 sm:mb-14 text-center select-none">
           {/* Subtle atmospheric blue glow */}

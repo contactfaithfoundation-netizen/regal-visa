@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Search, Plus, Minus, X, ArrowRight, HelpCircle } from 'lucide-react';
+import { PatternWaves } from './PatternWaves';
 
 export interface FaqItem {
   question: string;
@@ -176,8 +177,30 @@ export const FaqSection: React.FC<FaqSectionProps> = ({
   };
 
   return (
-    <section id="faqs" className={`w-full bg-white text-[#0F172A] font-sans ${className}`}>
-      <div className="max-w-[1000px] mx-auto px-4 sm:px-6 py-10 sm:py-16">
+    <section id="faqs" className={`relative w-full bg-white text-[#0F172A] font-sans overflow-hidden ${className}`}>
+      {/* Background Pattern Waves */}
+      <div className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden">
+        <PatternWaves
+          preset="pond"
+          color="#2563eb"
+          backgroundColor="#ffffff"
+          fade="edges"
+          interactive={false}
+          cursorSize={50}
+          cursorStrength={0.6}
+          wave="ripple"
+          spacing={10}
+          markSize={0.9}
+          depth={0.3}
+          shine={2}
+          contrast={0.75}
+          speed={1.05}
+          scale={1.7}
+          direction={57}
+        />
+      </div>
+
+      <div className="relative z-10 max-w-[1000px] mx-auto px-4 sm:px-6 py-10 sm:py-16">
         {/* Heading matching user reference design */}
         <div className="mb-6">
           <h2 className="text-xl sm:text-2xl md:text-[26px] font-bold text-[#0F172A] tracking-tight">

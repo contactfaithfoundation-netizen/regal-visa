@@ -10,6 +10,7 @@ import {
   ShieldCheck,
   ArrowRight,
 } from 'lucide-react';
+import { PatternWaves } from './PatternWaves';
 
 interface ProcessStep {
   step: string;
@@ -226,7 +227,29 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({
       id="process-section"
       className="relative w-full bg-white text-neutral-900 py-16 sm:py-24 px-4 sm:px-6 lg:px-8 border-t border-neutral-100 select-none overflow-hidden"
     >
-      <div className="max-w-4xl mx-auto">
+      {/* Background Pattern Waves */}
+      <div className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden">
+        <PatternWaves
+          preset="pond"
+          color="#2563eb"
+          backgroundColor="#ffffff"
+          fade="edges"
+          interactive={false}
+          cursorSize={50}
+          cursorStrength={0.6}
+          wave="ripple"
+          spacing={10}
+          markSize={0.9}
+          depth={0.3}
+          shine={2}
+          contrast={0.75}
+          speed={1.05}
+          scale={1.7}
+          direction={57}
+        />
+      </div>
+
+      <div className="relative z-10 max-w-4xl mx-auto">
         {/* Sculpted Heading matching About, Blogs & Services */}
         <div className="relative flex flex-col items-center justify-center mb-14 sm:mb-20 select-none text-center">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 sm:w-80 h-24 bg-[#2563EB]/[0.05] rounded-full blur-2xl pointer-events-none" />
