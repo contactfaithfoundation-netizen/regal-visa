@@ -268,33 +268,32 @@ export const ServicesSection: React.FC = () => {
         {/* Padded Container: Sticky Left Column stays pinned in viewport until all 5 services scroll past */}
         <div
           ref={containerRef}
-          className="relative flex items-start gap-3 sm:gap-8 lg:gap-16 pt-2 pb-36 sm:pb-52 lg:pb-72"
+          className="relative flex items-start gap-3 sm:gap-8 lg:gap-16 pt-2 pb-48 sm:pb-64 lg:pb-80"
         >
           {/* ========================================================
               STICKY LEFT PLANE COLUMN:
-              Remains attached (pinned) in viewport at top: 80px / top: 110px.
-              Does NOT move up with scroll until all 5 services are completed.
+              Vertically longer flight corridor (h-460px to h-720px).
+              Remains attached (pinned) in viewport.
               Text on the right moves up with scroll.
           ======================================================== */}
           <div
             style={{
               position: 'sticky',
-              top: '80px',
               alignSelf: 'flex-start',
             }}
-            className="sticky top-20 sm:top-24 lg:top-28 flex flex-col items-center justify-start w-24 sm:w-32 lg:w-80 xl:w-96 shrink-0 select-none z-20 self-start"
+            className="sticky top-16 sm:top-20 lg:top-24 flex flex-col items-center justify-start w-28 sm:w-36 lg:w-80 xl:w-96 shrink-0 select-none z-20 self-start"
           >
-            <div className="relative w-full h-[320px] sm:h-[400px] lg:h-[480px] xl:h-[520px] flex items-center justify-center">
-              {/* Flight Path Spine Line */}
-              <div className="absolute left-1/2 -translate-x-1/2 top-4 bottom-4 w-1 sm:w-1.5 rounded-full bg-slate-200/90 overflow-hidden shadow-inner">
+            <div className="relative w-full h-[460px] sm:h-[540px] lg:h-[660px] xl:h-[720px] flex items-center justify-center">
+              {/* Vertically Extended Flight Path Spine Line - Shifted slightly left on mobile */}
+              <div className="absolute left-[36%] sm:left-[42%] lg:left-1/2 -translate-x-1/2 top-6 bottom-6 w-1 sm:w-1.5 rounded-full bg-slate-200/90 overflow-hidden shadow-inner">
                 <motion.div
                   style={{ scaleY: smoothProgress }}
-                  className="w-full h-full bg-gradient-to-b from-[#2563EB] via-[#3B82F6] to-[#93C5FD] origin-top rounded-full shadow-[0_0_10px_rgba(37,99,235,0.7)]"
+                  className="w-full h-full bg-gradient-to-b from-[#2563EB] via-[#3B82F6] to-[#93C5FD] origin-top rounded-full shadow-[0_0_8px_rgba(37,99,235,0.4)]"
                 />
               </div>
 
-              {/* Waypoint Nodes along the rail - No numbers cluttering space */}
-              <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-8 sm:w-10 flex flex-col justify-between items-center py-4 pointer-events-auto">
+              {/* Waypoint Nodes along the extended rail - Clean, no ripples */}
+              <div className="absolute inset-y-0 left-[36%] sm:left-[42%] lg:left-1/2 -translate-x-1/2 w-8 sm:w-10 flex flex-col justify-between items-center py-6 pointer-events-auto">
                 {SERVICES_DATA.map((srv, idx) => {
                   const isCurrent = idx === currentActiveIdx;
                   const isPast = idx <= currentActiveIdx;
@@ -305,16 +304,12 @@ export const ServicesSection: React.FC = () => {
                       onClick={() => handleScrollToService(idx)}
                       title={`Jump to Service ${idx + 1}`}
                       aria-label={`Jump to Service ${idx + 1}`}
-                      className="group relative flex items-center justify-center p-2 cursor-pointer focus:outline-none"
+                      className="group relative flex items-center justify-center p-2.5 cursor-pointer focus:outline-none"
                     >
-                      {isCurrent && (
-                        <div className="absolute w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#2563EB]/25 animate-ping pointer-events-none" />
-                      )}
-
                       <div
                         className={`w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border-2 transition-all duration-300 z-10 ${
                           isCurrent
-                            ? 'bg-[#2563EB] border-white shadow-[0_0_12px_rgba(37,99,235,0.8)] scale-125'
+                            ? 'bg-[#2563EB] border-white scale-110'
                             : isPast
                             ? 'bg-[#2563EB] border-white'
                             : 'bg-white border-slate-300 group-hover:border-[#2563EB]'
@@ -325,31 +320,33 @@ export const ServicesSection: React.FC = () => {
                 })}
               </div>
 
-              {/* AIRPLANE GRAPHIC - Big on mobile (w-24 h-24 / 96px) and extra-large on desktop (w-56 h-56 / 224px) */}
+              {/* AIRPLANE GRAPHIC - Clean image with slight ripple behind it and shadows removed */}
               <motion.div
                 style={{ top: planeTop, rotate: planeRotate }}
-                className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 flex flex-col items-center pointer-events-none transform-gpu"
+                className="absolute left-[36%] sm:left-[42%] lg:left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 flex flex-col items-center pointer-events-none transform-gpu"
               >
                 <div className="relative flex items-center justify-center">
-                  <div className="absolute -inset-3 sm:-inset-6 lg:-inset-8 bg-[#2563EB]/20 rounded-full blur-xl pointer-events-none" />
-                  <div className="absolute -top-10 sm:-top-16 lg:-top-20 left-1/2 -translate-x-1/2 w-8 sm:w-12 lg:w-16 h-10 sm:h-16 lg:h-20 bg-gradient-to-t from-[#2563EB]/30 via-[#60A5FA]/15 to-transparent blur-xs pointer-events-none rounded-full" />
+                  {/* Slight, gentle ripple rings directly behind the plane */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <span
+                      className="absolute w-24 h-24 sm:w-32 sm:h-32 lg:w-44 lg:h-44 rounded-full border border-blue-400/40 animate-ping opacity-60 pointer-events-none"
+                      style={{ animationDuration: '2.8s' }}
+                    />
+                    <span
+                      className="absolute w-16 h-16 sm:w-22 sm:h-22 lg:w-30 lg:h-30 rounded-full border border-blue-500/30 animate-ping opacity-75 pointer-events-none"
+                      style={{ animationDuration: '2.8s', animationDelay: '0.9s' }}
+                    />
+                    <span className="absolute w-10 h-10 sm:w-14 sm:h-14 lg:w-18 lg:h-18 rounded-full bg-blue-500/10 pointer-events-none" />
+                  </div>
 
                   <img
                     src={PLANE_IMAGE_URL}
                     alt="Flight Route Airplane"
-                    className="relative w-24 h-24 sm:w-36 sm:h-36 lg:w-56 lg:h-56 xl:w-64 xl:h-64 object-contain drop-shadow-[0_10px_24px_rgba(37,99,235,0.4)] transition-transform duration-300"
+                    className="relative w-36 h-36 sm:w-44 sm:h-44 lg:w-56 lg:h-56 xl:w-64 xl:h-64 object-contain transition-transform duration-300"
                     loading="eager"
                   />
                 </div>
               </motion.div>
-            </div>
-
-            {/* Status Badge */}
-            <div className="mt-2 sm:mt-3 inline-flex items-center gap-1.5 px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-[#E2E8F0] shadow-xs text-[10px] sm:text-xs font-bold text-[#0F172A]">
-              <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#2563EB] animate-pulse" />
-              <span className="text-[#2563EB] font-mono">0{currentActiveIdx + 1}</span>
-              <span className="text-slate-300">/</span>
-              <span className="text-slate-500 font-mono">05</span>
             </div>
           </div>
 
@@ -357,7 +354,7 @@ export const ServicesSection: React.FC = () => {
               RIGHT COLUMN: Text on right moves up with scroll
               While the left plane element stays attached/pinned beside it.
           ======================================================== */}
-          <div className="flex-1 min-w-0 space-y-14 sm:space-y-28 lg:space-y-40">
+          <div className="flex-1 min-w-0 space-y-16 sm:space-y-32 lg:space-y-48">
             {SERVICES_DATA.map((service, idx) => (
               <div
                 key={service.id}
