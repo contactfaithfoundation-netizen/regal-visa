@@ -243,7 +243,7 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({
           depth={0.3}
           shine={2}
           contrast={0.75}
-          speed={1.05}
+          speed={2.2}
           scale={1.7}
           direction={57}
         />

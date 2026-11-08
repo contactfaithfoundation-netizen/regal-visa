@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { useRef, useState, useEffect } from 'react';
+import { motion, useScroll, useTransform, useSpring } from 'motion/react';
 import { PatternWaves } from './PatternWaves';
 
 interface ServiceItem {
@@ -9,9 +9,6 @@ interface ServiceItem {
   titleLine2: string;
   subtitle: string;
   pills: string[];
-  visual: {
-    image: string;
-  };
 }
 
 const SERVICES_DATA: ServiceItem[] = [
@@ -21,12 +18,8 @@ const SERVICES_DATA: ServiceItem[] = [
     titleLine1: 'Digital eVisa &',
     titleLine2: 'Fast-Track Processing',
     subtitle:
-      'We manage turnkey consular lodging and instant verified digital grant dispatch for Saudi Umrah, Malaysia, Turkey, UAE, and GCC destinations without embassy queues.',
-    pills: ['Instant eVisa', 'WhatsApp Dispatch', 'QR Verification'],
-    visual: {
-      image:
-        'https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&w=1000&q=85',
-    },
+      'Turnkey consular lodging and instant verified digital grant dispatch for Umrah, GCC, Turkey, and Malaysia.',
+    pills: ['Instant eVisa', 'WhatsApp Grant', 'QR Verified'],
   },
   {
     id: 'tier1-embassy',
@@ -34,12 +27,8 @@ const SERVICES_DATA: ServiceItem[] = [
     titleLine1: 'Tier-1 Embassy &',
     titleLine2: 'Sticker Visas',
     subtitle:
-      'We structure complete legal dossiers, procure priority biometric appointments, and conduct mock interview coaching for high-rejection jurisdictions.',
-    pills: ['UK & US B1/B2', 'Canada & Schengen', 'VFS Slot Procurement'],
-    visual: {
-      image:
-        'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1000&q=85',
-    },
+      'Complete legal dossiers, priority biometrics, and interview coaching for UK, USA, Canada, and Schengen.',
+    pills: ['UK & US B1/B2', 'Canada & Schengen', 'VFS Priority'],
   },
   {
     id: 'document-auditing',
@@ -47,12 +36,8 @@ const SERVICES_DATA: ServiceItem[] = [
     titleLine1: 'Consular Auditing &',
     titleLine2: 'Document Pre-Clearance',
     subtitle:
-      'We cross-audit applicant bank turnover against FBR Active Taxpayer declarations and issue verifiable flight and hotel PNR reservations that remain active.',
-    pills: ['FBR Tax Forensics', 'GDS Flight PNRs', 'Employer NOC Vetting'],
-    visual: {
-      image:
-        'https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=1000&q=85',
-    },
+      'Cross-audited bank turnover against FBR tax lists with live verifiable GDS flight reservations.',
+    pills: ['FBR Tax Forensics', 'GDS Flight PNRs', 'Employer NOC'],
   },
   {
     id: 'residence-citizenship',
@@ -60,144 +45,164 @@ const SERVICES_DATA: ServiceItem[] = [
     titleLine1: 'Global Residence &',
     titleLine2: 'Citizenship Pathways',
     subtitle:
-      'We guide clients through European Golden Visas, Swiss cantonal permits, UAE Golden Nomads, and Commonwealth citizenship by investment.',
+      'Strategic residency pathways for European Golden Visas, Swiss cantonal permits, and Caribbean passports.',
     pills: ['Golden Residency', 'Dual Passports', 'Global Mobility'],
-    visual: {
-      image:
-        'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1000&q=85',
-    },
   },
   {
     id: 'client-support',
     number: '05',
     titleLine1: 'Consular Support &',
-    titleLine2: 'Refusal Defense',
+    titleLine2: 'Refusal Overturn',
     subtitle:
-      'We provide direct 1-on-1 caseworker guidance, 15-minute emergency responses, and author formal administrative Remonstrance appeals to overturn prior refusals.',
-    pills: ['Remonstrance Appeals', '24/7 WhatsApp Desk', 'Case Deficiency Cure'],
-    visual: {
-      image:
-        'https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1000&q=85',
-    },
+      'Direct 1-on-1 caseworker defense, 15-minute response times, and formal administrative Remonstrance appeals.',
+    pills: ['Remonstrance Appeals', '24/7 WhatsApp Desk', 'Deficiency Cure'],
   },
 ];
 
+const PLANE_IMAGE_URL =
+  'https://res.cloudinary.com/rpphjsst/image/upload/v1794129938/image.webp';
+
+// Waypoint percentage offsets along the flight rail
+const WAYPOINT_POSITIONS = ['8%', '29%', '50%', '71%', '92%'];
+
+// Clean Unboxed Service Item matching reference layout
+const ServiceFlowCard: React.FC<{
+  service: ServiceItem;
+  idx: number;
+  isActive: boolean;
+  onSelect: (idx: number) => void;
+}> = ({ service, idx, isActive, onSelect }) => {
+  return (
+    <div
+      onClick={() => onSelect(idx)}
+      className={`relative select-none transition-all duration-500 py-6 sm:py-8 cursor-pointer rounded-2xl transition-opacity duration-300 ${
+        isActive ? 'opacity-100 scale-100' : 'opacity-40 hover:opacity-75 scale-[0.99]'
+      }`}
+    >
+      {/* Stream micro-tag indicator */}
+      <div className="flex items-center gap-2.5 mb-2.5 sm:mb-3">
+        <span
+          className={`w-2 h-2 rounded-full transition-all duration-500 ${
+            isActive
+              ? 'bg-[#2563EB] shadow-[0_0_10px_rgba(37,99,235,0.9)] scale-125'
+              : 'bg-slate-300'
+          }`}
+        />
+        <span
+          className={`font-sans text-xs sm:text-sm font-black tracking-widest uppercase transition-colors duration-500 ${
+            isActive ? 'text-[#2563EB]' : 'text-slate-400'
+          }`}
+        >
+          Service {service.number}
+        </span>
+      </div>
+
+      {/* Two-Line Title matching user reference */}
+      <h3 className="font-sans text-2xl sm:text-3xl lg:text-4xl xl:text-[42px] font-black tracking-[-0.03em] leading-[1.12] mb-3 sm:mb-4 transition-colors duration-500">
+        <span
+          className={`block transition-colors duration-500 ${
+            isActive ? 'text-[#0F172A]' : 'text-slate-600'
+          }`}
+        >
+          {service.titleLine1}
+        </span>
+        <span
+          className={`block transition-colors duration-500 ${
+            isActive ? 'text-[#2563EB]' : 'text-slate-400'
+          }`}
+        >
+          {service.titleLine2}
+        </span>
+      </h3>
+
+      {/* Concise Subtitle */}
+      <p
+        className={`font-sans text-sm sm:text-base lg:text-[16px] leading-relaxed max-w-xl mb-5 sm:mb-6 transition-colors duration-500 ${
+          isActive ? 'text-[#475569]' : 'text-slate-400'
+        }`}
+      >
+        {service.subtitle}
+      </p>
+
+      {/* Clean Pill Badges */}
+      <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+        {service.pills.map((pill, pIdx) => (
+          <span
+            key={pIdx}
+            className={`inline-flex items-center px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full border text-xs sm:text-[13px] font-medium transition-all duration-300 ${
+              isActive
+                ? 'bg-white border-slate-200 text-[#0F172A] shadow-[0_2px_8px_rgba(0,0,0,0.06)] hover:border-[#2563EB] hover:text-[#2563EB]'
+                : 'bg-white/60 border-slate-200/50 text-slate-400 shadow-none'
+            }`}
+          >
+            {pill}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 export const ServicesSection: React.FC = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const isSteppingRef = useRef(false);
-  const unlockTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [currentActiveIdx, setCurrentActiveIdx] = useState(0);
 
-  const touchStartY = useRef<number | null>(null);
-  const touchStartX = useRef<number | null>(null);
+  // Scroll tracking on the services container: smoothly maps full scroll through all 5 items
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start 35%', 'end 70%'],
+  });
 
-  // PC Scroll Controller: Stops the frame on the Services section,
-  // scrolls through all services 01 -> 02 -> 03 -> 04 -> 05,
-  // and only proceeds down to the next section once all 5 are scrolled!
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 160,
+    damping: 24,
+    mass: 0.5,
+  });
+
+  // Vertical plane trajectory: safely bounded from 8% to 92% so it never cuts off or disappears
+  const planeTop = useTransform(smoothProgress, [0, 1], ['8%', '92%']);
+
+  // Dynamic banking/tilt angle during flight transition
+  const planeRotate = useTransform(
+    smoothProgress,
+    [0, 0.25, 0.5, 0.75, 1],
+    [0, 4, -4, 3, 0]
+  );
+
+  // Active service updater based on scroll progress
   useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
+    return smoothProgress.on('change', (latest) => {
+      let active = 0;
+      if (latest >= 0.8) active = 4;
+      else if (latest >= 0.58) active = 3;
+      else if (latest >= 0.38) active = 2;
+      else if (latest >= 0.18) active = 1;
+      else active = 0;
 
-    const onWheel = (e: WheelEvent) => {
-      // Ignore weak jitter
-      if (Math.abs(e.deltaY) < 15) return;
+      setCurrentActiveIdx(active);
+    });
+  }, [smoothProgress]);
 
-      const rect = el.getBoundingClientRect();
-      // Only engage when the section is in the viewport (visible on screen)
-      const isVisibleOnScreen = rect.top <= 180 && rect.bottom >= 260;
-      if (!isVisibleOnScreen) return;
-
-      // Scrolling Down:
-      if (e.deltaY > 0) {
-        if (activeIndex < SERVICES_DATA.length - 1) {
-          // Stop frame right here and advance service
-          e.preventDefault();
-          if (!isSteppingRef.current) {
-            isSteppingRef.current = true;
-            setActiveIndex((prev) => Math.min(SERVICES_DATA.length - 1, prev + 1));
-            if (unlockTimerRef.current) clearTimeout(unlockTimerRef.current);
-            unlockTimerRef.current = setTimeout(() => {
-              isSteppingRef.current = false;
-            }, 360);
-          }
-        }
-        // When activeIndex === 4 (all 5 services viewed):
-        // do NOT call e.preventDefault(), natural page scrolling proceeds down!
-      } else if (e.deltaY < 0) {
-        // Scrolling Up:
-        if (activeIndex > 0) {
-          // Stop frame and step backwards
-          e.preventDefault();
-          if (!isSteppingRef.current) {
-            isSteppingRef.current = true;
-            setActiveIndex((prev) => Math.max(0, prev - 1));
-            if (unlockTimerRef.current) clearTimeout(unlockTimerRef.current);
-            unlockTimerRef.current = setTimeout(() => {
-              isSteppingRef.current = false;
-            }, 360);
-          }
-        }
-        // When activeIndex === 0 (at service 1):
-        // do NOT call e.preventDefault(), natural page scrolling proceeds up!
-      }
-    };
-
-    el.addEventListener('wheel', onWheel, { passive: false });
-    return () => {
-      el.removeEventListener('wheel', onWheel);
-      if (unlockTimerRef.current) clearTimeout(unlockTimerRef.current);
-    };
-  }, [activeIndex]);
-
-  // Mobile Touch Controller: Swiping steps through services 1 to 5,
-  // and then allows natural scrolling down once all are viewed!
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartY.current = e.touches[0].clientY;
-    touchStartX.current = e.touches[0].clientX;
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartY.current === null || touchStartX.current === null) return;
-    const deltaY = e.changedTouches[0].clientY - touchStartY.current;
-    const deltaX = e.changedTouches[0].clientX - touchStartX.current;
-
-    const isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 35;
-    const isVerticalSwipe = Math.abs(deltaY) > 45;
-
-    if (isHorizontalSwipe) {
-      if (deltaX < 0 && activeIndex < SERVICES_DATA.length - 1) {
-        setActiveIndex((prev) => prev + 1);
-      } else if (deltaX > 0 && activeIndex > 0) {
-        setActiveIndex((prev) => prev - 1);
-      }
-    } else if (isVerticalSwipe) {
-      // Swiping finger up (scrolling down):
-      if (deltaY < -45 && activeIndex < SERVICES_DATA.length - 1) {
-        setActiveIndex((prev) => prev + 1);
-      } else if (deltaY > 45 && activeIndex > 0) {
-        setActiveIndex((prev) => prev - 1);
-      }
+  // Smooth scroll to a specific service when clicking its waypoint or card
+  const handleScrollToService = (idx: number) => {
+    const el = cardRefs.current[idx];
+    if (el) {
+      const navOffset = 110;
+      const targetY = el.getBoundingClientRect().top + window.pageYOffset - navOffset;
+      window.scrollTo({
+        top: targetY,
+        behavior: 'smooth',
+      });
     }
-
-    touchStartY.current = null;
-    touchStartX.current = null;
   };
-
-  const activeService = SERVICES_DATA[activeIndex];
-
-  // Rotary Dial Math for Desktop (Arc centered on left)
-  const dialRadius = 165;
-  const dialCenterX = -25;
-  const dialCenterY = 175;
-  const stepAngleDeg = 32;
 
   return (
     <section
       id="services-section"
-      ref={sectionRef}
-      className="relative w-full bg-white text-neutral-900 py-14 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-10 border-t border-neutral-100 select-none overflow-hidden"
+      className="relative w-full bg-white text-neutral-900 py-16 sm:py-20 lg:py-28 px-4 sm:px-6 lg:px-10 border-t border-neutral-100 select-none overflow-visible"
     >
-      {/* Background Pattern Waves */}
+      {/* Background Pattern Waves - strictly contained in its own absolute overflow-hidden div */}
       <div className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden">
         <PatternWaves
           preset="pond"
@@ -213,18 +218,18 @@ export const ServicesSection: React.FC = () => {
           depth={0.3}
           shine={2}
           contrast={0.75}
-          speed={1.05}
+          speed={2.2}
           scale={1.7}
           direction={57}
         />
       </div>
 
-      <div className="relative z-10 max-w-[1240px] mx-auto w-full flex flex-col justify-center min-h-[580px] lg:min-h-[620px]">
-        {/* 1. Header: Sculpted typography matching Blogs, About, and Process */}
-        <div className="relative flex flex-col items-center justify-center mb-8 sm:mb-12 select-none text-center">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 sm:w-80 h-24 bg-[#2563EB]/[0.05] rounded-full blur-2xl pointer-events-none" />
+      <div className="relative z-10 max-w-[1240px] mx-auto">
+        {/* Sculpted Heading matching Blogs, About, and Process */}
+        <div className="relative flex flex-col items-center justify-center mb-14 sm:mb-20 select-none text-center">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 sm:w-96 h-28 bg-[#2563EB]/[0.05] rounded-full blur-2xl pointer-events-none" />
 
-          <span className="absolute -top-4 sm:-top-7 text-6xl sm:text-8xl md:text-9xl font-black tracking-tight text-black/[0.035] select-none pointer-events-none uppercase font-sans">
+          <span className="absolute -top-5 sm:-top-8 text-6xl sm:text-8xl md:text-9xl font-black tracking-tight text-black/[0.035] select-none pointer-events-none uppercase font-sans">
             SERVICES
           </span>
 
@@ -232,235 +237,121 @@ export const ServicesSection: React.FC = () => {
             Our <span className="text-[#2563EB]">Services</span>
           </h2>
 
-          <div className="w-10 sm:w-12 h-1 bg-gradient-to-r from-[#2563EB] to-[#60A5FA] rounded-full mt-3.5 sm:mt-4" />
+          <div className="w-12 sm:w-14 h-1 bg-gradient-to-r from-[#2563EB] to-[#60A5FA] rounded-full mt-4" />
+
+          <p className="mt-4 text-xs sm:text-sm text-[#64748B] max-w-md mx-auto font-medium font-sans">
+            Explore our specialized consular, visa, and residency pathways.
+          </p>
         </div>
 
-        {/* 2. DESKTOP 3-COLUMN LAYOUT (lg:grid) */}
-        <div className="hidden lg:grid grid-cols-12 gap-8 items-center my-auto">
+        {/* Two-Column Flow Layout: Sticky Big Airplane on Left, Services on Right */}
+        <div ref={containerRef} className="relative flex items-start gap-4 sm:gap-8 lg:gap-16">
           {/* ========================================================
-              LEFT COLUMN (26% width - Col Span 3): Vertical Rotary Counter Roller
+              LEFT COLUMN (Sticky Flight Corridor):
+              Sticks in viewport throughout all 5 services!
+              Plane is BIGGER in desktop view (w-60 to w-72).
+              Left-side 1, 2, 3 numbers and labels removed for max space!
           ======================================================== */}
-          <div className="col-span-3 relative h-[350px] flex items-center justify-start select-none">
-            {/* Dotted Dial SVG Arc */}
-            <svg
-              className="absolute inset-0 w-full h-full pointer-events-none overflow-visible"
-              viewBox="0 0 240 350"
-            >
-              <path
-                d="M -25,10 A 165 165 0 0 1 -25,340"
-                fill="none"
-                stroke="#E2E8F0"
-                strokeWidth="2.5"
-                strokeDasharray="4 8"
-                strokeLinecap="round"
-              />
-              <path
-                d="M -25,130 A 165 165 0 0 1 -25,220"
-                fill="none"
-                stroke="#2563EB"
-                strokeWidth="3.5"
-                strokeLinecap="round"
-                className="opacity-70"
-              />
-            </svg>
+          <div className="sticky top-24 sm:top-28 lg:top-32 flex flex-col items-center justify-start w-20 sm:w-28 lg:w-80 xl:w-96 shrink-0 select-none z-20 pt-2">
+            <div className="relative w-full h-[380px] sm:h-[440px] lg:h-[500px] xl:h-[540px] flex items-center justify-center">
+              {/* Vertical Flight Trajectory Spine Line */}
+              <div className="absolute left-1/2 -translate-x-1/2 top-4 bottom-4 w-1 sm:w-1.5 rounded-full bg-slate-200/90 overflow-hidden shadow-inner">
+                <motion.div
+                  style={{ scaleY: smoothProgress }}
+                  className="w-full h-full bg-gradient-to-b from-[#2563EB] via-[#3B82F6] to-[#93C5FD] origin-top rounded-full shadow-[0_0_10px_rgba(37,99,235,0.7)]"
+                />
+              </div>
 
-            {/* Numbers rotating along the semi-circular curve */}
-            <div className="relative w-full h-full flex items-center">
-              {SERVICES_DATA.map((srv, idx) => {
-                const diff = idx - activeIndex;
-                const angle = diff * stepAngleDeg;
-                const rad = (angle * Math.PI) / 180;
-                const x = dialCenterX + dialRadius * Math.cos(rad);
-                const y = dialCenterY + dialRadius * Math.sin(rad);
-                const isActive = idx === activeIndex;
+              {/* Minimalist Waypoint Nodes along the rail - NO 1, 2, 3 text clutter */}
+              <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-8 sm:w-10 flex flex-col justify-between items-center py-4 pointer-events-auto">
+                {SERVICES_DATA.map((srv, idx) => {
+                  const isCurrent = idx === currentActiveIdx;
+                  const isPast = idx <= currentActiveIdx;
 
-                return (
-                  <motion.div
-                    key={srv.id}
-                    animate={{
-                      x,
-                      y: y - 22,
-                      rotate: angle * 0.7,
-                      opacity: isActive ? 1 : Math.max(0.18, 0.6 - Math.abs(diff) * 0.2),
-                      scale: isActive ? 1.05 : 0.88,
-                    }}
-                    transition={{
-                      type: 'spring',
-                      stiffness: 280,
-                      damping: 28,
-                    }}
-                    onClick={() => setActiveIndex(idx)}
-                    className={`absolute left-0 top-0 flex items-center gap-3 cursor-pointer select-none ${
-                      isActive ? 'z-20' : 'z-10'
-                    }`}
-                  >
-                    {/* Active Brand Blue Dot Indicator */}
-                    <AnimatePresence>
-                      {isActive && (
-                        <motion.div
-                          initial={{ scale: 0, opacity: 0 }}
-                          animate={{ scale: 1, opacity: 1 }}
-                          exit={{ scale: 0, opacity: 0 }}
-                          className="w-3 h-3 rounded-full bg-[#2563EB] shadow-[0_0_12px_rgba(37,99,235,0.7)] shrink-0 ring-4 ring-[#2563EB]/15"
-                        />
-                      )}
-                    </AnimatePresence>
-
-                    {/* Step Number in brand sans font */}
-                    <span
-                      className={`font-sans tracking-tight transition-colors duration-200 ${
-                        isActive
-                          ? 'text-4xl xl:text-5xl font-black text-[#0F172A]'
-                          : 'text-2xl font-bold text-[#94A3B8] hover:text-[#475569]'
-                      }`}
+                  return (
+                    <button
+                      key={srv.id}
+                      onClick={() => handleScrollToService(idx)}
+                      title={`Jump to Service ${srv.number}: ${srv.titleLine1} ${srv.titleLine2}`}
+                      aria-label={`Jump to Service ${srv.number}`}
+                      className="group relative flex items-center justify-center p-2 cursor-pointer focus:outline-none"
                     >
-                      {srv.number}
-                    </span>
-                  </motion.div>
-                );
-              })}
+                      {/* Pulse halo when current */}
+                      {isCurrent && (
+                        <div className="absolute w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#2563EB]/25 animate-ping pointer-events-none" />
+                      )}
+
+                      {/* Central Node Dot on spine */}
+                      <div
+                        className={`w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border-2 transition-all duration-300 z-10 ${
+                          isCurrent
+                            ? 'bg-[#2563EB] border-white shadow-[0_0_12px_rgba(37,99,235,0.8)] scale-125'
+                            : isPast
+                            ? 'bg-[#2563EB] border-white'
+                            : 'bg-white border-slate-300 group-hover:border-[#2563EB]'
+                        }`}
+                      />
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* ========================================================
+                  BIG GLIDING AIRPLANE (Desktop Extra-Large, Heroic Size):
+                  Smoothly glides down inside the flight track with tilt & contrails!
+              ======================================================== */}
+              <motion.div
+                style={{ top: planeTop, rotate: planeRotate }}
+                className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 flex flex-col items-center pointer-events-none transform-gpu"
+              >
+                <div className="relative flex items-center justify-center">
+                  {/* Glowing Radar Halo & Jet Stream Contrails */}
+                  <div className="absolute -inset-4 sm:-inset-6 lg:-inset-8 bg-[#2563EB]/20 rounded-full blur-xl pointer-events-none" />
+
+                  {/* Dual Jet Engine Contrail Ribbons */}
+                  <div className="absolute -top-12 sm:-top-16 lg:-top-20 left-1/2 -translate-x-1/2 w-8 sm:w-12 lg:w-16 h-12 sm:h-16 lg:h-20 bg-gradient-to-t from-[#2563EB]/30 via-[#60A5FA]/15 to-transparent blur-xs pointer-events-none rounded-full" />
+
+                  {/* High-Resolution Airplane Graphic - Prominent & Big in Desktop View! */}
+                  <img
+                    src={PLANE_IMAGE_URL}
+                    alt="Flight Route Airplane"
+                    className="relative w-20 h-20 sm:w-28 sm:h-28 lg:w-56 lg:h-56 xl:w-64 xl:h-64 object-contain drop-shadow-[0_12px_28px_rgba(37,99,235,0.4)] transition-transform duration-300"
+                    loading="eager"
+                  />
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Flight Route Status Badge - Clean & Elegant */}
+            <div className="mt-2 sm:mt-3 inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-[#E2E8F0] shadow-sm text-[11px] sm:text-xs font-bold text-[#0F172A]">
+              <span className="w-2 h-2 rounded-full bg-[#2563EB] animate-pulse" />
+              <span className="text-[#2563EB] font-mono">LEG {SERVICES_DATA[currentActiveIdx].number}</span>
+              <span className="text-slate-300">&bull;</span>
+              <span className="text-slate-600 font-medium font-sans">05 Steps</span>
             </div>
           </div>
 
           {/* ========================================================
-              CENTER COLUMN (44% width - Col Span 5): Service Content
+              RIGHT COLUMN (Scrolling Services List):
+              Each service is in the same window/frame alongside the plane!
           ======================================================== */}
-          <div className="col-span-5 flex flex-col justify-center px-4 xl:px-6">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeService.id}
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -14 }}
-                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                className="space-y-4"
+          <div className="flex-1 min-w-0 space-y-16 sm:space-y-24 lg:space-y-36 py-4 pb-20">
+            {SERVICES_DATA.map((service, idx) => (
+              <div
+                key={service.id}
+                ref={(el) => {
+                  cardRefs.current[idx] = el;
+                }}
               >
-                {/* Brand Sans Heading */}
-                <h3 className="font-sans text-3xl sm:text-4xl xl:text-[44px] font-black tracking-tight text-[#0F172A] leading-[1.15]">
-                  <span>{activeService.titleLine1}</span>
-                  <br />
-                  <span>{activeService.titleLine2}</span>
-                </h3>
-
-                {/* Clean Subtitle Paragraph in Brand Sans Font */}
-                <p className="font-sans text-sm xl:text-[15px] text-[#64748B] font-normal leading-relaxed max-w-lg">
-                  {activeService.subtitle}
-                </p>
-
-                {/* 3 Rounded Pill Badges in Brand Colors */}
-                <div className="flex flex-wrap items-center gap-2.5 pt-2">
-                  {activeService.pills.map((pill, idx) => (
-                    <div
-                      key={idx}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-[#E2E8F0] shadow-xs text-xs sm:text-[13px] font-semibold text-[#1E293B] hover:border-[#2563EB] hover:text-[#2563EB] transition-all duration-200"
-                    >
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB]" />
-                      <span className="font-sans">{pill}</span>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-
-          {/* ========================================================
-              RIGHT COLUMN (30% width - Col Span 4): Dynamic Visual
-          ======================================================== */}
-          <div className="col-span-4 flex items-center justify-center pl-2">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeService.id}
-                initial={{ opacity: 0, rotate: -4, scale: 0.94 }}
-                animate={{ opacity: 1, rotate: 0, scale: 1 }}
-                exit={{ opacity: 0, rotate: 4, scale: 0.94 }}
-                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                className="relative w-full max-w-[330px] aspect-[4/5] rounded-[28px] overflow-hidden bg-white p-2.5 border border-[#E2E8F0] shadow-[0_20px_45px_rgba(15,23,42,0.08)] group"
-              >
-                <div className="relative w-full h-full rounded-[22px] overflow-hidden bg-neutral-100">
-                  <img
-                    src={activeService.visual.image}
-                    alt={`${activeService.titleLine1} ${activeService.titleLine2}`}
-                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
-                  />
-                </div>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        </div>
-
-        {/* 3. MOBILE VIEW (< 1024px) */}
-        <div
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-          className="lg:hidden space-y-6"
-        >
-          {/* Top Horizontal Counter Roller (`01` to `05`) */}
-          <div className="py-2 px-3 rounded-2xl bg-[#F8FAFC]/90 backdrop-blur-md border border-[#E2E8F0] flex items-center justify-between gap-1 overflow-x-auto select-none">
-            {SERVICES_DATA.map((srv, idx) => {
-              const isActive = idx === activeIndex;
-              return (
-                <button
-                  key={srv.id}
-                  onClick={() => setActiveIndex(idx)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all cursor-pointer ${
-                    isActive
-                      ? 'bg-white text-[#2563EB] font-black shadow-xs border border-[#2563EB]/20'
-                      : 'text-[#94A3B8] font-bold hover:text-[#475569]'
-                  }`}
-                >
-                  {isActive && (
-                    <span className="w-2 h-2 rounded-full bg-[#2563EB] shadow-[0_0_8px_rgba(37,99,235,0.7)] shrink-0" />
-                  )}
-                  <span className="text-sm font-sans">{srv.number}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Service Content & Visual Card */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeService.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.25 }}
-              className="bg-white/95 backdrop-blur-md rounded-3xl p-5 border border-[#E2E8F0] shadow-xs space-y-4"
-            >
-              {/* Mobile Heading in Brand Sans Font */}
-              <h3 className="font-sans text-2xl font-black text-[#0F172A] leading-snug">
-                <span>{activeService.titleLine1}</span>
-                <br />
-                <span>{activeService.titleLine2}</span>
-              </h3>
-
-              <p className="font-sans text-xs text-[#64748B] font-normal leading-relaxed">
-                {activeService.subtitle}
-              </p>
-
-              {/* 3 Pills */}
-              <div className="flex flex-wrap items-center gap-2 pt-1">
-                {activeService.pills.map((pill, idx) => (
-                  <div
-                    key={idx}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#F8FAFC] border border-[#E2E8F0] text-xs font-semibold text-[#1E293B]"
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB]" />
-                    <span className="font-sans">{pill}</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Pure visual image container on mobile */}
-              <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden bg-neutral-100 mt-3 border border-[#E2E8F0]">
-                <img
-                  src={activeService.visual.image}
-                  alt={`${activeService.titleLine1} ${activeService.titleLine2}`}
-                  className="w-full h-full object-cover object-center"
+                <ServiceFlowCard
+                  service={service}
+                  idx={idx}
+                  isActive={currentActiveIdx === idx}
+                  onSelect={handleScrollToService}
                 />
               </div>
-            </motion.div>
-          </AnimatePresence>
+            ))}
+          </div>
         </div>
       </div>
     </section>
