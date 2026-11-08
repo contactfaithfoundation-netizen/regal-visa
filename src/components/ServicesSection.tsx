@@ -149,7 +149,7 @@ export const ServicesSection: React.FC = () => {
     mass: 0.35,
   });
 
-  const planeTop = useTransform(smoothProgress, [0, 1], ['8%', '92%']);
+  const planeTop = useTransform(smoothProgress, [0, 1], ['4%', '96%']);
 
   const planeRotate = useTransform(
     smoothProgress,
@@ -221,7 +221,7 @@ export const ServicesSection: React.FC = () => {
   return (
     <section
       id="services-section"
-      className="relative w-full bg-white text-neutral-900 pt-14 sm:pt-20 lg:pt-24 pb-8 sm:pb-12 lg:pb-16 px-3 sm:px-6 lg:px-10 border-t border-neutral-100 select-none overflow-visible"
+      className="relative w-full bg-white text-neutral-900 pt-14 sm:pt-20 lg:pt-24 pb-8 sm:pb-12 lg:pb-16 px-2 sm:px-6 lg:px-10 border-t border-neutral-100 select-none overflow-visible"
     >
       {/* Background Pattern Waves */}
       <div className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden">
@@ -265,10 +265,10 @@ export const ServicesSection: React.FC = () => {
           </p>
         </div>
 
-        {/* Padded Container: Cleaned up bottom spacing before Process section */}
+        {/* Padded Container: Text shifted slightly more to the left on mobile */}
         <div
           ref={containerRef}
-          className="relative flex items-start gap-3 sm:gap-8 lg:gap-16 pt-2 pb-12 sm:pb-16 lg:pb-20"
+          className="relative flex items-start gap-1 sm:gap-6 lg:gap-16 pt-2 pb-12 sm:pb-16 lg:pb-20"
         >
           {/* ========================================================
               STICKY LEFT PLANE COLUMN:
@@ -281,19 +281,19 @@ export const ServicesSection: React.FC = () => {
               position: 'sticky',
               alignSelf: 'flex-start',
             }}
-            className="sticky top-16 sm:top-20 lg:top-24 flex flex-col items-center justify-start w-28 sm:w-36 lg:w-80 xl:w-96 shrink-0 select-none z-20 self-start"
+            className="sticky top-14 sm:top-18 lg:top-20 flex flex-col items-center justify-start w-[88px] sm:w-32 lg:w-80 xl:w-96 shrink-0 select-none z-20 self-start"
           >
-            <div className="relative w-full h-[460px] sm:h-[540px] lg:h-[660px] xl:h-[720px] flex items-center justify-center">
-              {/* Vertically Extended Flight Path Spine Line - Shifted slightly left on mobile */}
-              <div className="absolute left-[36%] sm:left-[42%] lg:left-1/2 -translate-x-1/2 top-6 bottom-6 w-1 sm:w-1.5 rounded-full bg-slate-200/90 overflow-hidden shadow-inner">
+            <div className="relative w-full h-[580px] sm:h-[680px] lg:h-[820px] xl:h-[880px] flex items-center justify-center">
+              {/* Vertically Extended Flight Path Spine Line - Longer & Prominent */}
+              <div className="absolute left-[36%] sm:left-[42%] lg:left-1/2 -translate-x-1/2 top-2 bottom-2 w-1 sm:w-1.5 rounded-full bg-slate-200/90 overflow-hidden shadow-inner">
                 <motion.div
                   style={{ scaleY: smoothProgress }}
                   className="w-full h-full bg-gradient-to-b from-[#2563EB] via-[#3B82F6] to-[#93C5FD] origin-top rounded-full shadow-[0_0_8px_rgba(37,99,235,0.4)]"
                 />
               </div>
 
-              {/* Waypoint Nodes along the extended rail - Clean, no ripples */}
-              <div className="absolute inset-y-0 left-[36%] sm:left-[42%] lg:left-1/2 -translate-x-1/2 w-8 sm:w-10 flex flex-col justify-between items-center py-6 pointer-events-auto">
+              {/* Waypoint Nodes along the extended rail - Extended Spacing */}
+              <div className="absolute inset-y-0 left-[36%] sm:left-[42%] lg:left-1/2 -translate-x-1/2 w-8 sm:w-10 flex flex-col justify-between items-center py-4 pointer-events-auto">
                 {SERVICES_DATA.map((srv, idx) => {
                   const isCurrent = idx === currentActiveIdx;
                   const isPast = idx <= currentActiveIdx;
@@ -354,7 +354,7 @@ export const ServicesSection: React.FC = () => {
               RIGHT COLUMN: Text on right moves up with scroll
               While the left plane element stays attached/pinned beside it.
           ======================================================== */}
-          <div className="flex-1 min-w-0 space-y-16 sm:space-y-32 lg:space-y-48">
+          <div className="flex-1 min-w-0 -ml-1 sm:ml-0 space-y-16 sm:space-y-32 lg:space-y-48">
             {SERVICES_DATA.map((service, idx) => (
               <div
                 key={service.id}

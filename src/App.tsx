@@ -15,6 +15,7 @@ import { BlogPostPage } from './components/BlogPostPage';
 import { AllVisasPage } from './components/AllVisasPage';
 import { ServicesSection } from './components/ServicesSection';
 import { ProcessSection } from './components/ProcessSection';
+import { SecondaryCtaBanner } from './components/SecondaryCtaBanner';
 import { parseCurrentRoute, countryToSlug } from './utils/router';
 
 export default function App() {
@@ -759,6 +760,11 @@ export default function App() {
       <BlogSection
         onSelectBlog={handleOpenBlog}
         onViewAllBlogs={handleNavigateToBlogs}
+      />
+
+      {/* SECONDARY CTA BANNER SECTION (White Rounded Card Container with 3D Spheres Video) */}
+      <SecondaryCtaBanner
+        onOpenVisaModal={() => setIsVisaOpen(true)}
       />
 
       {/* FREQUENTLY ASKED QUESTIONS SECTION (Pure White Background & Brand Colors) */}
