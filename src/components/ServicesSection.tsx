@@ -198,7 +198,7 @@ export const ServicesSection: React.FC = () => {
     };
   }, [calculateScrollProgress]);
 
-  const handleScrollToService = (idx: number) => {
+  const handleScrollToService = useCallback((idx: number) => {
     const el = cardRefs.current[idx];
     if (el) {
       const planeTargetY = window.innerHeight * 0.38;
@@ -210,7 +210,53 @@ export const ServicesSection: React.FC = () => {
         behavior: 'smooth',
       });
     }
-  };
+  }, []);
+
+  // One-step-per-scroll wheel handler for premium stepped scroll experience
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    let isThrottled = false;
+
+    const handleWheel = (e: WheelEvent) => {
+      // Check if mouse is hovering over the services section
+      const rect = container.getBoundingClientRect();
+      const inView = rect.top <= window.innerHeight * 0.4 && rect.bottom >= window.innerHeight * 0.6;
+      if (!inView) return;
+
+      const delta = e.deltaY;
+      if (Math.abs(delta) < 25) return;
+
+      if (isThrottled) {
+        e.preventDefault();
+        return;
+      }
+
+      if (delta > 0 && currentActiveIdx < SERVICES_DATA.length - 1) {
+        // Scroll forward one step
+        e.preventDefault();
+        isThrottled = true;
+        const nextIdx = currentActiveIdx + 1;
+        handleScrollToService(nextIdx);
+        setTimeout(() => {
+          isThrottled = false;
+        }, 700);
+      } else if (delta < 0 && currentActiveIdx > 0) {
+        // Scroll backward one step
+        e.preventDefault();
+        isThrottled = true;
+        const prevIdx = currentActiveIdx - 1;
+        handleScrollToService(prevIdx);
+        setTimeout(() => {
+          isThrottled = false;
+        }, 700);
+      }
+    };
+
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    return () => window.removeEventListener('wheel', handleWheel);
+  }, [currentActiveIdx, handleScrollToService]);
 
   return (
     <section
@@ -320,19 +366,6 @@ export const ServicesSection: React.FC = () => {
                 className="absolute left-[36%] sm:left-[42%] lg:left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 flex flex-col items-center pointer-events-none transform-gpu"
               >
                 <div className="relative flex items-center justify-center">
-                  {/* Slight, gentle ripple rings directly behind the plane */}
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <span
-                      className="absolute w-24 h-24 sm:w-32 sm:h-32 lg:w-44 lg:h-44 rounded-full border border-blue-400/40 animate-ping opacity-60 pointer-events-none"
-                      style={{ animationDuration: '2.8s' }}
-                    />
-                    <span
-                      className="absolute w-16 h-16 sm:w-22 sm:h-22 lg:w-30 lg:h-30 rounded-full border border-blue-500/30 animate-ping opacity-75 pointer-events-none"
-                      style={{ animationDuration: '2.8s', animationDelay: '0.9s' }}
-                    />
-                    <span className="absolute w-10 h-10 sm:w-14 sm:h-14 lg:w-18 lg:h-18 rounded-full bg-blue-500/10 pointer-events-none" />
-                  </div>
-
                   <img
                     src={PLANE_IMAGE_URL}
                     alt="Flight Route Airplane"

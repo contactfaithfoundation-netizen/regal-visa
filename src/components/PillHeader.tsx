@@ -12,6 +12,10 @@ interface PillHeaderProps {
   onNavigateToExplore?: () => void;
   onNavigateToBlogs?: () => void;
   onNavigateToVisas?: () => void;
+  onNavigateToServices?: () => void;
+  onNavigateToProcess?: () => void;
+  onNavigateToAbout?: () => void;
+  onNavigateToContact?: () => void;
   isVisasPage?: boolean;
   currentCountry?: {
     name: string;
@@ -36,6 +40,10 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
   onNavigateToExplore,
   onNavigateToBlogs,
   onNavigateToVisas,
+  onNavigateToServices,
+  onNavigateToProcess,
+  onNavigateToAbout,
+  onNavigateToContact,
   isVisasPage,
   currentCountry,
 }) => {
@@ -100,9 +108,37 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onToggleMenu, setCallMenuOpen]);
 
-  const handleLinkClick = (item: 'services' | 'process' | 'about' | 'blog' | 'contact') => {
+  const handleLinkClick = (item: 'about' | 'visas' | 'services' | 'process' | 'blog' | 'contact') => {
+    onToggleMenu(false);
+    if (item === 'about') {
+      if (onNavigateToAbout) {
+        onNavigateToAbout();
+        return;
+      }
+      const el = document.getElementById('about-section');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+      setActiveModal('about');
+      return;
+    }
+    if (item === 'visas') {
+      if (onNavigateToVisas) {
+        onNavigateToVisas();
+        return;
+      }
+      if (onNavigateToExplore) {
+        onNavigateToExplore();
+        return;
+      }
+      return;
+    }
     if (item === 'services') {
-      onToggleMenu(false);
+      if (onNavigateToServices) {
+        onNavigateToServices();
+        return;
+      }
       const el = document.getElementById('services-section');
       if (el) {
         el.scrollIntoView({ behavior: 'smooth' });
@@ -112,28 +148,18 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
       return;
     }
     if (item === 'process') {
-      onToggleMenu(false);
-      const el = document.getElementById('process-section');
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth' });
+      if (onNavigateToProcess) {
+        onNavigateToProcess();
+        return;
       }
-      return;
-    }
-    if (item === 'contact') {
-      onToggleMenu(false);
-      setCallMenuOpen(true);
-      return;
-    }
-    if (item === 'about') {
-      onToggleMenu(false);
-      const el = document.getElementById('about-section');
+      const el = document.getElementById('process-section');
       if (el) {
         el.scrollIntoView({ behavior: 'smooth' });
         return;
       }
+      return;
     }
     if (item === 'blog') {
-      onToggleMenu(false);
       if (onNavigateToBlogs) {
         onNavigateToBlogs();
         return;
@@ -143,9 +169,16 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
         el.scrollIntoView({ behavior: 'smooth' });
         return;
       }
+      setActiveModal('blog');
+      return;
     }
-    if (item === 'about' || item === 'blog' || item === 'services' || item === 'contact') {
-      setActiveModal(item);
+    if (item === 'contact') {
+      if (onNavigateToContact) {
+        onNavigateToContact();
+        return;
+      }
+      setCallMenuOpen(true);
+      return;
     }
   };
 
@@ -377,11 +410,12 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
                 } rounded-[24px] bg-[#EFF2F8] py-6 px-6 shadow-[0_12px_32px_rgba(0,0,0,0.15)] border border-white flex flex-col items-center justify-center gap-3.5 transform-gpu`}
               >
                 {[
+                  { label: 'About', key: 'about' as const },
+                  { label: 'Visas', key: 'visas' as const },
                   { label: 'Services', key: 'services' as const },
                   { label: 'Process', key: 'process' as const },
-                  { label: 'About', key: 'about' as const },
-                  { label: 'Blog', key: 'blog' as const },
-                  { label: 'Contacts', key: 'contact' as const },
+                  { label: 'Blogs', key: 'blog' as const },
+                  { label: 'Contact', key: 'contact' as const },
                 ].map((item) => (
                   <div
                     key={item.key}

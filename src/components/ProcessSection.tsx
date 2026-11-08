@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'motion/react';
 import {
   FileText,
@@ -78,11 +78,14 @@ interface ProcessSectionProps {
 }
 
 // Single step component with individual scroll-triggered color illumination
-const StepFlowItem: React.FC<{
-  stepItem: ProcessStep;
-  idx: number;
-  isEven: boolean;
-}> = ({ stepItem, isEven }) => {
+const StepFlowItem = React.forwardRef<
+  HTMLDivElement,
+  {
+    stepItem: ProcessStep;
+    idx: number;
+    isEven: boolean;
+  }
+>(({ stepItem, isEven }, ref) => {
   const itemRef = useRef<HTMLDivElement>(null);
   const [isActive, setIsActive] = useState(false);
 
@@ -112,7 +115,14 @@ const StepFlowItem: React.FC<{
 
   return (
     <motion.div
-      ref={itemRef}
+      ref={(el) => {
+        itemRef.current = el;
+        if (typeof ref === 'function') {
+          ref(el);
+        } else if (ref) {
+          (ref as any).current = el;
+        }
+      }}
       style={{ opacity, y, scale }}
       className="relative flex flex-col sm:flex-row items-start gap-4 sm:gap-8 group select-none transition-colors duration-500"
     >
@@ -214,13 +224,16 @@ const StepFlowItem: React.FC<{
       </div>
     </motion.div>
   );
-};
+});
+StepFlowItem.displayName = 'StepFlowItem';
 
 export const ProcessSection: React.FC<ProcessSectionProps> = ({
   onOpenVisaModal,
   onNavigateToExplore,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [activeStepIdx, setActiveStepIdx] = useState(0);
 
   // Overall scroll progress through the timeline container to color the central spine
   const { scrollYProgress: spineProgress } = useScroll({
@@ -232,6 +245,64 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({
     stiffness: 220,
     damping: 28,
   });
+
+  const handleScrollToStep = useCallback((idx: number) => {
+    const el = stepRefs.current[idx];
+    if (el) {
+      const rect = el.getBoundingClientRect();
+      const targetY = window.pageYOffset + rect.top - window.innerHeight * 0.32;
+      window.scrollTo({
+        top: targetY,
+        behavior: 'smooth',
+      });
+      setActiveStepIdx(idx);
+    }
+  }, []);
+
+  // One-step-per-scroll wheel handler for premium stepped scroll experience
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    let isThrottled = false;
+
+    const handleWheel = (e: WheelEvent) => {
+      const rect = container.getBoundingClientRect();
+      const inView = rect.top <= window.innerHeight * 0.4 && rect.bottom >= window.innerHeight * 0.6;
+      if (!inView) return;
+
+      const delta = e.deltaY;
+      if (Math.abs(delta) < 25) return;
+
+      if (isThrottled) {
+        e.preventDefault();
+        return;
+      }
+
+      if (delta > 0 && activeStepIdx < PROCESS_STEPS.length - 1) {
+        // Move one step forward
+        e.preventDefault();
+        isThrottled = true;
+        const nextIdx = activeStepIdx + 1;
+        handleScrollToStep(nextIdx);
+        setTimeout(() => {
+          isThrottled = false;
+        }, 700);
+      } else if (delta < 0 && activeStepIdx > 0) {
+        // Move one step backward
+        e.preventDefault();
+        isThrottled = true;
+        const prevIdx = activeStepIdx - 1;
+        handleScrollToStep(prevIdx);
+        setTimeout(() => {
+          isThrottled = false;
+        }, 700);
+      }
+    };
+
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    return () => window.removeEventListener('wheel', handleWheel);
+  }, [activeStepIdx, handleScrollToStep]);
 
   return (
     <section
@@ -294,6 +365,9 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({
             {PROCESS_STEPS.map((stepItem, idx) => (
               <StepFlowItem
                 key={stepItem.step}
+                ref={(el) => {
+                  stepRefs.current[idx] = el;
+                }}
                 stepItem={stepItem}
                 idx={idx}
                 isEven={idx % 2 === 0}

@@ -11,6 +11,10 @@ interface PoliciesPageProps {
   onOpenVisaModal: () => void;
   onNavigateToVisas?: () => void;
   onNavigateToBlogs?: () => void;
+  onNavigateToServices?: () => void;
+  onNavigateToProcess?: () => void;
+  onNavigateToAbout?: () => void;
+  onNavigateToContact?: () => void;
 }
 
 export const PoliciesPage: React.FC<PoliciesPageProps> = ({
@@ -19,6 +23,10 @@ export const PoliciesPage: React.FC<PoliciesPageProps> = ({
   onOpenVisaModal,
   onNavigateToVisas,
   onNavigateToBlogs,
+  onNavigateToServices,
+  onNavigateToProcess,
+  onNavigateToAbout,
+  onNavigateToContact,
 }) => {
   const [activeTab, setActiveTab] = useState<PolicyTab>(initialTab);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -38,8 +46,13 @@ export const PoliciesPage: React.FC<PoliciesPageProps> = ({
         onToggleCall={setIsCallOpen}
         onResetToHero={onBackToHome}
         onOpenVisaModal={onOpenVisaModal}
+        onNavigateToExplore={onNavigateToVisas}
         onNavigateToBlogs={onNavigateToBlogs}
         onNavigateToVisas={onNavigateToVisas}
+        onNavigateToServices={onNavigateToServices}
+        onNavigateToProcess={onNavigateToProcess}
+        onNavigateToAbout={onNavigateToAbout}
+        onNavigateToContact={onNavigateToContact}
       />
 
       {/* Main Container */}

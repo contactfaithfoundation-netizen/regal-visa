@@ -10,6 +10,11 @@ interface AllBlogsPageProps {
   onSelectBlog: (slug: string) => void;
   onOpenVisaModal: () => void;
   onNavigateToVisas?: () => void;
+  onNavigateToBlogs?: () => void;
+  onNavigateToServices?: () => void;
+  onNavigateToProcess?: () => void;
+  onNavigateToAbout?: () => void;
+  onNavigateToContact?: () => void;
 }
 
 export const AllBlogsPage: React.FC<AllBlogsPageProps> = ({
@@ -17,6 +22,11 @@ export const AllBlogsPage: React.FC<AllBlogsPageProps> = ({
   onSelectBlog,
   onOpenVisaModal,
   onNavigateToVisas,
+  onNavigateToBlogs,
+  onNavigateToServices,
+  onNavigateToProcess,
+  onNavigateToAbout,
+  onNavigateToContact,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -49,6 +59,11 @@ export const AllBlogsPage: React.FC<AllBlogsPageProps> = ({
         onOpenVisaModal={onOpenVisaModal}
         onNavigateToVisas={onNavigateToVisas}
         onNavigateToExplore={onNavigateToVisas}
+        onNavigateToBlogs={onNavigateToBlogs || (() => window.scrollTo({ top: 0, behavior: 'smooth' }))}
+        onNavigateToServices={onNavigateToServices}
+        onNavigateToProcess={onNavigateToProcess}
+        onNavigateToAbout={onNavigateToAbout}
+        onNavigateToContact={onNavigateToContact}
       />
 
       {/* Main Container */}

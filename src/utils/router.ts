@@ -58,7 +58,7 @@ export function slugToCountry(slug: string): string {
 }
 
 export interface RouteState {
-  view: 'home' | 'country-visa' | 'blogs' | 'blog-detail' | 'visas' | 'policies';
+  view: 'home' | 'country-visa' | 'blogs' | 'blog-detail' | 'visas' | 'policies' | 'services' | 'process' | 'about' | 'contact';
   country?: string;
   blogSlug?: string;
   section?: string;
@@ -94,6 +94,20 @@ export function parseCurrentRoute(): RouteState {
   // 3. Check pathname: /visas or /all-visas
   if (/^\/(?:visas|all-visas)\/?$/i.test(pathname)) {
     return { view: 'visas' };
+  }
+
+  // Check pathname: /services, /process, /about, /contact
+  if (/^\/(?:services|all-services)\/?$/i.test(pathname)) {
+    return { view: 'services' };
+  }
+  if (/^\/(?:process|consular-process)\/?$/i.test(pathname)) {
+    return { view: 'process' };
+  }
+  if (/^\/(?:about|about-us)\/?$/i.test(pathname)) {
+    return { view: 'about' };
+  }
+  if (/^\/(?:contact|contact-us|contacts)\/?$/i.test(pathname)) {
+    return { view: 'contact' };
   }
 
   // 4. Check pathname: /policies, /terms, /privacy, /refund-policy
@@ -136,6 +150,10 @@ export function parseCurrentRoute(): RouteState {
     const viewParam = params.get('view');
     if (viewParam === 'blogs') return { view: 'blogs' };
     if (viewParam === 'visas') return { view: 'visas' };
+    if (viewParam === 'services') return { view: 'services' };
+    if (viewParam === 'process') return { view: 'process' };
+    if (viewParam === 'about') return { view: 'about' };
+    if (viewParam === 'contact') return { view: 'contact' };
 
     const countryParam = params.get('country') || params.get('visa');
     if (countryParam) {
@@ -164,6 +182,19 @@ export function parseCurrentRoute(): RouteState {
 
     if (cleanHash === 'visas' || cleanHash === '/visas') {
       return { view: 'visas' };
+    }
+
+    if (cleanHash === 'services' || cleanHash === '/services') {
+      return { view: 'services' };
+    }
+    if (cleanHash === 'process' || cleanHash === '/process') {
+      return { view: 'process' };
+    }
+    if (cleanHash === 'about' || cleanHash === '/about' || cleanHash === 'about-us') {
+      return { view: 'about' };
+    }
+    if (cleanHash === 'contact' || cleanHash === '/contact' || cleanHash === 'contacts') {
+      return { view: 'contact' };
     }
 
     const hashVisaMatch = cleanHash.match(/^\/?(?:visa|country)\/([^/?#]+)/i);

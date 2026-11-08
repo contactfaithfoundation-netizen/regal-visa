@@ -19,14 +19,14 @@ interface FaqSectionProps {
   className?: string;
 }
 
-const DEFAULT_FAQ_CATEGORIES: FaqCategory[] = [
+export const DEFAULT_FAQ_CATEGORIES: FaqCategory[] = [
   {
     category: 'General Information',
     items: [
       {
-        question: 'What is the visa issuance process through Globe Express?',
+        question: 'What is the visa issuance process through Regal Visa Solutions?',
         answer:
-          'Globe Express provides direct consular document pre-clearance and official submission for Pakistani passport holders. All documents are reviewed by senior visa officers before lodging with foreign consular authorities, ensuring guaranteed compliance and rapid turnaround.',
+          'Regal Visa Solutions provides direct consular document pre-clearance and official submission for Pakistani passport holders. All documents are reviewed by senior visa officers before lodging with foreign consular authorities, ensuring guaranteed compliance and rapid turnaround.',
       },
       {
         question: 'Are embassy visits or biometric appointments required?',

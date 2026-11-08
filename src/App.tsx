@@ -17,8 +17,12 @@ import { ServicesSection } from './components/ServicesSection';
 import { ReadyToBeginCard } from './components/ReadyToBeginCard';
 import { ProcessSection } from './components/ProcessSection';
 import { SecondaryCtaBanner } from './components/SecondaryCtaBanner';
+import { LocationSection } from './components/LocationSection';
 import { PoliciesPage, PolicyTab } from './components/PoliciesPage';
+import { AboutPage } from './components/AboutPage';
+import { ContactPage } from './components/ContactPage';
 import { parseCurrentRoute, countryToSlug } from './utils/router';
+import Lenis from 'lenis';
 
 export default function App() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -31,8 +35,12 @@ export default function App() {
   const [isHeroVisible, setIsHeroVisible] = useState(true);
 
   // Synchronized routing state
-  const [currentView, setCurrentView] = useState<'home' | 'country-visa' | 'blogs' | 'blog-detail' | 'visas' | 'policies'>(() => {
-    return parseCurrentRoute().view;
+  const [currentView, setCurrentView] = useState<'home' | 'country-visa' | 'blogs' | 'blog-detail' | 'visas' | 'policies' | 'about' | 'contact'>(() => {
+    const parsed = parseCurrentRoute().view;
+    if (parsed === 'services' || parsed === 'process') {
+      return 'home';
+    }
+    return parsed as any;
   });
   const [selectedCountry, setSelectedCountry] = useState<string>(() => {
     return parseCurrentRoute().country || 'United Kingdom';
@@ -52,6 +60,30 @@ export default function App() {
 
   const autoPlayTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const touchStartXRef = useRef<number | null>(null);
+
+  // Initialize Lenis buttery-smooth momentum scrolling
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.15,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      touchMultiplier: 1.5,
+    });
+
+    let animationFrameId: number;
+    function raf(time: number) {
+      lenis.raf(time);
+      animationFrameId = requestAnimationFrame(raf);
+    }
+    animationFrameId = requestAnimationFrame(raf);
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      lenis.destroy();
+    };
+  }, []);
 
   // Track scroll position to hide top loading progress bar when scrolling down past the hero section
   useEffect(() => {
@@ -256,6 +288,56 @@ export default function App() {
     }
   }, []);
 
+  // Scroll to section on home page
+  const handleScrollToSection = useCallback((sectionId: string) => {
+    if (currentView !== 'home') {
+      handleBackToHome({ section: sectionId });
+    } else {
+      const el = document.getElementById(sectionId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [currentView, handleBackToHome]);
+
+  // Navigate to Services section on home page
+  const handleNavigateToServices = useCallback(() => {
+    handleScrollToSection('services-section');
+  }, [handleScrollToSection]);
+
+  // Navigate to Consular Process section on home page
+  const handleNavigateToProcess = useCallback(() => {
+    handleScrollToSection('process-section');
+  }, [handleScrollToSection]);
+
+  // Navigate to About Us page
+  const handleNavigateToAbout = useCallback(() => {
+    if (!window.history.state || window.history.state.view !== 'home') {
+      window.history.replaceState({ view: 'home' }, 'Globe Express', '/');
+    }
+    window.history.pushState(
+      { view: 'about' },
+      'About Us & Consular History - Regal Visa Solutions',
+      '/about'
+    );
+    setCurrentView('about');
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, []);
+
+  // Navigate to Contact Us page
+  const handleNavigateToContact = useCallback(() => {
+    if (!window.history.state || window.history.state.view !== 'home') {
+      window.history.replaceState({ view: 'home' }, 'Globe Express', '/');
+    }
+    window.history.pushState(
+      { view: 'contact' },
+      'Contact Us & Consular Liaison Directory - Regal Visa Solutions',
+      '/contact'
+    );
+    setCurrentView('contact');
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, []);
+
   // Reset user back to the initial hero section view
   const handleResetToHero = useCallback(() => {
     setIsMenuOpen(false);
@@ -342,15 +424,21 @@ export default function App() {
   // Synchronize document title with active route
   useEffect(() => {
     if (currentView === 'country-visa' && selectedCountry) {
-      document.title = `${selectedCountry} Visa for Pakistanis - Requirements, Fees & Fast-Track Application`;
+      document.title = `${selectedCountry} Visa for Pakistanis - RegalVisa Solutions`;
     } else if (currentView === 'blog-detail') {
-      document.title = 'Pakistan Visa Intelligence Blog - Globe Express';
+      document.title = 'Visa Intelligence Article - RegalVisa Solutions';
     } else if (currentView === 'blogs') {
-      document.title = 'Pakistan Visa Blogs, Guides & Case Studies - Globe Express';
+      document.title = 'Pakistan Visa Intelligence & Guides - RegalVisa Solutions';
     } else if (currentView === 'visas') {
-      document.title = 'Explore All Visas & Worldwide Approvals - Globe Express';
+      document.title = 'Explore All Visas & Global Clearance - RegalVisa Solutions';
+    } else if (currentView === 'about') {
+      document.title = 'About Us - RegalVisa Solutions';
+    } else if (currentView === 'contact') {
+      document.title = 'Contact Us - RegalVisa Solutions';
+    } else if (currentView === 'policies') {
+      document.title = 'Policies & Legal - RegalVisa Solutions';
     } else {
-      document.title = 'Globe Express - Official Visa Concierge & Worldwide Entry Approvals';
+      document.title = 'RegalVisa Solutions - Pakistan\'s Premier Visa & Consular Advisory';
     }
   }, [currentView, selectedCountry]);
 
@@ -392,6 +480,28 @@ export default function App() {
         window.location.pathname + window.location.search + window.location.hash
       );
       setCurrentView('visas');
+    } else if (initialRoute.view === 'services') {
+      window.history.replaceState({ view: 'home' }, 'Globe Express', '/#services-section');
+      setCurrentView('home');
+      setTimeout(() => {
+        const el = document.getElementById('services-section');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 120);
+    } else if (initialRoute.view === 'process') {
+      window.history.replaceState({ view: 'home' }, 'Globe Express', '/#process-section');
+      setCurrentView('home');
+      setTimeout(() => {
+        const el = document.getElementById('process-section');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 120);
+    } else if (initialRoute.view === 'about') {
+      window.history.replaceState({ view: 'home' }, 'Globe Express', '/');
+      window.history.pushState({ view: 'about' }, 'About Us', '/about');
+      setCurrentView('about');
+    } else if (initialRoute.view === 'contact') {
+      window.history.replaceState({ view: 'home' }, 'Globe Express', '/');
+      window.history.pushState({ view: 'contact' }, 'Contact Us', '/contact');
+      setCurrentView('contact');
     } else {
       if (!window.history.state) {
         window.history.replaceState(
@@ -421,6 +531,22 @@ export default function App() {
           setCurrentView('blogs');
         } else if (e.state.view === 'visas') {
           setCurrentView('visas');
+        } else if (e.state.view === 'services') {
+          setCurrentView('home');
+          setTimeout(() => {
+            const el = document.getElementById('services-section');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          }, 80);
+        } else if (e.state.view === 'process') {
+          setCurrentView('home');
+          setTimeout(() => {
+            const el = document.getElementById('process-section');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          }, 80);
+        } else if (e.state.view === 'about') {
+          setCurrentView('about');
+        } else if (e.state.view === 'contact') {
+          setCurrentView('contact');
         } else if (e.state.view === 'policies') {
           setSelectedPolicyTab((e.state.policyTab as PolicyTab) || 'terms');
           setCurrentView('policies');
@@ -443,6 +569,22 @@ export default function App() {
         setCurrentView('blogs');
       } else if (route.view === 'visas') {
         setCurrentView('visas');
+      } else if (route.view === 'services') {
+        setCurrentView('home');
+        setTimeout(() => {
+          const el = document.getElementById('services-section');
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }, 80);
+      } else if (route.view === 'process') {
+        setCurrentView('home');
+        setTimeout(() => {
+          const el = document.getElementById('process-section');
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }, 80);
+      } else if (route.view === 'about') {
+        setCurrentView('about');
+      } else if (route.view === 'contact') {
+        setCurrentView('contact');
       } else if (route.view === 'policies') {
         setSelectedPolicyTab((route.policyTab as PolicyTab) || 'terms');
         setCurrentView('policies');
@@ -471,6 +613,38 @@ export default function App() {
         onNavigateToExplore={handleNavigateToExplore}
         onNavigateToBlogs={handleNavigateToBlogs}
         onNavigateToVisas={handleNavigateToVisas}
+        onNavigateToServices={handleNavigateToServices}
+        onNavigateToProcess={handleNavigateToProcess}
+        onNavigateToAbout={handleNavigateToAbout}
+        onNavigateToContact={handleNavigateToContact}
+      />
+    );
+  }
+
+  if (currentView === 'about') {
+    return (
+      <AboutPage
+        onBackToHome={() => handleBackToHome()}
+        onOpenVisaModal={() => setIsVisaOpen(true)}
+        onNavigateToVisas={handleNavigateToVisas}
+        onNavigateToBlogs={handleNavigateToBlogs}
+        onNavigateToServices={handleNavigateToServices}
+        onNavigateToProcess={handleNavigateToProcess}
+        onNavigateToContact={handleNavigateToContact}
+      />
+    );
+  }
+
+  if (currentView === 'contact') {
+    return (
+      <ContactPage
+        onBackToHome={() => handleBackToHome()}
+        onOpenVisaModal={() => setIsVisaOpen(true)}
+        onNavigateToVisas={handleNavigateToVisas}
+        onNavigateToBlogs={handleNavigateToBlogs}
+        onNavigateToServices={handleNavigateToServices}
+        onNavigateToProcess={handleNavigateToProcess}
+        onNavigateToAbout={handleNavigateToAbout}
       />
     );
   }
@@ -483,6 +657,12 @@ export default function App() {
         onBackToHome={() => handleBackToHome()}
         onSelectBlog={handleOpenBlog}
         onOpenVisaModal={() => setIsVisaOpen(true)}
+        onNavigateToVisas={handleNavigateToVisas}
+        onNavigateToBlogs={handleNavigateToBlogs}
+        onNavigateToServices={handleNavigateToServices}
+        onNavigateToProcess={handleNavigateToProcess}
+        onNavigateToAbout={handleNavigateToAbout}
+        onNavigateToContact={handleNavigateToContact}
       />
     );
   }
@@ -494,6 +674,11 @@ export default function App() {
         onSelectBlog={handleOpenBlog}
         onOpenVisaModal={() => setIsVisaOpen(true)}
         onNavigateToVisas={handleNavigateToVisas}
+        onNavigateToBlogs={handleNavigateToBlogs}
+        onNavigateToServices={handleNavigateToServices}
+        onNavigateToProcess={handleNavigateToProcess}
+        onNavigateToAbout={handleNavigateToAbout}
+        onNavigateToContact={handleNavigateToContact}
       />
     );
   }
@@ -505,6 +690,11 @@ export default function App() {
         onSelectCountry={handleOpenCountryVisa}
         onOpenVisaModal={() => setIsVisaOpen(true)}
         onNavigateToBlogs={handleNavigateToBlogs}
+        onNavigateToVisas={handleNavigateToVisas}
+        onNavigateToServices={handleNavigateToServices}
+        onNavigateToProcess={handleNavigateToProcess}
+        onNavigateToAbout={handleNavigateToAbout}
+        onNavigateToContact={handleNavigateToContact}
       />
     );
   }
@@ -517,6 +707,10 @@ export default function App() {
         onOpenVisaModal={() => setIsVisaOpen(true)}
         onNavigateToVisas={handleNavigateToVisas}
         onNavigateToBlogs={handleNavigateToBlogs}
+        onNavigateToServices={handleNavigateToServices}
+        onNavigateToProcess={handleNavigateToProcess}
+        onNavigateToAbout={handleNavigateToAbout}
+        onNavigateToContact={handleNavigateToContact}
       />
     );
   }
@@ -542,6 +736,10 @@ export default function App() {
         onNavigateToExplore={handleNavigateToExplore}
         onNavigateToBlogs={handleNavigateToBlogs}
         onNavigateToVisas={handleNavigateToVisas}
+        onNavigateToServices={handleNavigateToServices}
+        onNavigateToProcess={handleNavigateToProcess}
+        onNavigateToAbout={handleNavigateToAbout}
+        onNavigateToContact={handleNavigateToContact}
       />
 
       {/* HERO SECTION - Stable height on mobile so image never stretches or gets longer on scroll */}
@@ -807,6 +1005,9 @@ export default function App() {
         onViewAllBlogs={handleNavigateToBlogs}
       />
 
+      {/* HEADQUARTERS LOCATION SECTION WITH EMBEDDED GOOGLE MAP */}
+      <LocationSection />
+
       {/* FREQUENTLY ASKED QUESTIONS SECTION (Pure White Background & Brand Colors) */}
       <FaqSection className="border-t border-neutral-100" />
 
@@ -817,6 +1018,10 @@ export default function App() {
         onNavigateToVisas={handleNavigateToVisas}
         onNavigateToBlogs={handleNavigateToBlogs}
         onNavigateToPolicies={handleNavigateToPolicies}
+        onNavigateToServices={handleNavigateToServices}
+        onNavigateToProcess={handleNavigateToProcess}
+        onNavigateToAbout={handleNavigateToAbout}
+        onNavigateToContact={handleNavigateToContact}
       />
     </div>
   );

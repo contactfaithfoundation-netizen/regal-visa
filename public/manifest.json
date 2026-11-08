@@ -1,0 +1,24 @@
+{
+  "name": "RegalVisa Solutions",
+  "short_name": "RegalVisa",
+  "description": "RegalVisa Solutions - Pakistan's Premier Consular Visa & Immigration Advisory",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0F172A",
+  "theme_color": "#2563EB",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "https://res.cloudinary.com/dacyy7rkn/image/upload/v1794165811/image_tqqmok_1_iynviw.avif",
+      "sizes": "192x192",
+      "type": "image/avif",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://res.cloudinary.com/dacyy7rkn/image/upload/v1794165811/image_tqqmok_1_iynviw.avif",
+      "sizes": "512x512",
+      "type": "image/avif",
+      "purpose": "any maskable"
+    }
+  ]
+}

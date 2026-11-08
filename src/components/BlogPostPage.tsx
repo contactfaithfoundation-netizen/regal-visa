@@ -11,6 +11,12 @@ interface BlogPostPageProps {
   onBackToHome: () => void;
   onSelectBlog: (slug: string) => void;
   onOpenVisaModal: () => void;
+  onNavigateToVisas?: () => void;
+  onNavigateToBlogs?: () => void;
+  onNavigateToServices?: () => void;
+  onNavigateToProcess?: () => void;
+  onNavigateToAbout?: () => void;
+  onNavigateToContact?: () => void;
 }
 
 export const BlogPostPage: React.FC<BlogPostPageProps> = ({
@@ -19,6 +25,12 @@ export const BlogPostPage: React.FC<BlogPostPageProps> = ({
   onBackToHome,
   onSelectBlog,
   onOpenVisaModal,
+  onNavigateToVisas,
+  onNavigateToBlogs,
+  onNavigateToServices,
+  onNavigateToProcess,
+  onNavigateToAbout,
+  onNavigateToContact,
 }) => {
   const [copied, setCopied] = useState(false);
   const [readProgress, setReadProgress] = useState(0);
@@ -75,7 +87,13 @@ export const BlogPostPage: React.FC<BlogPostPageProps> = ({
         onToggleCall={setIsCallOpen}
         onResetToHero={onBackToHome}
         onOpenVisaModal={onOpenVisaModal}
-        onNavigateToBlogs={onBackToBlogs}
+        onNavigateToExplore={onNavigateToVisas}
+        onNavigateToVisas={onNavigateToVisas}
+        onNavigateToBlogs={onNavigateToBlogs || onBackToBlogs}
+        onNavigateToServices={onNavigateToServices}
+        onNavigateToProcess={onNavigateToProcess}
+        onNavigateToAbout={onNavigateToAbout}
+        onNavigateToContact={onNavigateToContact}
       />
 
       {/* Main Article Container */}

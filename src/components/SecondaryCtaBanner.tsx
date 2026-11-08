@@ -8,6 +8,10 @@ interface SecondaryCtaBannerProps {
   onNavigateToVisas?: () => void;
   onNavigateToBlogs?: () => void;
   onNavigateToPolicies?: (tab?: PolicyTabType) => void;
+  onNavigateToServices?: () => void;
+  onNavigateToProcess?: () => void;
+  onNavigateToAbout?: () => void;
+  onNavigateToContact?: () => void;
   className?: string;
 }
 
@@ -17,6 +21,10 @@ export const SecondaryCtaBanner: React.FC<SecondaryCtaBannerProps> = ({
   onNavigateToVisas,
   onNavigateToBlogs,
   onNavigateToPolicies,
+  onNavigateToServices,
+  onNavigateToProcess,
+  onNavigateToAbout,
+  onNavigateToContact,
   className = '',
 }) => {
   const handleScrollTo = (id: string) => {
@@ -94,7 +102,7 @@ export const SecondaryCtaBanner: React.FC<SecondaryCtaBannerProps> = ({
 
           {/* Footer Navigation Section: Logo & 3 Columns Links (No line above logo, subtext removed, logo kept big) */}
           <div className="relative z-20 w-full mt-14 pt-2 flex flex-col lg:flex-row lg:items-start justify-between gap-10">
-            {/* Big Brand Logo (Subtext removed, logo kept big) */}
+            {/* Big Brand Logo (Enlarged size while keeping footer layout intact) */}
             <div className="flex flex-col items-start shrink-0">
               <button
                 type="button"
@@ -105,7 +113,7 @@ export const SecondaryCtaBanner: React.FC<SecondaryCtaBannerProps> = ({
                 <img
                   src="https://res.cloudinary.com/dacyy7rkn/image/upload/v1792480449/image_tqqmok.avif"
                   alt="Regal Visa Solutions"
-                  className="h-14 sm:h-16 md:h-18 lg:h-20 w-auto object-contain transition-transform group-hover:scale-105"
+                  className="h-20 sm:h-24 md:h-28 lg:h-32 w-auto object-contain transition-transform group-hover:scale-105"
                   loading="lazy"
                 />
               </button>
@@ -140,17 +148,55 @@ export const SecondaryCtaBanner: React.FC<SecondaryCtaBannerProps> = ({
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleScrollTo('services-section')}
+                  onClick={() => {
+                    if (onNavigateToServices) {
+                      onNavigateToServices();
+                    } else {
+                      handleScrollTo('services-section');
+                    }
+                  }}
                   className="text-xs sm:text-[13px] text-left font-medium text-[#475569] hover:text-[#1D4ED8] transition-colors cursor-pointer"
                 >
                   Services
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleScrollTo('process-section')}
+                  onClick={() => {
+                    if (onNavigateToProcess) {
+                      onNavigateToProcess();
+                    } else {
+                      handleScrollTo('process-section');
+                    }
+                  }}
                   className="text-xs sm:text-[13px] text-left font-medium text-[#475569] hover:text-[#1D4ED8] transition-colors cursor-pointer"
                 >
                   Consular Process
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onNavigateToAbout) {
+                      onNavigateToAbout();
+                    } else {
+                      handleScrollTo('about-section');
+                    }
+                  }}
+                  className="text-xs sm:text-[13px] text-left font-medium text-[#475569] hover:text-[#1D4ED8] transition-colors cursor-pointer"
+                >
+                  About Us
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onNavigateToContact) {
+                      onNavigateToContact();
+                    } else {
+                      handleScrollTo('contact');
+                    }
+                  }}
+                  className="text-xs sm:text-[13px] text-left font-medium text-[#475569] hover:text-[#1D4ED8] transition-colors cursor-pointer"
+                >
+                  Contact Us
                 </button>
                 <button
                   type="button"
@@ -261,7 +307,7 @@ export const SecondaryCtaBanner: React.FC<SecondaryCtaBannerProps> = ({
           <div className="relative z-20 w-full mt-10 pt-6 border-t border-[#F1F5F9] flex flex-col sm:flex-row items-center justify-between gap-4">
             {/* Copyright */}
             <p className="text-[11px] sm:text-xs text-[#94A3B8] font-normal">
-              &copy; {new Date().getFullYear()} Regal Visa Solutions. All rights reserved.
+              &copy; 2025 Regal Visa Solutions. All rights reserved.
             </p>
 
             {/* 3 Social Media Links (Instagram, Facebook, TikTok) - Compact on mobile to always fit in one row */}

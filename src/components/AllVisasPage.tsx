@@ -9,6 +9,11 @@ interface AllVisasPageProps {
   onSelectCountry: (country: string) => void;
   onOpenVisaModal: () => void;
   onNavigateToBlogs: () => void;
+  onNavigateToVisas?: () => void;
+  onNavigateToServices?: () => void;
+  onNavigateToProcess?: () => void;
+  onNavigateToAbout?: () => void;
+  onNavigateToContact?: () => void;
 }
 
 export const AllVisasPage: React.FC<AllVisasPageProps> = ({
@@ -16,6 +21,11 @@ export const AllVisasPage: React.FC<AllVisasPageProps> = ({
   onSelectCountry,
   onOpenVisaModal,
   onNavigateToBlogs,
+  onNavigateToVisas,
+  onNavigateToServices,
+  onNavigateToProcess,
+  onNavigateToAbout,
+  onNavigateToContact,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCallOpen, setIsCallOpen] = useState(false);
@@ -35,7 +45,13 @@ export const AllVisasPage: React.FC<AllVisasPageProps> = ({
         onToggleCall={setIsCallOpen}
         onResetToHero={onBackToHome}
         onOpenVisaModal={onOpenVisaModal}
+        onNavigateToExplore={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         onNavigateToBlogs={onNavigateToBlogs}
+        onNavigateToVisas={onNavigateToVisas || (() => window.scrollTo({ top: 0, behavior: 'smooth' }))}
+        onNavigateToServices={onNavigateToServices}
+        onNavigateToProcess={onNavigateToProcess}
+        onNavigateToAbout={onNavigateToAbout}
+        onNavigateToContact={onNavigateToContact}
         isVisasPage={true}
       />
 

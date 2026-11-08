@@ -29,6 +29,7 @@ import {
 } from 'lucide-react';
 import { PillHeader } from './PillHeader';
 import { SecondaryCtaBanner } from './SecondaryCtaBanner';
+import { DEFAULT_FAQ_CATEGORIES } from './FaqSection';
 
 export interface CountryVisaPageProps {
   countryName?: string;
@@ -37,6 +38,10 @@ export interface CountryVisaPageProps {
   onNavigateToExplore?: () => void;
   onNavigateToBlogs?: () => void;
   onNavigateToVisas?: () => void;
+  onNavigateToServices?: () => void;
+  onNavigateToProcess?: () => void;
+  onNavigateToAbout?: () => void;
+  onNavigateToContact?: () => void;
 }
 
 interface CountryVisaData {
@@ -749,6 +754,10 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
   onNavigateToExplore,
   onNavigateToBlogs,
   onNavigateToVisas,
+  onNavigateToServices,
+  onNavigateToProcess,
+  onNavigateToAbout,
+  onNavigateToContact,
 }) => {
   const data = useMemo(() => getCountryData(countryName), [countryName]);
 
@@ -802,9 +811,9 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
     setReviewPage((prev) => (prev - 1 + maxPages) % maxPages);
   };
 
-  // Filter FAQ items
+  // Filter FAQ items - Consistent across all country pages
   const filteredFaqData = useMemo(() => {
-    return data.faqs
+    return DEFAULT_FAQ_CATEGORIES
       .map((catGroup) => {
         if (activeFaqCategory !== 'All' && catGroup.category !== activeFaqCategory) {
           return null;
@@ -824,7 +833,7 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
         };
       })
       .filter(Boolean) as { category: string; items: { question: string; answer: string }[] }[];
-  }, [data.faqs, faqSearch, activeFaqCategory]);
+  }, [faqSearch, activeFaqCategory]);
 
   const waInquiryUrl = `https://wa.me/923246883359?text=Hi%20Globe%20Express%2C%20I%20want%20to%20apply%20or%20know%20more%20about%20the%20${encodeURIComponent(data.name)}%20visa%20for%20Pakistanis.`;
 
@@ -935,6 +944,10 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
         onNavigateToExplore={onNavigateToVisas || onNavigateToExplore || onBackToHome}
         onNavigateToBlogs={onNavigateToBlogs}
         onNavigateToVisas={onNavigateToVisas}
+        onNavigateToServices={onNavigateToServices}
+        onNavigateToProcess={onNavigateToProcess}
+        onNavigateToAbout={onNavigateToAbout}
+        onNavigateToContact={onNavigateToContact}
         currentCountry={{
           name: data.name,
           flagCode: data.flagCode,
@@ -1583,10 +1596,15 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
         onNavigateHome={onBackToHome}
         onNavigateToVisas={onNavigateToVisas}
         onNavigateToBlogs={onNavigateToBlogs}
+        onNavigateToServices={onNavigateToServices}
+        onNavigateToProcess={onNavigateToProcess}
+        onNavigateToAbout={onNavigateToAbout}
+        onNavigateToContact={onNavigateToContact}
       />
 
       {/* ========================================================
           INTERACTIVE MODAL 1: Required Documents Checklist
+          (Point-to-point, Brand Colors, Flag & Name with Required Documents)
       ======================================================== */}
       <AnimatePresence>
         {isChecklistModalOpen && (
@@ -1596,70 +1614,79 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsChecklistModalOpen(false)}
-              className="absolute inset-0 bg-[#0F172A]/60 backdrop-blur-xs"
+              className="absolute inset-0 bg-black/60 backdrop-blur-xs"
             />
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
               style={{ willChange: 'transform, opacity' }}
-              className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-[#E2E8F0] p-6 z-10 max-h-[90vh] overflow-y-auto transform-gpu"
+              className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl border border-[#E2E8F0] p-6 z-10 max-h-[90vh] overflow-y-auto transform-gpu"
             >
-              <div className="flex items-center justify-between pb-3 border-b border-[#E2E8F0]">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-[#F1F5F9] text-[#1C232D] flex items-center justify-center">
-                    <FileCheck2 className="w-4 h-4" />
+              {/* Header: Flag, Country Name & Required Documents ONLY */}
+              <div className="flex items-center justify-between pb-3.5 border-b border-[#E2E8F0]">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-full overflow-hidden border border-[#E2E8F0] shadow-xs shrink-0 bg-neutral-100 flex items-center justify-center">
+                    <img
+                      src={`https://flagcdn.com/w80/${data.flagCode.toLowerCase()}.png`}
+                      alt={`${data.name} Flag`}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <div>
-                    <h3 className="text-sm font-bold text-[#0F172A]">
-                      {data.name} Visa Documents Checklist
+                    <h3 className="text-base font-black text-[#0F172A] leading-tight">
+                      {data.name}
                     </h3>
-                    <p className="text-[11px] text-[#64748B]">
-                      Pakistan Passport Requirement Standards
+                    <p className="text-[11px] font-semibold text-[#2563EB] uppercase tracking-wider">
+                      Required Documents
                     </p>
                   </div>
                 </div>
                 <button
+                  type="button"
                   onClick={() => setIsChecklistModalOpen(false)}
-                  className="p-1.5 rounded-full hover:bg-neutral-100 text-[#64748B] transition cursor-pointer"
+                  className="p-1.5 rounded-full hover:bg-neutral-100 text-[#64748B] hover:text-[#0F172A] transition cursor-pointer"
+                  aria-label="Close"
                 >
                   <X className="w-4 h-4" />
                 </button>
               </div>
 
-              <div className="py-4 space-y-3.5 text-xs">
+              {/* To-the-point Documents Checklist */}
+              <div className="py-4 space-y-2.5">
                 {data.documents.map((doc, idx) => (
                   <div
                     key={idx}
-                    className={`p-3 rounded-2xl border flex items-start gap-3 ${
-                      idx === 0
-                        ? 'bg-[#F8FAFC] border-[#CBD5E1]'
-                        : 'bg-[#F8FAFC] border-[#E2E8F0]'
-                    }`}
+                    className="p-3 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] flex items-start gap-3 transition-colors hover:border-[#CBD5E1]"
                   >
-                    <CheckCircle2
-                      className={`w-4 h-4 shrink-0 mt-0.5 ${
-                        idx === 0 ? 'text-[#1C232D]' : 'text-[#10B981]'
-                      }`}
-                    />
-                    <div>
-                      <span className="font-bold text-[#0F172A] block">{doc.title}</span>
-                      <span className="text-[11px] text-[#64748B]">{doc.desc}</span>
+                    <div className="w-5 h-5 rounded-full bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center shrink-0 mt-0.5">
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                    </div>
+                    <div className="min-w-0">
+                      <span className="font-bold text-xs text-[#0F172A] block leading-snug">
+                        {doc.title}
+                      </span>
+                      <span className="text-[11px] text-[#64748B] block mt-0.5 leading-relaxed">
+                        {doc.desc}
+                      </span>
                     </div>
                   </div>
                 ))}
               </div>
 
+              {/* Action Button: Book a Call Free */}
               <div className="pt-2">
                 <button
+                  type="button"
                   onClick={() => {
                     setIsChecklistModalOpen(false);
                     setIsCheckoutModalOpen(true);
                   }}
-                  className="w-full py-3 rounded-full bg-[#1C232D] hover:bg-[#141A22] text-white text-xs font-semibold transition cursor-pointer shadow-sm"
+                  className="w-full py-3.5 rounded-full bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-bold tracking-tight shadow-[0_4px_14px_rgba(37,99,235,0.28)] active:scale-95 transition cursor-pointer flex items-center justify-center gap-2"
                 >
-                  Proceed to Application
+                  <PhoneCall className="w-3.5 h-3.5" />
+                  <span>Book a Call Free</span>
                 </button>
               </div>
             </motion.div>

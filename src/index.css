@@ -1,4 +1,15 @@
 @import "tailwindcss";
+@import "lenis/dist/lenis.css";
+
+/* Step-Snap Scroll behavior for pinned multi-step sections */
+.step-snap-container {
+  scroll-snap-type: y mandatory;
+}
+
+.step-snap-item {
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+}
 
 @layer base {
   :root {
