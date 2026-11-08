@@ -221,7 +221,7 @@ export const ServicesSection: React.FC = () => {
   return (
     <section
       id="services-section"
-      className="relative w-full bg-white text-neutral-900 py-14 sm:py-20 lg:py-28 px-3 sm:px-6 lg:px-10 border-t border-neutral-100 select-none overflow-visible"
+      className="relative w-full bg-white text-neutral-900 pt-14 sm:pt-20 lg:pt-24 pb-8 sm:pb-12 lg:pb-16 px-3 sm:px-6 lg:px-10 border-t border-neutral-100 select-none overflow-visible"
     >
       {/* Background Pattern Waves */}
       <div className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden">
@@ -265,10 +265,10 @@ export const ServicesSection: React.FC = () => {
           </p>
         </div>
 
-        {/* Padded Container: Sticky Left Column stays pinned in viewport until all 5 services scroll past */}
+        {/* Padded Container: Cleaned up bottom spacing before Process section */}
         <div
           ref={containerRef}
-          className="relative flex items-start gap-3 sm:gap-8 lg:gap-16 pt-2 pb-48 sm:pb-64 lg:pb-80"
+          className="relative flex items-start gap-3 sm:gap-8 lg:gap-16 pt-2 pb-12 sm:pb-16 lg:pb-20"
         >
           {/* ========================================================
               STICKY LEFT PLANE COLUMN:

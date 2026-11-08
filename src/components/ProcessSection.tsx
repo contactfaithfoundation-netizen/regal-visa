@@ -225,7 +225,7 @@ export const ProcessSection: React.FC<ProcessSectionProps> = ({
   return (
     <section
       id="process-section"
-      className="relative w-full bg-white text-neutral-900 py-16 sm:py-24 px-4 sm:px-6 lg:px-8 border-t border-neutral-100 select-none overflow-hidden"
+      className="relative w-full bg-white text-neutral-900 pt-8 sm:pt-12 lg:pt-14 pb-16 sm:pb-24 px-4 sm:px-6 lg:px-8 border-t border-neutral-100 select-none overflow-hidden"
     >
       {/* Background Pattern Waves */}
       <div className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden">
