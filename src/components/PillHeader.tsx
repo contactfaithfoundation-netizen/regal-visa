@@ -100,7 +100,7 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onToggleMenu, setCallMenuOpen]);
 
-  const handleLinkClick = (item: 'services' | 'about' | 'blog' | 'contact') => {
+  const handleLinkClick = (item: 'services' | 'process' | 'about' | 'blog' | 'contact') => {
     if (item === 'services') {
       onToggleMenu(false);
       const el = document.getElementById('services-section');
@@ -108,6 +108,16 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
         el.scrollIntoView({ behavior: 'smooth' });
         return;
       }
+      setActiveModal('services');
+      return;
+    }
+    if (item === 'process') {
+      onToggleMenu(false);
+      const el = document.getElementById('process-section');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+      return;
     }
     if (item === 'contact') {
       onToggleMenu(false);
@@ -134,7 +144,9 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
         return;
       }
     }
-    setActiveModal(item);
+    if (item === 'about' || item === 'blog' || item === 'services' || item === 'contact') {
+      setActiveModal(item);
+    }
   };
 
   const handleCategoryClick = (category: 'residence' | 'citizenship' | 'visa') => {
@@ -366,6 +378,7 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
               >
                 {[
                   { label: 'Services', key: 'services' as const },
+                  { label: 'Process', key: 'process' as const },
                   { label: 'About', key: 'about' as const },
                   { label: 'Blog', key: 'blog' as const },
                   { label: 'Contacts', key: 'contact' as const },

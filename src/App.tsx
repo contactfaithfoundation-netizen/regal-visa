@@ -14,6 +14,7 @@ import { AllBlogsPage } from './components/AllBlogsPage';
 import { BlogPostPage } from './components/BlogPostPage';
 import { AllVisasPage } from './components/AllVisasPage';
 import { ServicesSection } from './components/ServicesSection';
+import { ProcessSection } from './components/ProcessSection';
 import { parseCurrentRoute, countryToSlug } from './utils/router';
 
 export default function App() {
@@ -747,6 +748,12 @@ export default function App() {
 
       {/* INTERACTIVE 3-COLUMN SCROLL SERVICES SECTION */}
       <ServicesSection />
+
+      {/* 4-STEP CONSULAR CLEARANCE PROCESS SECTION */}
+      <ProcessSection
+        onOpenVisaModal={() => setIsVisaOpen(true)}
+        onNavigateToExplore={handleNavigateToExplore}
+      />
 
       {/* VISA INTELLIGENCE & BLOG SECTION (Brand Colors, Pure White Background, Reference Style) */}
       <BlogSection
