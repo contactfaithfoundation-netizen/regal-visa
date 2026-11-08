@@ -21,6 +21,7 @@ import { LocationSection } from './components/LocationSection';
 import { PoliciesPage, PolicyTab } from './components/PoliciesPage';
 import { AboutPage } from './components/AboutPage';
 import { ContactPage } from './components/ContactPage';
+import { LoadingScreen } from './components/LoadingScreen';
 import { parseCurrentRoute, countryToSlug } from './utils/router';
 import Lenis from 'lenis';
 
@@ -717,6 +718,9 @@ export default function App() {
 
   return (
     <div className="relative w-full min-h-screen bg-[#0f1419] font-sans">
+      {/* Initial Smooth White Background Logo Loading Screen */}
+      <LoadingScreen />
+
       {/* 4px Auto-Play Progress Bar at very top edge (only visible while hero section is in view) */}
       <ProgressBar
         slideKey={slideTimerKey}
