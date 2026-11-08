@@ -762,13 +762,16 @@ export default function App() {
         onViewAllBlogs={handleNavigateToBlogs}
       />
 
-      {/* SECONDARY CTA BANNER SECTION (White Rounded Card Container with 3D Spheres Video) */}
-      <SecondaryCtaBanner
-        onOpenVisaModal={() => setIsVisaOpen(true)}
-      />
-
       {/* FREQUENTLY ASKED QUESTIONS SECTION (Pure White Background & Brand Colors) */}
       <FaqSection className="border-t border-neutral-100" />
+
+      {/* FOOTER & SECONDARY CTA BANNER (Logo, Page Navigation, 3D Spheres Video, Social Links) */}
+      <SecondaryCtaBanner
+        onOpenVisaModal={() => setIsVisaOpen(true)}
+        onNavigateHome={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        onNavigateToVisas={handleNavigateToVisas}
+        onNavigateToBlogs={handleNavigateToBlogs}
+      />
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { Search, X, ShieldCheck } from 'lucide-react';
 import { BLOGS_DATABASE, BlogPostData } from '../data/blogs';
 import { PillHeader } from './PillHeader';
 import { FaqSection } from './FaqSection';
+import { SecondaryCtaBanner } from './SecondaryCtaBanner';
 
 interface AllBlogsPageProps {
   onBackToHome: () => void;
@@ -163,6 +164,13 @@ export const AllBlogsPage: React.FC<AllBlogsPageProps> = ({
       <section className="border-t border-neutral-100 mt-12 sm:mt-16 bg-white">
         <FaqSection />
       </section>
+
+      {/* Footer & CTA */}
+      <SecondaryCtaBanner
+        onOpenVisaModal={onOpenVisaModal}
+        onNavigateHome={onBackToHome}
+        onNavigateToVisas={onNavigateToVisas}
+      />
     </div>
   );
 };

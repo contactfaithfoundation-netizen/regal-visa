@@ -3,6 +3,7 @@ import { ArrowLeft, Calendar, Clock, UserCheck, ShieldCheck, Share2, Check, Arro
 import { getBlogPostBySlug, BLOGS_DATABASE, BlogPostData } from '../data/blogs';
 import { MarkdownRenderer } from './MarkdownRenderer';
 import { PillHeader } from './PillHeader';
+import { SecondaryCtaBanner } from './SecondaryCtaBanner';
 
 interface BlogPostPageProps {
   slug: string;
@@ -259,6 +260,13 @@ export const BlogPostPage: React.FC<BlogPostPageProps> = ({
           </button>
         </div>
       </main>
+
+      {/* Footer & CTA */}
+      <SecondaryCtaBanner
+        onOpenVisaModal={onOpenVisaModal}
+        onNavigateHome={onBackToHome}
+        onNavigateToBlogs={onBackToBlogs}
+      />
     </div>
   );
 };

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { PillHeader } from './PillHeader';
 import { ExploreEventsSection } from './ExploreEventsSection';
 import { FaqSection } from './FaqSection';
+import { SecondaryCtaBanner } from './SecondaryCtaBanner';
 
 interface AllVisasPageProps {
   onBackToHome: () => void;
@@ -47,6 +48,13 @@ export const AllVisasPage: React.FC<AllVisasPageProps> = ({
         <section className="border-t border-neutral-100 bg-white">
           <FaqSection />
         </section>
+
+        {/* Footer & CTA */}
+        <SecondaryCtaBanner
+          onOpenVisaModal={onOpenVisaModal}
+          onNavigateHome={onBackToHome}
+          onNavigateToBlogs={onNavigateToBlogs}
+        />
       </main>
     </div>
   );

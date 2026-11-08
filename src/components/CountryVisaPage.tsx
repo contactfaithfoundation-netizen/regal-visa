@@ -28,6 +28,7 @@ import {
   Send,
 } from 'lucide-react';
 import { PillHeader } from './PillHeader';
+import { SecondaryCtaBanner } from './SecondaryCtaBanner';
 
 export interface CountryVisaPageProps {
   countryName?: string;
@@ -1575,6 +1576,14 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
           </aside>
         </div>
       </main>
+
+      {/* Footer & CTA */}
+      <SecondaryCtaBanner
+        onOpenVisaModal={onOpenVisaModal}
+        onNavigateHome={onBackToHome}
+        onNavigateToVisas={onNavigateToVisas}
+        onNavigateToBlogs={onNavigateToBlogs}
+      />
 
       {/* ========================================================
           INTERACTIVE MODAL 1: Required Documents Checklist
