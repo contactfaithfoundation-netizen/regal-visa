@@ -38,6 +38,21 @@ export const CountryVisaCard: React.FC<CountryVisaCardProps> = ({
   const currentFlagCode =
     flagCode || COUNTRY_FLAGS[country]?.code || 'ch';
 
+  const isFixedPrice = [
+    'united states',
+    'united kingdom',
+    'australia',
+    'canada',
+    'germany',
+    'italy',
+    'france',
+    'us',
+    'uk',
+    'aus',
+  ].some((c) => country.toLowerCase().includes(c));
+
+  const packagePriceText = isFixedPrice ? 'PKR 75,000' : 'Price on call';
+
   const handleOpenVisaPage = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (onOpenVisaPage) {
@@ -104,7 +119,7 @@ export const CountryVisaCard: React.FC<CountryVisaCardProps> = ({
               </div>
             </div>
 
-            {/* Right Trigger Button with clean state toggle */}
+            {/* Right Trigger Button with clean state toggle in site's primary blue */}
             <button
               type="button"
               onClick={(e) => {
@@ -112,7 +127,7 @@ export const CountryVisaCard: React.FC<CountryVisaCardProps> = ({
                 onToggleVisa(!isVisaOpen);
               }}
               aria-label={isVisaOpen ? 'Collapse Visa Details' : 'Expand Visa Details'}
-              className="h-7 px-3 rounded-full bg-[#1C232D] hover:bg-[#141A22] text-white text-[11px] font-semibold flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer shrink-0 shadow-xs"
+              className="h-7 px-3 rounded-full bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-[11px] font-semibold flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer shrink-0 shadow-[0_2px_8px_rgba(37,99,235,0.35)]"
             >
               <span>{isVisaOpen ? 'Close' : 'Visa Details'}</span>
               {isVisaOpen ? (
@@ -147,13 +162,13 @@ export const CountryVisaCard: React.FC<CountryVisaCardProps> = ({
                   <div className="p-3 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl flex items-center justify-between">
                     <span className="text-[11.5px] font-medium text-[#6C7484]">Official Package:</span>
                     <span className="font-sans text-[14px] font-extrabold text-[#1C232D]">
-                      PKR 17,200
+                      {packagePriceText}
                     </span>
                   </div>
 
                   <button
                     onClick={handleOpenVisaPage}
-                    className="w-full py-2.5 px-3.5 rounded-xl bg-[#1C232D] hover:bg-[#141A22] text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition shadow-xs active:scale-[0.98] cursor-pointer"
+                    className="w-full py-2.5 px-3.5 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition shadow-[0_4px_14px_rgba(37,99,235,0.35)] active:scale-[0.98] cursor-pointer"
                   >
                     <span>Check Visa Requirements</span>
                     <ArrowUpRight className="w-3.5 h-3.5" />

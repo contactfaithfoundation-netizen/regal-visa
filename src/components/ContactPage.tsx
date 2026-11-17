@@ -29,6 +29,7 @@ interface ContactPageProps {
   onNavigateToServices?: () => void;
   onNavigateToProcess?: () => void;
   onNavigateToAbout?: () => void;
+  onNavigateToAppointments?: () => void;
 }
 
 const SUPPORT_NUMBERS = [
@@ -58,6 +59,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
   onNavigateToServices,
   onNavigateToProcess,
   onNavigateToAbout,
+  onNavigateToAppointments,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCallOpen, setIsCallOpen] = useState(false);
@@ -96,6 +98,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
         onNavigateToProcess={onNavigateToProcess}
         onNavigateToAbout={onNavigateToAbout}
         onNavigateToContact={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        onNavigateToAppointments={onNavigateToAppointments}
       />
 
       {/* Hero Header */}
@@ -409,6 +412,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
         onNavigateToProcess={onNavigateToProcess}
         onNavigateToAbout={onNavigateToAbout}
         onNavigateToContact={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        onNavigateToAppointments={onNavigateToAppointments}
       />
     </div>
   );

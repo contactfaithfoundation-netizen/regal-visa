@@ -58,9 +58,10 @@ export function slugToCountry(slug: string): string {
 }
 
 export interface RouteState {
-  view: 'home' | 'country-visa' | 'blogs' | 'blog-detail' | 'visas' | 'policies' | 'services' | 'process' | 'about' | 'contact';
+  view: 'home' | 'country-visa' | 'blogs' | 'blog-detail' | 'visas' | 'policies' | 'services' | 'process' | 'about' | 'contact' | 'appointment';
   country?: string;
   blogSlug?: string;
+  appointmentType?: 'visit' | 'business';
   section?: string;
   policyTab?: 'terms' | 'privacy' | 'refund' | 'disclaimer';
 }
@@ -130,6 +131,17 @@ export function parseCurrentRoute(): RouteState {
   }
   if (/^\/(?:policies|legal)\/?$/i.test(pathname)) {
     return { view: 'policies', policyTab: 'terms' };
+  }
+
+  // Check pathname: /appointment/:type or /appointments
+  const appointmentMatch = pathname.match(/^\/(?:appointment|appointments)(?:\/([a-z0-9-]+))?\/?$/i);
+  if (appointmentMatch) {
+    const sub = (appointmentMatch[1] || '').toLowerCase();
+    const appType: 'visit' | 'business' = sub.includes('business') ? 'business' : 'visit';
+    return {
+      view: 'appointment',
+      appointmentType: appType,
+    };
   }
 
   // 4. Check pathname: /visa/:slug or /country/:slug

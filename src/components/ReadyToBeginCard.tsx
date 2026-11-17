@@ -45,7 +45,7 @@ export const ReadyToBeginCard: React.FC<ReadyToBeginCardProps> = ({
         <div className="relative z-20 flex flex-col sm:flex-row items-center gap-3 shrink-0 w-full sm:w-auto">
           {/* WhatsApp Direct Inquiry */}
           <a
-            href="https://wa.me/923246883359?text=Hi%20Globe%20Express%2C%20I%20want%20to%20start%20my%20visa%20process%20and%20get%20a%20free%20document%20assessment."
+            href="https://wa.me/923224252883?text=Hi%20RegalVisa%20Solutions%2C%20I%20want%20to%20start%20my%20visa%20process%20and%20get%20a%20free%20document%20assessment."
             target="_blank"
             rel="noreferrer"
             className="w-full sm:w-auto px-5 py-3 rounded-full bg-[#25D366] hover:bg-[#20BA5A] text-white text-xs sm:text-sm font-semibold transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer shadow-[0_8px_20px_-4px_rgba(37,211,102,0.35)]"

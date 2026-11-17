@@ -54,7 +54,7 @@ const SERVICES_DATA: ServiceItem[] = [
 ];
 
 const PLANE_IMAGE_URL =
-  'https://res.cloudinary.com/rpphjsst/image/upload/v1794129938/image.webp';
+  'https://res.cloudinary.com/rpphjsst/image/upload/v1794941777/akaash.webp';
 
 // Service Item Card Component
 const ServiceFlowCard: React.FC<{

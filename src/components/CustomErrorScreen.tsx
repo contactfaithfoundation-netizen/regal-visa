@@ -175,10 +175,10 @@ export const CustomErrorScreen: React.FC<ErrorScreenProps> = ({
           <div className="mt-10 pt-6 border-t border-slate-200/80 w-full max-w-md flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
             <span>Need urgent consular assistance?</span>
             <a
-              href="tel:03246883359"
+              href="tel:03224252883"
               className="font-bold text-[#1D4ED8] hover:underline whitespace-nowrap"
             >
-              Call 0324 6883359
+              Call 0322 4252883
             </a>
           </div>
         </div>

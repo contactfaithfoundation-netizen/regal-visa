@@ -16,6 +16,7 @@ interface PillHeaderProps {
   onNavigateToProcess?: () => void;
   onNavigateToAbout?: () => void;
   onNavigateToContact?: () => void;
+  onNavigateToAppointments?: () => void;
   isVisasPage?: boolean;
   currentCountry?: {
     name: string;
@@ -24,8 +25,8 @@ interface PillHeaderProps {
 }
 
 const SUPPORT_NUMBERS = [
-  { number: '03246883359' },
   { number: '03224252883' },
+  { number: '03246883359' },
   { number: '03490449109' },
   { number: '0302195335' },
 ];
@@ -44,6 +45,7 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
   onNavigateToProcess,
   onNavigateToAbout,
   onNavigateToContact,
+  onNavigateToAppointments,
   isVisasPage,
   currentCountry,
 }) => {
@@ -204,7 +206,11 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
       return;
     }
     if (category === 'visa-appointments') {
-      // Intentionally do nothing as requested
+      onToggleMenu(false);
+      if (onNavigateToAppointments) {
+        onNavigateToAppointments();
+        return;
+      }
       return;
     }
   };
@@ -368,7 +374,7 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
             </svg>
           </button>
 
-          {/* 3. Right Squircle Button (Phone Handset Icon) - Shows 4 contact numbers with Call & WhatsApp buttons */}
+          {/* 3. Right Squircle Button (WhatsApp Icon) - Shows 4 contact numbers with Call & WhatsApp buttons */}
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -379,19 +385,15 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
               setCallMenuOpen(next);
             }}
             aria-label="Contact Numbers"
-            title="Show Phone Numbers"
-            className={`w-11 h-11 rounded-[16px] flex items-center justify-center active:scale-95 transition-all duration-150 cursor-pointer shrink-0 border border-black/[0.02] ${
-              isCallMenuOpen
-                ? 'bg-[#2563EB] text-white shadow-[0_2px_10px_rgba(37,99,235,0.35)]'
-                : 'bg-[#F1F4F8] hover:bg-[#2563EB] text-[#7E889B] hover:text-white'
-            }`}
+            title="Show Contact Numbers"
+            className="w-11 h-11 rounded-[16px] flex items-center justify-center active:scale-95 transition-all duration-150 cursor-pointer shrink-0 border border-black/[0.02] bg-[#25D366] hover:bg-[#20BA5A] text-white shadow-[0_2px_10px_rgba(37,211,102,0.35)]"
           >
             <svg
               viewBox="0 0 24 24"
               fill="currentColor"
-              className="w-[16px] h-[16px] transition-colors"
+              className="w-[21px] h-[21px] transition-transform group-hover:scale-105"
             >
-              <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.57a1 1 0 01-.25 1.02l-2.2 2.2z" />
+              <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67M9.53 7.35C9.37 7.35 9.1 7.41 8.88 7.65C8.65 7.89 8.02 8.48 8.02 9.71C8.02 10.93 8.91 12.11 9.03 12.27C9.15 12.44 10.74 14.9 13.21 15.96C15.26 16.84 15.68 16.66 16.12 16.63C16.57 16.59 17.55 16.05 17.76 15.48C17.96 14.9 17.96 14.41 17.9 14.31C17.84 14.21 17.68 14.15 17.44 14.03C17.2 13.91 16.01 13.33 15.79 13.25C15.57 13.17 15.41 13.13 15.25 13.37C15.09 13.61 14.62 14.15 14.48 14.31C14.34 14.47 14.2 14.49 13.96 14.37C13.72 14.25 12.95 14 12.03 13.18C11.31 12.54 10.83 11.76 10.69 11.52C10.55 11.28 10.67 11.14 10.79 11.02C10.9 10.91 11.04 10.73 11.16 10.59C11.28 10.45 11.32 10.35 11.4 10.19C11.48 10.03 11.44 9.89 11.38 9.77C11.32 9.65 10.85 8.5 10.65 8.03C10.46 7.57 10.26 7.63 10.11 7.63C9.97 7.62 9.81 7.35 9.53 7.35Z" />
             </svg>
           </button>
         </nav>
@@ -515,9 +517,10 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
                   </svg>
                 </div>
 
-                {/* Banner 3: Visa Appointments (No navigation) */}
+                {/* Banner 3: Visa Appointments */}
                 <div
-                  className="relative h-[54px] w-full rounded-[16px] overflow-hidden flex items-center justify-between px-5 select-none shadow-sm bg-[#1E3A8A] transform-gpu"
+                  onClick={() => handleCategoryClick('visa-appointments')}
+                  className="relative h-[54px] w-full rounded-[16px] overflow-hidden flex items-center justify-between px-5 cursor-pointer group select-none shadow-sm bg-[#1E3A8A] transform-gpu"
                 >
                   <img
                     src="https://res.cloudinary.com/rpphjsst/image/upload/v1794176849/0b310ac4-0991-4219-8605-d6719bb0842c.png"
@@ -530,6 +533,17 @@ export const PillHeader: React.FC<PillHeaderProps> = ({
                   <span className="text-[14px] font-semibold text-white tracking-[-0.01em] z-10 drop-shadow-sm">
                     Visa Appointments
                   </span>
+                  <svg
+                    className="w-4 h-4 text-white/70 group-hover:text-white group-hover:translate-x-0.5 transition-all z-10 drop-shadow-sm"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
                 </div>
               </motion.div>
             </>

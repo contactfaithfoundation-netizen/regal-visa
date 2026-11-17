@@ -287,13 +287,6 @@ export const SecondaryCtaBanner: React.FC<SecondaryCtaBannerProps> = ({
                 </button>
                 <button
                   type="button"
-                  onClick={() => handlePolicyClick('refund')}
-                  className="text-xs sm:text-[13px] text-left font-medium text-[#475569] hover:text-[#1D4ED8] transition-colors cursor-pointer"
-                >
-                  Refund & Cancellation
-                </button>
-                <button
-                  type="button"
                   onClick={() => handlePolicyClick('disclaimer')}
                   className="text-xs sm:text-[13px] text-left font-medium text-[#475569] hover:text-[#1D4ED8] transition-colors cursor-pointer"
                 >

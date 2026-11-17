@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShieldCheck, FileText, ArrowLeft, Lock, RefreshCcw, AlertCircle, CheckCircle2, Scale } from 'lucide-react';
+import { ShieldCheck, FileText, ArrowLeft, Lock, AlertCircle, CheckCircle2, Scale } from 'lucide-react';
 import { PillHeader } from './PillHeader';
 import { SecondaryCtaBanner } from './SecondaryCtaBanner';
 
@@ -77,7 +77,7 @@ export const PoliciesPage: React.FC<PoliciesPageProps> = ({
             Policies, Terms & Consular Regulations
           </h1>
           <p className="mt-2 text-sm sm:text-base text-[#64748B] max-w-2xl">
-            Review the official terms of engagement, data privacy guarantees, refund regulations, and sovereign consular jurisdictional terms for Regal Visa Solutions.
+            Review the official terms of engagement, data privacy guarantees, and sovereign consular jurisdictional terms for Regal Visa Solutions.
           </p>
         </div>
 
@@ -107,19 +107,6 @@ export const PoliciesPage: React.FC<PoliciesPageProps> = ({
           >
             <Lock className="w-4 h-4" />
             <span>Privacy Policy</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab('refund')}
-            className={`px-4 sm:px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap flex items-center gap-2 ${
-              activeTab === 'refund'
-                ? 'bg-[#1D4ED8] text-white shadow-sm'
-                : 'bg-slate-100 text-[#475569] hover:bg-slate-200 hover:text-[#0F172A]'
-            }`}
-          >
-            <RefreshCcw className="w-4 h-4" />
-            <span>Refund & Cancellation Policy</span>
           </button>
 
           <button
@@ -215,47 +202,6 @@ export const PoliciesPage: React.FC<PoliciesPageProps> = ({
                 </h3>
                 <p className="text-sm">
                   Upon completion of your visa processing cycle and consular clearance, clients may request the immediate purging of all uploaded digital attachments from our secure database by writing to our compliance officer.
-                </p>
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'refund' && (
-            <div className="space-y-6">
-              <div className="border-b border-[#F1F5F9] pb-4">
-                <h2 className="text-xl sm:text-2xl font-bold text-[#0F172A]">
-                  Refund & Cancellation Policy
-                </h2>
-                <p className="text-xs text-[#94A3B8] mt-1">Last Updated: March 2026</p>
-              </div>
-
-              <div className="space-y-3">
-                <h3 className="text-base font-bold text-[#0F172A] flex items-center gap-2">
-                  <RefreshCcw className="w-4 h-4 text-[#1D4ED8]" />
-                  1. Sovereign Embassy Fees Non-Refundable
-                </h3>
-                <p className="text-sm">
-                  All government consular filing fees, embassy visa fees, biometric charges, and visa center service fees paid directly to foreign governments are non-refundable by those sovereign bodies under all circumstances.
-                </p>
-              </div>
-
-              <div className="space-y-3">
-                <h3 className="text-base font-bold text-[#0F172A] flex items-center gap-2">
-                  <RefreshCcw className="w-4 h-4 text-[#1D4ED8]" />
-                  2. Advisory & Clearance Fee Refunds
-                </h3>
-                <p className="text-sm">
-                  If an application is cancelled by the client prior to file audit commencement, a full 100% refund of advisory fees is remitted within 5 working days. If file drafting and tax validation have commenced, a prorated administrative fee applies.
-                </p>
-              </div>
-
-              <div className="space-y-3">
-                <h3 className="text-base font-bold text-[#0F172A] flex items-center gap-2">
-                  <RefreshCcw className="w-4 h-4 text-[#1D4ED8]" />
-                  3. Remonstrance & Re-Application Guarantee
-                </h3>
-                <p className="text-sm">
-                  In the rare event of a consular refusal on an application cleared by our senior officers, Regal Visa Solutions drafts your official Remonstrance appeal or second submission file without additional consultancy charges.
                 </p>
               </div>
             </div>

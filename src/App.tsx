@@ -21,6 +21,7 @@ import { LocationSection } from './components/LocationSection';
 import { PoliciesPage, PolicyTab } from './components/PoliciesPage';
 import { AboutPage } from './components/AboutPage';
 import { ContactPage } from './components/ContactPage';
+import { AppointmentPage, AppointmentType } from './components/AppointmentPage';
 import { CustomErrorScreen } from './components/CustomErrorScreen';
 import { LoadingScreen } from './components/LoadingScreen';
 import { parseCurrentRoute, countryToSlug } from './utils/router';
@@ -37,12 +38,15 @@ export default function App() {
   const [isHeroVisible, setIsHeroVisible] = useState(true);
 
   // Synchronized routing state
-  const [currentView, setCurrentView] = useState<'home' | 'country-visa' | 'blogs' | 'blog-detail' | 'visas' | 'policies' | 'about' | 'contact' | '404' | 'offline'>(() => {
+  const [currentView, setCurrentView] = useState<'home' | 'country-visa' | 'blogs' | 'blog-detail' | 'visas' | 'policies' | 'about' | 'contact' | 'appointment' | '404' | 'offline'>(() => {
     const parsed = parseCurrentRoute().view;
     if (parsed === 'services' || parsed === 'process') {
       return 'home';
     }
     return parsed as any;
+  });
+  const [selectedAppointmentType, setSelectedAppointmentType] = useState<AppointmentType>(() => {
+    return parseCurrentRoute().appointmentType || 'visit';
   });
   const [selectedCountry, setSelectedCountry] = useState<string>(() => {
     return parseCurrentRoute().country || 'United Kingdom';
@@ -245,6 +249,22 @@ export default function App() {
     );
     setVisasFilter(filter);
     setCurrentView('visas');
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, []);
+
+  // Navigate to Appointments dedicated page
+  const handleOpenAppointment = useCallback((type: AppointmentType = 'visit') => {
+    if (!window.history.state || window.history.state.view !== 'home') {
+      window.history.replaceState({ view: 'home' }, 'Globe Express', '/');
+    }
+    const path = `/appointment/${type}`;
+    window.history.pushState(
+      { view: 'appointment', appointmentType: type },
+      `${type === 'business' ? 'Business' : 'Visit'} Visa Appointment - Globe Express`,
+      path
+    );
+    setSelectedAppointmentType(type);
+    setCurrentView('appointment');
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   }, []);
 
@@ -552,6 +572,9 @@ export default function App() {
           setCurrentView('about');
         } else if (e.state.view === 'contact') {
           setCurrentView('contact');
+        } else if (e.state.view === 'appointment') {
+          setSelectedAppointmentType((e.state.appointmentType as AppointmentType) || 'visit');
+          setCurrentView('appointment');
         } else if (e.state.view === 'policies') {
           setSelectedPolicyTab((e.state.policyTab as PolicyTab) || 'terms');
           setCurrentView('policies');
@@ -574,6 +597,9 @@ export default function App() {
         setCurrentView('blogs');
       } else if (route.view === 'visas') {
         setCurrentView('visas');
+      } else if (route.view === 'appointment') {
+        setSelectedAppointmentType(route.appointmentType || 'visit');
+        setCurrentView('appointment');
       } else if (route.view === 'services') {
         setCurrentView('home');
         setTimeout(() => {
@@ -622,6 +648,7 @@ export default function App() {
         onNavigateToProcess={handleNavigateToProcess}
         onNavigateToAbout={handleNavigateToAbout}
         onNavigateToContact={handleNavigateToContact}
+        onNavigateToAppointments={() => handleOpenAppointment('visit')}
       />
     );
   }
@@ -668,6 +695,7 @@ export default function App() {
         onNavigateToProcess={handleNavigateToProcess}
         onNavigateToAbout={handleNavigateToAbout}
         onNavigateToContact={handleNavigateToContact}
+        onNavigateToAppointments={() => handleOpenAppointment('visit')}
       />
     );
   }
@@ -684,6 +712,24 @@ export default function App() {
         onNavigateToProcess={handleNavigateToProcess}
         onNavigateToAbout={handleNavigateToAbout}
         onNavigateToContact={handleNavigateToContact}
+        onNavigateToAppointments={() => handleOpenAppointment('visit')}
+      />
+    );
+  }
+
+  if (currentView === 'appointment') {
+    return (
+      <AppointmentPage
+        type={selectedAppointmentType}
+        onBackToHome={() => handleBackToHome()}
+        onOpenVisaModal={() => setIsVisaOpen(true)}
+        onNavigateToVisas={handleNavigateToVisas}
+        onNavigateToBlogs={handleNavigateToBlogs}
+        onNavigateToServices={handleNavigateToServices}
+        onNavigateToProcess={handleNavigateToProcess}
+        onNavigateToAbout={handleNavigateToAbout}
+        onNavigateToContact={handleNavigateToContact}
+        onSelectAppointmentType={(t) => handleOpenAppointment(t)}
       />
     );
   }
@@ -693,6 +739,7 @@ export default function App() {
       <AllVisasPage
         onBackToHome={() => handleBackToHome()}
         onSelectCountry={handleOpenCountryVisa}
+        onSelectAppointment={handleOpenAppointment}
         onOpenVisaModal={() => setIsVisaOpen(true)}
         onNavigateToBlogs={handleNavigateToBlogs}
         onNavigateToVisas={handleNavigateToVisas}
@@ -717,6 +764,7 @@ export default function App() {
         onNavigateToProcess={handleNavigateToProcess}
         onNavigateToAbout={handleNavigateToAbout}
         onNavigateToContact={handleNavigateToContact}
+        onNavigateToAppointments={() => handleOpenAppointment('visit')}
       />
     );
   }
@@ -733,6 +781,7 @@ export default function App() {
         onNavigateToProcess={handleNavigateToProcess}
         onNavigateToAbout={handleNavigateToAbout}
         onNavigateToContact={handleNavigateToContact}
+        onNavigateToAppointments={() => handleOpenAppointment('visit')}
       />
     );
   }
@@ -765,6 +814,7 @@ export default function App() {
         onNavigateToProcess={handleNavigateToProcess}
         onNavigateToAbout={handleNavigateToAbout}
         onNavigateToContact={handleNavigateToContact}
+        onNavigateToAppointments={() => handleOpenAppointment('visit')}
       />
 
       {/* HERO SECTION - Stable height on mobile so image never stretches or gets longer on scroll */}
@@ -848,8 +898,8 @@ export default function App() {
               ease: [0.7, 0, 0.15, 1],
             };
             isClickable = true;
-          } else if (offset === 5) {
-            // Off-Screen Waiting Card
+          } else {
+            // Off-Screen Waiting Card (park all other slides off-screen until their turn)
             const slot = 4;
             zIndex = 5;
             animateProps = {
@@ -978,17 +1028,7 @@ export default function App() {
           );
         })}
 
-        {/* 3. z-[15]: Dark gradient overlay for text readability */}
-        <div
-          className="absolute inset-0 z-[15] pointer-events-none"
-          style={{
-            background:
-              'linear-gradient(90deg, rgba(15,20,25,0.72) 0%, rgba(15,20,25,0.30) 50%, rgba(15,20,25,0.45) 100%)',
-          }}
-        >
-          <div className="absolute inset-0 bg-radial-[at_30%_50%] from-transparent via-transparent to-black/50" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0f1419]/80 via-transparent to-black/40" />
-        </div>
+
       </section>
 
       {/* ABOUT SECTION: High-converting Pakistan context statement with kinetic ScrollReveal on pure white */}
@@ -1006,6 +1046,7 @@ export default function App() {
       <section className="w-full bg-white">
         <ExploreEventsSection
           onSelectCountry={handleOpenCountryVisa}
+          onSelectAppointment={handleOpenAppointment}
         />
       </section>
 
@@ -1047,6 +1088,7 @@ export default function App() {
         onNavigateToProcess={handleNavigateToProcess}
         onNavigateToAbout={handleNavigateToAbout}
         onNavigateToContact={handleNavigateToContact}
+        onNavigateToAppointments={() => handleOpenAppointment('visit')}
       />
     </div>
   );

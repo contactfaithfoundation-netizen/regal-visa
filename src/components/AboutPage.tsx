@@ -11,7 +11,6 @@ import {
   Sparkles,
   PhoneCall,
   Briefcase,
-  History,
   Target,
   FileCheck2,
 } from 'lucide-react';
@@ -29,15 +28,8 @@ interface AboutPageProps {
   onNavigateToServices?: () => void;
   onNavigateToProcess?: () => void;
   onNavigateToContact?: () => void;
+  onNavigateToAppointments?: () => void;
 }
-
-const MILESTONES = [
-  { year: '2014', title: 'Founded in Lahore & Islamabad', desc: 'Started as a boutique immigration and student visa advisory for Pakistani professionals.' },
-  { year: '2017', title: 'Consular Pre-Clearance Framework', desc: 'Pioneered our proprietary 12-point forensic document audit system, reducing client refusal rates to under 3%.' },
-  { year: '2020', title: 'Digital eVisa Platform Launch', desc: 'Automated digital submissions across GCC, Malaysia, and Türkiye, delivering grants directly to WhatsApp.' },
-  { year: '2023', title: 'European & US Appeals Desk', desc: 'Established specialized administrative review and Section 214(b) refusal overturn legal desk.' },
-  { year: '2026', title: '14,000+ Visas Delivered', desc: 'Over PKR 1.2B in verified funds audited, servicing travellers, families, and corporations nationwide.' },
-];
 
 const CORE_VALUES = [
   {
@@ -70,6 +62,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
   onNavigateToServices,
   onNavigateToProcess,
   onNavigateToContact,
+  onNavigateToAppointments,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCallOpen, setIsCallOpen] = useState(false);
@@ -95,6 +88,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
         onNavigateToProcess={onNavigateToProcess}
         onNavigateToAbout={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         onNavigateToContact={onNavigateToContact}
+        onNavigateToAppointments={onNavigateToAppointments}
       />
 
       {/* Hero Header */}
@@ -253,35 +247,6 @@ export const AboutPage: React.FC<AboutPageProps> = ({
         </div>
       </section>
 
-      {/* Journey Timeline */}
-      <section className="py-8 px-4 sm:px-8 xl:px-14 max-w-5xl mx-auto mb-16">
-        <div className="text-center mb-10">
-          <span className="text-xs font-bold uppercase tracking-wider text-[#2563EB]">
-            OUR HISTORY
-          </span>
-          <h2 className="text-2xl sm:text-3xl font-black text-[#0F172A] tracking-tight mt-1">
-            A Decade of Consular Milestones
-          </h2>
-        </div>
-
-        <div className="space-y-6">
-          {MILESTONES.map((m, idx) => (
-            <div
-              key={idx}
-              className="p-5 rounded-2xl bg-white border border-[#E2E8F0] flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 shadow-xs"
-            >
-              <div className="px-3.5 py-1.5 rounded-xl bg-[#1C232D] text-white text-xs font-black shrink-0">
-                {m.year}
-              </div>
-              <div className="space-y-0.5">
-                <h3 className="text-sm font-bold text-[#0F172A]">{m.title}</h3>
-                <p className="text-xs text-[#64748B] leading-relaxed">{m.desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* Ready To Begin Callout */}
       <ReadyToBeginCard
         onOpenVisaModal={onOpenVisaModal}
@@ -303,6 +268,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
         onNavigateToProcess={onNavigateToProcess}
         onNavigateToAbout={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         onNavigateToContact={onNavigateToContact}
+        onNavigateToAppointments={onNavigateToAppointments}
       />
     </div>
   );

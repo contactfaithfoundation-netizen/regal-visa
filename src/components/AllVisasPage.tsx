@@ -7,6 +7,7 @@ import { SecondaryCtaBanner } from './SecondaryCtaBanner';
 interface AllVisasPageProps {
   onBackToHome: () => void;
   onSelectCountry: (country: string) => void;
+  onSelectAppointment?: (type: 'visit' | 'business') => void;
   onOpenVisaModal: () => void;
   onNavigateToBlogs: () => void;
   onNavigateToVisas?: (filter?: string) => void;
@@ -14,12 +15,14 @@ interface AllVisasPageProps {
   onNavigateToProcess?: () => void;
   onNavigateToAbout?: () => void;
   onNavigateToContact?: () => void;
+  onNavigateToAppointments?: () => void;
   initialFilter?: string;
 }
 
 export const AllVisasPage: React.FC<AllVisasPageProps> = ({
   onBackToHome,
   onSelectCountry,
+  onSelectAppointment,
   onOpenVisaModal,
   onNavigateToBlogs,
   onNavigateToVisas,
@@ -27,6 +30,7 @@ export const AllVisasPage: React.FC<AllVisasPageProps> = ({
   onNavigateToProcess,
   onNavigateToAbout,
   onNavigateToContact,
+  onNavigateToAppointments,
   initialFilter,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -54,13 +58,18 @@ export const AllVisasPage: React.FC<AllVisasPageProps> = ({
         onNavigateToProcess={onNavigateToProcess}
         onNavigateToAbout={onNavigateToAbout}
         onNavigateToContact={onNavigateToContact}
+        onNavigateToAppointments={onNavigateToAppointments || (() => onSelectAppointment?.('visit'))}
         isVisasPage={true}
       />
 
       {/* Main Container: Explore Visas Whole Section with appropriate top padding for floating header */}
       <main className="pt-24 sm:pt-32 bg-white">
         {/* Whole Explore & Events Visa Section */}
-        <ExploreEventsSection onSelectCountry={onSelectCountry} initialFilter={initialFilter} />
+        <ExploreEventsSection
+          onSelectCountry={onSelectCountry}
+          onSelectAppointment={onSelectAppointment}
+          initialFilter={initialFilter}
+        />
 
         {/* FAQs Underneath (same as FAQ of home page) */}
         <section className="border-t border-neutral-100 bg-white">

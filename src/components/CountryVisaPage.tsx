@@ -26,6 +26,9 @@ import {
   FileCheck2,
   ArrowLeft,
   Send,
+  PhoneCall,
+  Download,
+  Copy,
 } from 'lucide-react';
 import { PillHeader } from './PillHeader';
 import { SecondaryCtaBanner } from './SecondaryCtaBanner';
@@ -42,6 +45,7 @@ export interface CountryVisaPageProps {
   onNavigateToProcess?: () => void;
   onNavigateToAbout?: () => void;
   onNavigateToContact?: () => void;
+  onNavigateToAppointments?: () => void;
 }
 
 interface CountryVisaData {
@@ -505,6 +509,7 @@ const COUNTRIES_REGISTRY: Record<string, CountryVisaData> = {
     name: 'Switzerland',
     flagCode: 'ch',
     heroImage: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1600&q=85',
+    videoUrl: 'https://media.atlys.com/b2c/clp/country-landing-page-videos/CH.mp4?tr=f-webm',
     authority: 'State Secretariat for Migration SEM Switzerland',
     visaType: 'Schengen Tourist Visa (Type C)',
     stayLength: 'Up to 90 days',
@@ -543,6 +548,7 @@ const COUNTRIES_REGISTRY: Record<string, CountryVisaData> = {
     name: 'Japan',
     flagCode: 'jp',
     heroImage: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=1600&q=85',
+    videoUrl: 'https://media.atlys.com/b2c/clp/Japan%20CLP/japan-clp-hero.mp4?updatedAt=1737978971776',
     authority: 'Ministry of Foreign Affairs of Japan',
     visaType: 'Short-Term Tourist Visa',
     stayLength: '15 to 30 days',
@@ -581,6 +587,7 @@ const COUNTRIES_REGISTRY: Record<string, CountryVisaData> = {
     name: 'Spain',
     flagCode: 'es',
     heroImage: 'https://images.unsplash.com/photo-1543783207-ec64e4d95325?auto=format&fit=crop&w=1600&q=85',
+    videoUrl: 'https://media.atlys.com/b2c/clp/country-landing-page-videos/ES.mp4?tr=f-webm',
     authority: 'Ministry of Foreign Affairs European Union and Cooperation Spain',
     visaType: 'Schengen Short Stay Visa',
     stayLength: 'Up to 90 days',
@@ -613,6 +620,206 @@ const COUNTRIES_REGISTRY: Record<string, CountryVisaData> = {
       { name: 'Faraz Rehman', date: '18 Oct 2026', country: 'Spain', rating: 5, text: 'Secured my Barcelona vacation visa with multiple entries in 16 days.' },
       { name: 'Sumera Naz', date: '10 Oct 2026', country: 'Spain', rating: 5, text: 'BLS appointment and travel insurance were arranged in one smooth package.' },
       { name: 'Ali Raza', date: '1 Oct 2026', country: 'Spain', rating: 5, text: 'Great team and honest advice. Zero hassle throughout.' },
+    ],
+  },
+  germany: {
+    name: 'Germany',
+    flagCode: 'de',
+    heroImage: 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=1600&q=85',
+    videoUrl: 'https://media.atlys.com/b2c/clp/country-landing-page-videos/DE.mp4?tr=f-webm',
+    authority: 'German Federal Foreign Office & VFS Global',
+    visaType: 'Schengen Tourist Visa (Type C)',
+    stayLength: 'Up to 90 days',
+    validity: '180 days',
+    entryType: 'Multiple Entry',
+    govtFee: 50000,
+    procFee: 25000,
+    readyDate: '8 Nov 2026',
+    dispatchTime: '04:15 PM',
+    documents: [
+      { title: '1. Valid Passport & Previous Visas', desc: 'At least 3 months validity beyond intended departure from Schengen zone.' },
+      { title: '2. 6 Months Bank Statement', desc: 'Demonstrating sufficient funds (minimum EUR 100 per day).' },
+      { title: '3. Travel Health Insurance (EUR 30,000 Minimum)', desc: 'Valid across all Schengen member states.' },
+      { title: '4. Confirmed Hotel Bookings & Flight Itinerary', desc: 'Round-trip flight reservation and German hotel confirmations.' },
+      { title: '5. Employment Proof & Tax Returns', desc: 'Employer letter, pay slips, and FBR tax returns for 2 years.' },
+    ],
+    rejectionReasons: [
+      { title: 'Insufficient Travel Insurance', desc: 'Policy must cover EUR 30,000 minimum across entire Schengen area.' },
+      { title: 'Weak Financial Documentation', desc: 'Low average bank balance without verifiable income source.' },
+    ],
+    faqs: [
+      {
+        category: 'Germany Schengen',
+        items: [
+          { question: 'Can I travel to other European countries with a German Schengen visa?', answer: 'Yes, a Schengen Type C visa allows travel across all 29 Schengen member states including France, Italy, Switzerland, and Spain.' },
+          { question: 'Where do I submit biometrics for a German visa in Pakistan?', answer: 'Biometrics are taken at VFS Germany centers in Islamabad and Lahore.' },
+        ],
+      },
+    ],
+    reviews: [
+      { name: 'Tariq Mahmood', date: '15 Oct 2026', country: 'Germany', rating: 5, text: 'Got my German Schengen visa approved for the Frankfurt trade fair. Perfect documentation prep.' },
+      { name: 'Sara Khan', date: '8 Oct 2026', country: 'Germany', rating: 5, text: 'Smooth biometric appointment and visa granted in 12 days.' },
+      { name: 'Ali Hassan', date: '29 Sep 2026', country: 'Germany', rating: 5, text: 'Great support with travel insurance and hotel bookings for Berlin trip.' },
+    ],
+  },
+  france: {
+    name: 'France',
+    flagCode: 'fr',
+    heroImage: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1600&q=85',
+    videoUrl: 'https://media.atlys.com/b2c/clp/country-landing-page-videos/FR.mp4?tr=f-webm',
+    authority: 'French Embassy & VFS Global Pakistan',
+    visaType: 'Schengen Tourist Visa (Type C)',
+    stayLength: 'Up to 90 days',
+    validity: '180 days',
+    entryType: 'Multiple Entry',
+    govtFee: 50000,
+    procFee: 25000,
+    readyDate: '14 Nov 2026',
+    dispatchTime: '03:00 PM',
+    documents: [
+      { title: '1. Machine-Readable Passport', desc: 'Valid for at least 3 months beyond departure from Schengen area.' },
+      { title: '2. 6 Months Bank Statement & Tax Returns', desc: 'Demonstrating financial stability with 2 years FBR returns.' },
+      { title: '3. Travel Insurance (EUR 30,000 Coverage)', desc: 'Mandatory insurance covering entire Schengen zone.' },
+      { title: '4. Confirmed Paris/France Hotel Bookings', desc: 'Hotel reservations for duration of stay.' },
+      { title: '5. Round-Trip Flight Ticket', desc: 'Confirmed airline booking with return date within visa validity.' },
+    ],
+    rejectionReasons: [
+      { title: 'Incomplete Financial Proof', desc: 'Missing 2-year tax returns or insufficient bank balance.' },
+      { title: 'Unconfirmed Accommodation', desc: 'Hotel bookings not matching the declared itinerary dates.' },
+    ],
+    faqs: [
+      {
+        category: 'France Schengen',
+        items: [
+          { question: 'Does a French Schengen visa allow travel across Europe?', answer: 'Yes, a French Schengen visa allows free movement across all 29 Schengen member states.' },
+          { question: 'Where do I apply for a French visa in Pakistan?', answer: 'Applications are submitted at VFS France centers in Islamabad, Lahore, and Karachi.' },
+        ],
+      },
+    ],
+    reviews: [
+      { name: 'Amna Rauf', date: '16 Oct 2026', country: 'France', rating: 5, text: 'Paris trip visa approved in 10 days. Perfect documentation service.' },
+      { name: 'Bilal Shah', date: '9 Oct 2026', country: 'France', rating: 5, text: 'All hotel bookings and insurance handled by the team. Zero stress.' },
+      { name: 'Fatima Zahra', date: '1 Oct 2026', country: 'France', rating: 5, text: 'Got multi-entry Schengen for 180 days. Excellent!' },
+    ],
+  },
+  italy: {
+    name: 'Italy',
+    flagCode: 'it',
+    heroImage: 'https://images.unsplash.com/photo-1515542622106-78bda8ba0e5b?auto=format&fit=crop&w=1600&q=85',
+    videoUrl: 'https://media.atlys.com/b2c/clp/country-landing-page-videos/IT.mp4?tr=f-webm',
+    authority: 'Italian Embassy & BLS International Pakistan',
+    visaType: 'Schengen Tourist Visa (Type C)',
+    stayLength: 'Up to 90 days',
+    validity: '180 days',
+    entryType: 'Multiple Entry',
+    govtFee: 50000,
+    procFee: 25000,
+    readyDate: '20 Nov 2026',
+    dispatchTime: '02:00 PM',
+    documents: [
+      { title: '1. Valid Passport (Min 3 Months Beyond Departure)', desc: 'At least 2 blank visa pages available.' },
+      { title: '2. 6 Months Bank Statement & Financial Proof', desc: 'Demonstrating adequate funds for duration of stay in Italy.' },
+      { title: '3. Travel Health Insurance (EUR 30,000 Minimum)', desc: 'Covering entire Schengen area including Italy.' },
+      { title: '4. Confirmed Italian Hotel Vouchers', desc: 'Hotel bookings in Rome, Milan, Venice, or other Italian cities.' },
+      { title: '5. Return Flight Itinerary', desc: 'Round-trip flight reservation to Italy.' },
+    ],
+    rejectionReasons: [
+      { title: 'Insufficient Insurance Coverage', desc: 'Travel insurance must meet EUR 30,000 minimum threshold.' },
+      { title: 'Inconsistent Itinerary', desc: 'Travel plan not matching hotel bookings and flight dates.' },
+    ],
+    faqs: [
+      {
+        category: 'Italy Schengen',
+        items: [
+          { question: 'Can I visit Vatican City and other European countries on an Italian visa?', answer: 'Yes, a Schengen visa allows travel to all 29 Schengen member states and Vatican City is located within Rome.' },
+          { question: 'Where are BLS Italy centers in Pakistan?', answer: 'BLS International operates Italian visa centers in Islamabad and Lahore for Pakistani applicants.' },
+        ],
+      },
+    ],
+    reviews: [
+      { name: 'Zain Raza', date: '17 Oct 2026', country: 'Italy', rating: 5, text: 'Rome and Florence trip visa approved in 14 days. Brilliant documentation support.' },
+      { name: 'Maryam Siddiqui', date: '10 Oct 2026', country: 'Italy', rating: 5, text: 'BLS appointment and travel insurance all arranged. Stress-free application.' },
+      { name: 'Omar Malik', date: '2 Oct 2026', country: 'Italy', rating: 5, text: 'Multi-entry Schengen for Italian tourism. Professional and efficient team.' },
+    ],
+  },
+  netherlands: {
+    name: 'Netherlands',
+    flagCode: 'nl',
+    heroImage: 'https://images.unsplash.com/photo-1584003564911-6e2ee44b77e9?auto=format&fit=crop&w=1600&q=85',
+    videoUrl: 'https://media.atlys.com/b2c/clp/country-landing-page-videos/NL.mp4?tr=f-webm',
+    authority: 'Royal Netherlands Embassy & VFS Global',
+    visaType: 'Schengen Tourist Visa (Type C)',
+    stayLength: 'Up to 90 days',
+    validity: '180 days',
+    entryType: 'Multiple Entry',
+    govtFee: 30000,
+    procFee: 10500,
+    readyDate: '10 Nov 2026',
+    dispatchTime: '03:30 PM',
+    documents: [
+      { title: '1. Valid Passport & Prior Visa History', desc: 'At least 3 months validity beyond intended Schengen departure date.' },
+      { title: '2. 6 Months Bank Statement', desc: 'Minimum EUR 100 equivalent per day of stay in Netherlands.' },
+      { title: '3. Travel Insurance (EUR 30,000 Minimum)', desc: 'Mandatory cover across entire Schengen territory.' },
+      { title: '4. Amsterdam / Netherlands Hotel Bookings', desc: 'Confirmed accommodation reservations for all nights.' },
+      { title: '5. Employment & Income Verification', desc: 'Employer letter, salary slips and 2-year FBR returns.' },
+    ],
+    rejectionReasons: [
+      { title: 'Insufficient Financial Means', desc: 'Bank statements not demonstrating sufficient daily travel budget.' },
+      { title: 'Missing Travel Insurance', desc: 'Policy must meet EUR 30,000 minimum Schengen-wide coverage.' },
+    ],
+    faqs: [
+      {
+        category: 'Netherlands Schengen',
+        items: [
+          { question: 'Can I travel to Belgium and Germany with a Netherlands Schengen visa?', answer: 'Yes, a Netherlands Schengen Type C visa allows travel across all 29 Schengen member states.' },
+          { question: 'Where do Pakistani citizens submit Netherlands visa applications?', answer: 'At VFS Netherlands centers in Islamabad and Lahore.' },
+        ],
+      },
+    ],
+    reviews: [
+      { name: 'Hassan Noor', date: '15 Oct 2026', country: 'Netherlands', rating: 5, text: 'Amsterdam trip visa approved smoothly. Great insurance and hotel arrangement.' },
+      { name: 'Aisha Malik', date: '7 Oct 2026', country: 'Netherlands', rating: 5, text: 'Professional team. Got Schengen for Netherlands and visited Germany and Belgium too.' },
+      { name: 'Khalid Javed', date: '28 Sep 2026', country: 'Netherlands', rating: 5, text: 'Very organized and efficient service for European travel.' },
+    ],
+  },
+  'new zealand': {
+    name: 'New Zealand',
+    flagCode: 'nz',
+    heroImage: 'https://images.unsplash.com/photo-1507699622108-4be3abd695ad?auto=format&fit=crop&w=1600&q=85',
+    videoUrl: 'https://media.atlys.com/b2c/clp/country-landing-page-videos/NZ.mp4?tr=f-webm',
+    authority: 'Immigration New Zealand (INZ)',
+    visaType: 'Visitor Visa',
+    stayLength: 'Up to 9 months',
+    validity: '9 months',
+    entryType: 'Multiple Entry',
+    govtFee: 25000,
+    procFee: 9500,
+    readyDate: '5 Dec 2026',
+    dispatchTime: '02:00 PM',
+    documents: [
+      { title: '1. Valid Pakistani Passport', desc: 'Minimum 6 months validity beyond intended departure from New Zealand.' },
+      { title: '2. 6 Months Bank Statement', desc: 'Demonstrating sufficient funds for duration of stay.' },
+      { title: '3. Employment Letter & Tax Returns', desc: 'Proof of employment and financial stability in Pakistan.' },
+      { title: '4. Travel Insurance', desc: 'Recommended comprehensive travel health insurance.' },
+      { title: '5. Confirmed Return Flight Ticket', desc: 'Airline reservation showing return from New Zealand.' },
+    ],
+    rejectionReasons: [
+      { title: 'Insufficient Proof of Funds', desc: 'Bank statements not demonstrating adequate financial means.' },
+      { title: 'Weak Ties to Home Country', desc: 'Insufficient evidence of return ties such as employment or property.' },
+    ],
+    faqs: [
+      {
+        category: 'New Zealand Visa',
+        items: [
+          { question: 'How long can Pakistani citizens stay in New Zealand on a visitor visa?', answer: 'Pakistani passport holders can stay up to 9 months on a New Zealand visitor visa per entry.' },
+          { question: 'Is the New Zealand visitor visa applied online?', answer: 'Yes, applications are lodged online through the Immigration New Zealand portal.' },
+        ],
+      },
+    ],
+    reviews: [
+      { name: 'Imran Yousaf', date: '18 Oct 2026', country: 'New Zealand', rating: 5, text: 'Auckland and Queenstown trip visa approved in 15 days. Great team!' },
+      { name: 'Nida Hussain', date: '10 Oct 2026', country: 'New Zealand', rating: 5, text: 'Complete documentation support for New Zealand visitor visa. Excellent service.' },
+      { name: 'Rehan Ahmed', date: '1 Oct 2026', country: 'New Zealand', rating: 5, text: 'Professional guidance on INZ portal requirements.' },
     ],
   },
 };
@@ -747,6 +954,71 @@ function getCountryData(rawCountryName: string): CountryVisaData {
   };
 }
 
+// Master Document Requirements specified for Pakistani applicants
+interface StandardRequirementItem {
+  id: string;
+  title: string;
+  badge?: string;
+  detail: string;
+}
+
+const MASTER_DOCUMENT_REQUIREMENTS: StandardRequirementItem[] = [
+  {
+    id: 'bank-statement',
+    title: '06 Month Latest Bank Statement With AC Maintenance Letter With Sign And Stamp',
+    badge: 'Signed & Stamped',
+    detail: '06 Month Latest Bank Statement With AC Maintenance Letter With Sign And Stamp.',
+  },
+  {
+    id: 'tax-returns',
+    title: "2 Year's Tax Returns",
+    badge: 'FBR Verified',
+    detail: "Official 2 Year's Income Tax Returns (FBR Verified).",
+  },
+  {
+    id: 'frc',
+    title: 'FRC',
+    badge: 'NADRA Issued',
+    detail: 'Family Registration Certificate (NADRA Issued).',
+  },
+  {
+    id: 'mrc',
+    title: 'MRC',
+    badge: 'NADRA Certified',
+    detail: 'Marriage Registration Certificate (NADRA Certified).',
+  },
+  {
+    id: 'company-letter',
+    title: '2 Company Letter With Sign And Stamp',
+    badge: 'Signed & Stamped',
+    detail: '2 Company Letter With Sign And Stamp.',
+  },
+  {
+    id: 'passports',
+    title: 'All Original Passport With Previous Passport',
+    badge: 'Physical Copies',
+    detail: 'All Original Passport With Previous Passport.',
+  },
+  {
+    id: 'nic-copy',
+    title: 'NIC Copy',
+    badge: 'Clear Scan',
+    detail: 'Valid Applicant CNIC / NIC Copy.',
+  },
+  {
+    id: 'pictures',
+    title: '3 Pictures With White Background',
+    badge: 'Recent Photo',
+    detail: '3 Pictures With White Background.',
+  },
+  {
+    id: 'parents-nic',
+    title: "Father And Mother's NIC Copy",
+    badge: 'Family Record',
+    detail: "Father And Mother's NIC Copy.",
+  },
+];
+
 export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
   countryName = 'Malaysia',
   onBackToHome,
@@ -758,6 +1030,7 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
   onNavigateToProcess,
   onNavigateToAbout,
   onNavigateToContact,
+  onNavigateToAppointments,
 }) => {
   const data = useMemo(() => getCountryData(countryName), [countryName]);
 
@@ -787,6 +1060,7 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
   const [isChecklistModalOpen, setIsChecklistModalOpen] = useState(false);
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
   const [isWhatsAppModalOpen, setIsWhatsAppModalOpen] = useState(false);
+  const [hasCopiedChecklist, setHasCopiedChecklist] = useState(false);
 
   // Simplified Lead Callback Form State
   const [applicantName, setApplicantName] = useState('');
@@ -794,7 +1068,24 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
   const [applicantCity, setApplicantCity] = useState('Lahore');
   const [checkoutSubmitted, setCheckoutSubmitted] = useState(false);
 
+  const isFixedPriceCountry = useMemo(() => {
+    const n = (countryName || data.name || '').toLowerCase();
+    return [
+      'united states',
+      'united kingdom',
+      'australia',
+      'canada',
+      'germany',
+      'italy',
+      'france',
+      'us',
+      'uk',
+      'aus',
+    ].some((c) => n.includes(c));
+  }, [countryName, data.name]);
+
   const totalFee = data.govtFee + data.procFee;
+  const displayPriceText = isFixedPriceCountry ? 'PKR 75,000' : 'Price on call';
 
   const toggleAccordion = (cat: string) => {
     setOpenAccordions((prev) => ({
@@ -835,7 +1126,7 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
       .filter(Boolean) as { category: string; items: { question: string; answer: string }[] }[];
   }, [faqSearch, activeFaqCategory]);
 
-  const waInquiryUrl = `https://wa.me/923246883359?text=Hi%20Globe%20Express%2C%20I%20want%20to%20apply%20or%20know%20more%20about%20the%20${encodeURIComponent(data.name)}%20visa%20for%20Pakistanis.`;
+  const waInquiryUrl = `https://wa.me/923224252883?text=Hi%20RegalVisa%20Solutions%2C%20I%20want%20to%20apply%20or%20know%20more%20about%20the%20${encodeURIComponent(data.name)}%20visa%20for%20Pakistanis.`;
 
   const renderStartApplicationCard = (isMobileVariant = false) => (
     <div
@@ -843,47 +1134,16 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
         isMobileVariant ? 'w-full' : ''
       }`}
     >
-      {/* Top Banner */}
-      <div className="px-4 py-2.5 flex items-center justify-between text-[#1C232D] text-xs font-semibold">
-        <div className="flex items-center gap-2">
-          <Clock className="w-4 h-4 text-[#1C232D]" />
-          <span>Ready by {data.readyDate}, {data.dispatchTime}</span>
-        </div>
-        <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-[#10B981]/10 text-[#059669] border border-[#10B981]/20">
-          Fast-Track
-        </span>
-      </div>
-
       {/* Inner White Card */}
       <div className="bg-white rounded-[20px] p-4 sm:p-5 shadow-sm border border-[#E2E8F0]/60">
-        {/* Government Fees */}
-        <div className="flex justify-between items-center text-xs text-[#475569] mb-3">
-          <div className="flex items-center gap-2">
-            <Landmark className="w-3.5 h-3.5 text-[#64748B]" />
-            <span>Government Fees</span>
-          </div>
-          <span className="font-semibold text-[#0F172A]">
-            {data.govtFee > 0 ? `PKR ${data.govtFee.toLocaleString()}` : 'Included / Nil'}
-          </span>
-        </div>
-
-        {/* Processing Fees */}
-        <div className="flex justify-between items-center text-xs text-[#475569] pb-3.5 border-b border-dashed border-[#E2E8F0]">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-3.5 h-3.5 text-[#1C232D]" />
-            <span>Processing &amp; Verification</span>
-          </div>
-          <span className="font-semibold text-[#0F172A]">PKR {data.procFee.toLocaleString()}</span>
-        </div>
-
-        {/* Total Amount Row */}
-        <div className="flex justify-between items-center pt-3.5 mb-5">
+        {/* Total Package Fee Row */}
+        <div className="flex justify-between items-center mb-5">
           <div className="flex items-center gap-2">
             <Wallet className="w-4 h-4 text-[#1C232D]" />
-            <span className="text-sm font-bold text-[#0F172A]">Total Amount</span>
+            <span className="text-sm font-bold text-[#0F172A]">Package Fee</span>
           </div>
           <span className="text-base sm:text-lg font-extrabold text-[#1C232D]">
-            PKR {totalFee.toLocaleString()}
+            {displayPriceText}
           </span>
         </div>
 
@@ -948,6 +1208,7 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
         onNavigateToProcess={onNavigateToProcess}
         onNavigateToAbout={onNavigateToAbout}
         onNavigateToContact={onNavigateToContact}
+        onNavigateToAppointments={onNavigateToAppointments}
         currentCountry={{
           name: data.name,
           flagCode: data.flagCode,
@@ -1026,16 +1287,13 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
               {data.name} Visa for Pakistanis
             </h1>
 
-            {/* Delivery Subtitle */}
-            <p className="text-xs sm:text-sm md:text-base font-medium text-white/95 mb-4 sm:mb-6 flex items-center gap-1.5 sm:gap-2 drop-shadow-[0_1px_6px_rgba(0,0,0,0.8)]">
-              <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white/80 shrink-0" />
-              <span>e-visa on {data.readyDate}</span>
-            </p>
+            {/* Action Gap */}
+            <div className="mb-4 sm:mb-6" />
 
-            {/* Thinner, slightly smaller Primary CTA Button */}
+            {/* Primary CTA Button in Site Blue */}
             <button
               onClick={() => setIsChecklistModalOpen(true)}
-              className="px-4 sm:px-6 py-2 sm:py-2.5 rounded-full bg-[#1C232D] hover:bg-[#141A22] text-white text-[11px] sm:text-xs font-semibold shadow-[0_6px_20px_rgba(28,35,45,0.35)] transition cursor-pointer active:scale-95 flex items-center gap-1.5 sm:gap-2 border border-white/20 backdrop-blur-xs"
+              className="px-4 sm:px-6 py-2 sm:py-2.5 rounded-full bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-[11px] sm:text-xs font-semibold shadow-[0_6px_20px_rgba(37,99,235,0.45)] transition cursor-pointer active:scale-95 flex items-center gap-1.5 sm:gap-2 border border-blue-300/30 backdrop-blur-xs"
             >
               <FileCheck2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
               <span>Check Required Documents</span>
@@ -1063,55 +1321,55 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
                 <div className="w-8 h-[3px] bg-[#1C232D] rounded-full mt-1.5" />
               </div>
 
-              {/* 4-Item Spec Grid on White Background */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-5 mb-8">
+              {/* 4-Item Spec Grid on White Background - Single row on mobile */}
+              <div className="grid grid-cols-4 gap-1.5 sm:gap-5 mb-8">
                 {/* 1. Type */}
-                <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl p-4 flex items-center gap-3.5 shadow-xs">
-                  <div className="w-9 h-9 rounded-xl bg-[#F1F5F9] text-[#1C232D] flex items-center justify-center shrink-0 border border-[#CBD5E1]/60">
-                    <FileText className="w-4 h-4" />
+                <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl sm:rounded-2xl p-1.5 sm:p-4 flex flex-col sm:flex-row items-center text-center sm:text-left gap-1 sm:gap-3.5 shadow-xs overflow-hidden">
+                  <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-[#F1F5F9] text-[#1C232D] flex items-center justify-center shrink-0 border border-[#CBD5E1]/60">
+                    <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </div>
-                  <div className="flex flex-col min-w-0">
-                    <span className="text-[11px] text-[#64748B]">Type:</span>
-                    <span className="text-xs font-bold text-[#0F172A] underline decoration-[#CBD5E1] underline-offset-2">
+                  <div className="flex flex-col min-w-0 max-w-full">
+                    <span className="text-[7.5px] sm:text-[11px] text-[#64748B] leading-none mb-0.5 sm:mb-0">Type:</span>
+                    <span className="text-[8px] sm:text-xs font-bold text-[#0F172A] underline decoration-[#CBD5E1] underline-offset-2 truncate">
                       {data.visaType}
                     </span>
                   </div>
                 </div>
 
                 {/* 2. Length of Stay */}
-                <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl p-4 flex items-center gap-3.5 shadow-xs">
-                  <div className="w-9 h-9 rounded-xl bg-[#F1F5F9] text-[#1C232D] flex items-center justify-center shrink-0 border border-[#CBD5E1]/60">
-                    <Calendar className="w-4 h-4" />
+                <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl sm:rounded-2xl p-1.5 sm:p-4 flex flex-col sm:flex-row items-center text-center sm:text-left gap-1 sm:gap-3.5 shadow-xs overflow-hidden">
+                  <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-[#F1F5F9] text-[#1C232D] flex items-center justify-center shrink-0 border border-[#CBD5E1]/60">
+                    <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </div>
-                  <div className="flex flex-col min-w-0">
-                    <span className="text-[11px] text-[#64748B]">Length of Stay:</span>
-                    <span className="text-xs font-bold text-[#0F172A]">
+                  <div className="flex flex-col min-w-0 max-w-full">
+                    <span className="text-[7.5px] sm:text-[11px] text-[#64748B] leading-none mb-0.5 sm:mb-0">Length:</span>
+                    <span className="text-[8px] sm:text-xs font-bold text-[#0F172A] truncate">
                       {data.stayLength}
                     </span>
                   </div>
                 </div>
 
                 {/* 3. Validity */}
-                <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl p-4 flex items-center gap-3.5 shadow-xs">
-                  <div className="w-9 h-9 rounded-xl bg-[#ECFDF5] text-[#10B981] flex items-center justify-center shrink-0 border border-[#A7F3D0]/60">
-                    <CheckCircle2 className="w-4 h-4" />
+                <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl sm:rounded-2xl p-1.5 sm:p-4 flex flex-col sm:flex-row items-center text-center sm:text-left gap-1 sm:gap-3.5 shadow-xs overflow-hidden">
+                  <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-[#ECFDF5] text-[#10B981] flex items-center justify-center shrink-0 border border-[#A7F3D0]/60">
+                    <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </div>
-                  <div className="flex flex-col min-w-0">
-                    <span className="text-[11px] text-[#64748B]">Validity:</span>
-                    <span className="text-xs font-bold text-[#0F172A]">
+                  <div className="flex flex-col min-w-0 max-w-full">
+                    <span className="text-[7.5px] sm:text-[11px] text-[#64748B] leading-none mb-0.5 sm:mb-0">Validity:</span>
+                    <span className="text-[8px] sm:text-xs font-bold text-[#0F172A] truncate">
                       {data.validity}
                     </span>
                   </div>
                 </div>
 
                 {/* 4. Entry */}
-                <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl p-4 flex items-center gap-3.5 shadow-xs">
-                  <div className="w-9 h-9 rounded-xl bg-[#F1F5F9] text-[#1C232D] flex items-center justify-center shrink-0 border border-[#CBD5E1]/60">
-                    <Plane className="w-4 h-4" />
+                <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl sm:rounded-2xl p-1.5 sm:p-4 flex flex-col sm:flex-row items-center text-center sm:text-left gap-1 sm:gap-3.5 shadow-xs overflow-hidden">
+                  <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-[#F1F5F9] text-[#1C232D] flex items-center justify-center shrink-0 border border-[#CBD5E1]/60">
+                    <Plane className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </div>
-                  <div className="flex flex-col min-w-0">
-                    <span className="text-[11px] text-[#64748B]">Entry:</span>
-                    <span className="text-xs font-bold text-[#0F172A]">
+                  <div className="flex flex-col min-w-0 max-w-full">
+                    <span className="text-[7.5px] sm:text-[11px] text-[#64748B] leading-none mb-0.5 sm:mb-0">Entry:</span>
+                    <span className="text-[8px] sm:text-xs font-bold text-[#0F172A] truncate">
                       {data.entryType}
                     </span>
                   </div>
@@ -1123,19 +1381,12 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
                 {/* Header Node: Glowing Dot in #1C232D */}
                 <div className="w-3 h-3 rounded-full bg-[#1C232D] ring-4 ring-[#F1F5F9] -left-[7px] top-1 absolute shadow-sm" />
 
-                <h3 className="text-sm font-bold text-[#0F172A] mb-3">
-                  Get your visa by
-                </h3>
-
                 {/* Expandable Card in White */}
                 <div className="bg-white rounded-2xl border border-[#E2E8F0] p-4 sm:p-5 shadow-[0_8px_25px_rgba(15,23,42,0.04)]">
                   <div className="flex items-center gap-2.5">
                     <div className="w-2.5 h-2.5 rounded-full bg-[#1C232D] animate-pulse" />
                     <span className="text-xs sm:text-sm font-bold text-[#0F172A]">
-                      {data.readyDate} at {data.dispatchTime}
-                    </span>
-                    <span className="text-[10px] font-semibold text-[#10B981] bg-[#ECFDF5] px-2 py-0.5 rounded-full border border-[#A7F3D0]/60 ml-auto">
-                      Guaranteed Dispatch
+                      Guaranteed Consular Processing
                     </span>
                   </div>
 
@@ -1206,7 +1457,7 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
             <div className="lg:hidden">
               <div className="mb-3">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-[#64748B]">
-                  Fast-Track Consular Portal
+                  Consular Portal
                 </span>
                 <h3 className="text-lg font-bold text-[#0F172A]">
                   Apply for {data.name} Visa
@@ -1375,10 +1626,7 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
                       Step 4
                     </span>
                     <h3 className="text-xs sm:text-sm font-bold text-[#0F172A]">
-                      Get Your Verified Visa on{' '}
-                      <span className="text-[#1C232D] font-extrabold underline decoration-[#CBD5E1]">
-                        {data.readyDate}
-                      </span>
+                      Receive Your Verified Visa Approval
                     </h3>
                     <p className="text-xs text-[#64748B] mt-1 leading-relaxed">
                       Download your official visa and travel with full peace of mind.
@@ -1603,31 +1851,34 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
       />
 
       {/* ========================================================
-          INTERACTIVE MODAL 1: Required Documents Checklist
-          (Point-to-point, Brand Colors, Flag & Name with Required Documents)
+          INTERACTIVE MODAL 1: Required Documents Checklist Popup
+          (Minimalist, clean, best UI/UX style with requested requirements)
       ======================================================== */}
       <AnimatePresence>
         {isChecklistModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3.5 sm:p-5 select-none">
+            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsChecklistModalOpen(false)}
-              className="absolute inset-0 bg-black/60 backdrop-blur-xs"
+              className="absolute inset-0 bg-neutral-900/60 backdrop-blur-sm"
             />
+
+            {/* Modal Dialog */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              initial={{ opacity: 0, scale: 0.96, y: 12 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-              style={{ willChange: 'transform, opacity' }}
-              className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl border border-[#E2E8F0] p-6 z-10 max-h-[90vh] overflow-y-auto transform-gpu"
+              exit={{ opacity: 0, scale: 0.96, y: 12 }}
+              transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+              style={{ willChange: 'transform, opacity', maxHeight: 'min(90vh, 580px)' }}
+              className="relative w-full max-w-[460px] bg-white rounded-[22px] sm:rounded-[26px] shadow-[0_25px_60px_rgba(0,0,0,0.22)] border border-neutral-100 z-10 overflow-hidden transform-gpu flex flex-col"
             >
-              {/* Header: Flag, Country Name & Required Documents ONLY */}
-              <div className="flex items-center justify-between pb-3.5 border-b border-[#E2E8F0]">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full overflow-hidden border border-[#E2E8F0] shadow-xs shrink-0 bg-neutral-100 flex items-center justify-center">
+              {/* Top Header */}
+              <div className="flex items-center justify-between px-5 pt-4 sm:pt-5 pb-3 border-b border-neutral-100 shrink-0 bg-neutral-50/60">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-full overflow-hidden border border-neutral-200/80 shrink-0 bg-white shadow-xs">
                     <img
                       src={`https://flagcdn.com/w80/${data.flagCode.toLowerCase()}.png`}
                       alt={`${data.name} Flag`}
@@ -1635,58 +1886,87 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
                     />
                   </div>
                   <div>
-                    <h3 className="text-base font-black text-[#0F172A] leading-tight">
-                      {data.name}
-                    </h3>
-                    <p className="text-[11px] font-semibold text-[#2563EB] uppercase tracking-wider">
-                      Required Documents
-                    </p>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[10px] font-black uppercase tracking-wider text-neutral-900 bg-neutral-200/70 px-1.5 py-0.5 rounded leading-none">
+                        REQUIREMENTS
+                      </span>
+                      <span className="text-xs font-bold text-neutral-800">
+                        {data.name} Visa
+                      </span>
+                    </div>
+                    <p className="text-[10.5px] text-neutral-400 mt-0.5">Mandatory checklist for Pakistani applicants</p>
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={() => setIsChecklistModalOpen(false)}
-                  className="p-1.5 rounded-full hover:bg-neutral-100 text-[#64748B] hover:text-[#0F172A] transition cursor-pointer"
-                  aria-label="Close"
+                  className="w-7 h-7 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-500 hover:text-neutral-800 transition flex items-center justify-center cursor-pointer shrink-0"
+                  aria-label="Close modal"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-3.5 h-3.5" />
                 </button>
               </div>
 
-              {/* To-the-point Documents Checklist */}
-              <div className="py-4 space-y-2.5">
-                {data.documents.map((doc, idx) => (
+              {/* Requirement Items List - Concise, non-scrolly, sleek on mobile & desktop */}
+              <div
+                className="overflow-y-auto px-4 sm:px-5 py-2 divide-y divide-neutral-100"
+                style={{ WebkitOverflowScrolling: 'touch', overscrollBehavior: 'contain' }}
+              >
+                {MASTER_DOCUMENT_REQUIREMENTS.map((item, index) => (
                   <div
-                    key={idx}
-                    className="p-3 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] flex items-start gap-3 transition-colors hover:border-[#CBD5E1]"
+                    key={item.id}
+                    className="flex items-start gap-2.5 sm:gap-3 py-2 sm:py-2.5 px-1.5 rounded-lg hover:bg-neutral-50/80 transition-colors"
                   >
-                    <div className="w-5 h-5 rounded-full bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center shrink-0 mt-0.5">
-                      <CheckCircle2 className="w-3.5 h-3.5" />
+                    {/* Index */}
+                    <div className="w-5 h-5 rounded-md bg-neutral-900 text-white text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
+                      {index + 1}
                     </div>
-                    <div className="min-w-0">
-                      <span className="font-bold text-xs text-[#0F172A] block leading-snug">
-                        {doc.title}
-                      </span>
-                      <span className="text-[11px] text-[#64748B] block mt-0.5 leading-relaxed">
-                        {doc.desc}
-                      </span>
-                    </div>
+                    {/* Title only */}
+                    <span className="text-[12px] sm:text-[12.5px] font-medium text-neutral-800 leading-snug flex-1">
+                      {item.title}
+                    </span>
                   </div>
                 ))}
               </div>
 
-              {/* Action Button: Book a Call Free */}
-              <div className="pt-2">
+              {/* Bottom Footer Actions */}
+              <div className="px-4 sm:px-5 pb-4 pt-3 border-t border-neutral-100 flex items-center gap-2 shrink-0 bg-neutral-50/40">
+                {/* Copy / Share Checklist */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const text = `REQUIREMENTS:\n\n` +
+                      MASTER_DOCUMENT_REQUIREMENTS.map((r, i) => `${r.title}`).join('\n\n');
+                    navigator.clipboard.writeText(text);
+                    setHasCopiedChecklist(true);
+                    setTimeout(() => setHasCopiedChecklist(false), 2500);
+                  }}
+                  className="px-3.5 py-2.5 rounded-xl border border-neutral-200 hover:border-neutral-300 bg-white text-neutral-700 text-[11px] font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer active:scale-95 shrink-0 shadow-xs"
+                >
+                  {hasCopiedChecklist ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-emerald-600" />
+                      <span className="text-emerald-700 font-bold">Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3.5 h-3.5 text-neutral-500" />
+                      <span>Copy Checklist</span>
+                    </>
+                  )}
+                </button>
+
+                {/* Primary Action Button */}
                 <button
                   type="button"
                   onClick={() => {
                     setIsChecklistModalOpen(false);
                     setIsCheckoutModalOpen(true);
                   }}
-                  className="w-full py-3.5 rounded-full bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-bold tracking-tight shadow-[0_4px_14px_rgba(37,99,235,0.28)] active:scale-95 transition cursor-pointer flex items-center justify-center gap-2"
+                  className="w-full flex-1 py-2.5 sm:py-3 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-bold tracking-tight shadow-sm active:scale-95 transition cursor-pointer flex items-center justify-center gap-1.5"
                 >
                   <PhoneCall className="w-3.5 h-3.5" />
-                  <span>Book a Call Free</span>
+                  <span>Free Consular Assessment</span>
                 </button>
               </div>
             </motion.div>
@@ -1880,7 +2160,7 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
               <div className="my-4 p-3 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-left text-xs space-y-1">
                 <span className="text-[10px] uppercase font-bold text-[#10B981]">Dedicated Officer</span>
                 <p className="font-bold text-[#0F172A]">Consular Officer Farhan ({data.name} Desk)</p>
-                <p className="text-[11px] text-[#64748B]">+92 300 8472910</p>
+                <p className="text-[11px] text-[#64748B]">+92 322 4252883</p>
               </div>
               <div className="flex gap-2">
                 <button
@@ -1890,7 +2170,7 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
                   Cancel
                 </button>
                 <a
-                  href={`https://wa.me/923008472910?text=Hi%2C%20I%20am%20inquiring%20about%20the%20${encodeURIComponent(data.name)}%20visa%20from%20Pakistan.`}
+                  href={`https://wa.me/923224252883?text=Hi%2C%20I%20am%20inquiring%20about%20the%20${encodeURIComponent(data.name)}%20visa%20from%20Pakistan.`}
                   target="_blank"
                   rel="noreferrer"
                   onClick={() => setIsWhatsAppModalOpen(false)}
@@ -1918,10 +2198,7 @@ export const CountryVisaPage: React.FC<CountryVisaPageProps> = ({
         <div className="flex flex-col min-w-0 pr-1 justify-center">
           <div className="flex items-baseline gap-1.5 flex-nowrap">
             <span className="text-[17px] font-black text-[#0F172A] tracking-tight whitespace-nowrap">
-              PKR {totalFee.toLocaleString()}
-            </span>
-            <span className="text-[10px] text-[#64748B] font-medium whitespace-nowrap">
-              all fees
+              {displayPriceText}
             </span>
           </div>
           <button
