@@ -33,10 +33,10 @@ interface ContactPageProps {
 }
 
 const SUPPORT_NUMBERS = [
-  { number: '03246883359', name: 'Consular Casework Desk', hours: '24/7 Priority Support' },
-  { number: '03224252883', name: 'eVisa & Digital Desk', hours: '9:00 AM – 10:00 PM' },
-  { number: '03490449109', name: 'US, UK & Schengen Desk', hours: '9:00 AM – 9:00 PM' },
-  { number: '0302195335', name: 'Umrah & Hajj Desk', hours: '24/7 Pilgrim Support' },
+  { number: '03224252883' },
+  { number: '03246883359' },
+  { number: '03490449109' },
+  { number: '0302195335' },
 ];
 
 const LAHORE_OFFICE = {
@@ -127,7 +127,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                 Direct Telephone Directory
               </h2>
               <p className="text-xs sm:text-sm text-[#64748B] mt-1">
-                Call or WhatsApp our specialized desks directly. No robotic switchboards.
+                Call or WhatsApp our team directly. No robotic switchboards.
               </p>
             </div>
 
@@ -140,13 +140,9 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                     key={idx}
                     className="p-4 rounded-2xl bg-[#F8FAFC] border border-[#E2E8F0] hover:border-[#CBD5E1] transition shadow-xs flex items-center justify-between gap-3"
                   >
-                    <div className="space-y-0.5">
-                      <div className="text-xs font-bold text-[#0F172A]">{item.name}</div>
-                      <div className="text-base font-bold text-[#2563EB] tracking-tight">
-                        {item.number}
-                      </div>
-                      <div className="text-[10.5px] text-[#64748B]">{item.hours}</div>
-                    </div>
+                    <span className="text-base sm:text-lg font-bold text-[#0F172A] tracking-tight">
+                      {item.number}
+                    </span>
 
                     <div className="flex items-center gap-2 shrink-0">
                       <a
@@ -179,7 +175,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
             <div className="rounded-3xl bg-white border border-[#E2E8F0] shadow-[0_20px_50px_rgba(15,23,42,0.06)] p-5 sm:p-7">
               <div className="mb-4">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-[#2563EB]">
-                  ONLINE APPOINTMENT DESK
+                  ONLINE APPOINTMENT
                 </span>
                 <h2 className="text-lg sm:text-xl font-bold text-[#0F172A] tracking-tight mt-0.5">
                   Book a Free Consular Call
