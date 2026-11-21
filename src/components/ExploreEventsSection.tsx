@@ -526,8 +526,8 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
   const showWideCard = useMemo(() => {
     if (activeTab !== 'explore') return false;
     const q = searchQuery.toLowerCase().trim();
-    const matchesSearch = !q || 'saudi arabia umrah qaba kaaba makkah mecca nusuk'.includes(q);
-    const matchesType = typeFilter === 'All' || typeFilter === 'Tourist' || typeFilter === 'Visit';
+    const matchesSearch = !q || 'saudi arabia visit tourist qaba kaaba makkah mecca nusuk umrah hajj'.includes(q) || q.includes('saudi') || q.includes('visit');
+    const matchesType = typeFilter === 'All' || typeFilter === 'All Visa Types' || typeFilter === 'Tourist' || typeFilter === 'Visit';
     const matchesCategory = categoryFilter === 'All Categories' || categoryFilter === 'Hajj & Umrah';
     return matchesSearch && matchesType && matchesCategory;
   }, [activeTab, searchQuery, typeFilter, categoryFilter]);
@@ -620,7 +620,7 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
 
             {/* Destination Name */}
             <h4 className="font-['Playfair_Display',serif] text-[12px] sm:text-[14px] font-semibold uppercase tracking-[0.04em] text-white text-center leading-tight drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)] px-1">
-              SAUDI ARABIA (HAJJ &amp; UMRAH)
+              SAUDI ARABIA (VISIT VISA)
             </h4>
 
             {/* Horizontal Divider with width matching other cards */}
@@ -639,7 +639,7 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
                   TYPE
                 </span>
                 <span className="text-[9.5px] sm:text-[10.5px] font-bold tracking-tight text-white leading-tight drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]">
-                  HAJJ &amp; UMRAH
+                  VISIT VISA
                 </span>
               </div>
 
@@ -670,10 +670,10 @@ export const ExploreEventsSection: React.FC<ExploreEventsSectionProps> = ({ onSe
       {/* External Text Below Card (identical to other cards) */}
       <div className="mt-2 sm:mt-2.5 px-0.5 flex flex-col gap-0.5">
         <p className="text-[11.5px] sm:text-xs font-semibold text-neutral-800 leading-tight">
-          Saudi Arabia (Hajj &amp; Umrah)
+          Saudi Arabia (Visit Visa)
         </p>
         <p className="text-[10.5px] text-neutral-500 leading-tight">
-          Official Nusuk and consular pilgrimage permit issued directly for pilgrimage.
+          Official 1-year multiple entry electronic tourist &amp; visit visa with fast issuance.
         </p>
         <p className="md:hidden text-[11px] font-medium text-neutral-500 mt-0.5 leading-tight">
           Fees: Price on call

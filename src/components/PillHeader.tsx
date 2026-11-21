@@ -28,7 +28,7 @@ const SUPPORT_NUMBERS = [
   { number: '03224252883' },
   { number: '03246883359' },
   { number: '03490449109' },
-  { number: '0302195335' },
+  { number: '03160463808' },
 ];
 
 export const PillHeader: React.FC<PillHeaderProps> = ({

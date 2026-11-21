@@ -36,7 +36,7 @@ const SUPPORT_NUMBERS = [
   { number: '03224252883' },
   { number: '03246883359' },
   { number: '03490449109' },
-  { number: '0302195335' },
+  { number: '03160463808' },
 ];
 
 const LAHORE_OFFICE = {
@@ -251,7 +251,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                         <option value="Canada">Canada (Visitor / Super Visa)</option>
                         <option value="Schengen">Schengen Area (Europe)</option>
                         <option value="Malaysia">Malaysia eVisa</option>
-                        <option value="Saudi Arabia">Saudi Arabia (Umrah / Tourist)</option>
+                        <option value="Saudi Arabia">Saudi Arabia (Visit / Tourist)</option>
                         <option value="UAE">UAE (Dubai 30/60 Days)</option>
                         <option value="Türkiye">Türkiye</option>
                         <option value="Australia">Australia</option>
