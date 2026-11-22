@@ -5,7 +5,7 @@ export const AboutSection: React.FC = () => {
   return (
     <section
       id="about-section"
-      className="relative w-full bg-white text-neutral-900 pt-14 sm:pt-20 md:pt-24 pb-6 sm:pb-8 px-5 sm:px-8 border-t border-neutral-100 overflow-hidden select-none"
+      className="relative w-full bg-white text-neutral-900 pt-14 sm:pt-20 md:pt-24 pb-10 sm:pb-14 px-5 sm:px-8 border-t border-neutral-100 overflow-hidden select-none"
     >
       <div className="max-w-4xl mx-auto flex flex-col items-center text-center">
         {/* Sculpted About US Heading with refined visual depth */}
@@ -48,31 +48,6 @@ export const AboutSection: React.FC = () => {
           >
             Most visas are rejected for simple paperwork mistakes, not your profile. We prepare, verify, and submit your application correctly so your visa gets approved the first time.
           </ScrollReveal>
-        </div>
-
-        {/* Official Consular & Government Accreditation Grid */}
-        <div className="w-full mt-7 sm:mt-10 flex justify-center">
-          {/* Mobile View Image */}
-          <div className="block sm:hidden w-full max-w-sm mx-auto px-1">
-            <img
-              src="https://res.cloudinary.com/rpphjsst/image/upload/v1794047665/Global_Government_Agencies_Logo_Grid.avif"
-              alt="Global Government Agencies"
-              className="w-full h-auto object-contain rounded-2xl"
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
-
-          {/* Desktop & Tablet View Image */}
-          <div className="hidden sm:block w-full max-w-3xl md:max-w-4xl mx-auto">
-            <img
-              src="https://res.cloudinary.com/rpphjsst/image/upload/v1794047640/Gemini_Generated_Image_g2hxs9g2hxs9g2hx.avif"
-              alt="Official Consular Accreditation & Worldwide Partners"
-              className="w-full h-auto object-contain rounded-2xl"
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
         </div>
       </div>
     </section>
