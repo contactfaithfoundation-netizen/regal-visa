@@ -469,7 +469,7 @@ export default function App() {
     } else if (currentView === 'policies') {
       document.title = 'Policies & Legal Advisory | Regal Visa Solutions';
     } else {
-      document.title = 'Regal Visa Solutions | Pakistan\'s Premier Visa & Consular Advisory';
+      document.title = 'Regal Visa Solutions | The Best Travel Agency in Pakistan For All Fast Visa Approvals';
     }
   }, [currentView, selectedCountry]);
 
