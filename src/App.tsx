@@ -449,21 +449,27 @@ export default function App() {
   // Synchronize document title with active route
   useEffect(() => {
     if (currentView === 'country-visa' && selectedCountry) {
-      document.title = `${selectedCountry} Visa for Pakistanis - RegalVisa Solutions`;
-    } else if (currentView === 'blog-detail') {
-      document.title = 'Visa Intelligence Article - RegalVisa Solutions';
-    } else if (currentView === 'blogs') {
-      document.title = 'Pakistan Visa Intelligence & Guides - RegalVisa Solutions';
+      document.title = `${selectedCountry} Visa for Pakistani Citizens | Regal Visa Solutions`;
+    } else if (currentView === 'appointment') {
+      document.title = 'Visa Biometric & Consular Appointment Booking | Regal Visa Solutions';
+    } else if (currentView === 'services') {
+      document.title = 'Document Auditing & Visa File Services | Regal Visa Solutions';
+    } else if (currentView === 'process') {
+      document.title = 'Consular Application Process & Timeline | Regal Visa Solutions';
     } else if (currentView === 'visas') {
-      document.title = 'Explore All Visas & Global Clearance - RegalVisa Solutions';
+      document.title = 'Explore All Visas for Pakistani Passport Holders | Regal Visa Solutions';
     } else if (currentView === 'about') {
-      document.title = 'About Us - RegalVisa Solutions';
+      document.title = 'About Us | Regal Visa Solutions Pakistan';
     } else if (currentView === 'contact') {
-      document.title = 'Contact Us - RegalVisa Solutions';
+      document.title = 'Contact Us & WhatsApp Helpline | Regal Visa Solutions';
+    } else if (currentView === 'blogs') {
+      document.title = 'Pakistan Visa Intelligence & Travel Guides | Regal Visa Solutions';
+    } else if (currentView === 'blog-detail') {
+      document.title = 'Visa Intelligence Article | Regal Visa Solutions';
     } else if (currentView === 'policies') {
-      document.title = 'Policies & Legal - RegalVisa Solutions';
+      document.title = 'Policies & Legal Advisory | Regal Visa Solutions';
     } else {
-      document.title = 'RegalVisa Solutions - Pakistan\'s Premier Visa & Consular Advisory';
+      document.title = 'Regal Visa Solutions | Pakistan\'s Premier Visa & Consular Advisory';
     }
   }, [currentView, selectedCountry]);
 

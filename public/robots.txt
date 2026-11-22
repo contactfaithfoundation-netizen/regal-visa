@@ -1,0 +1,6 @@
+# robots.txt for Regal Visa Solutions
+User-agent: *
+Allow: /
+
+# Canonical Sitemap for Googlebot & search crawlers
+Sitemap: https://regalvisasolutions.com/sitemap.xml
