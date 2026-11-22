@@ -9,15 +9,15 @@
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "https://res.cloudinary.com/dacyy7rkn/image/upload/v1794165811/image_tqqmok_1_iynviw.avif",
+      "src": "/favicon.png",
       "sizes": "192x192",
-      "type": "image/avif",
+      "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "https://res.cloudinary.com/dacyy7rkn/image/upload/v1794165811/image_tqqmok_1_iynviw.avif",
+      "src": "/favicon-512x512.png",
       "sizes": "512x512",
-      "type": "image/avif",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]
